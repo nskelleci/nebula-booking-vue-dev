@@ -2,16 +2,11 @@ import axios from '@/axios.js'
 import VesselService from '../../Services/VesselServices'
 const state = {
   vessels : [],
-  vessel : null
+  vessel : {}
 }
 
 const getters = {
-  getVessel :  (state) => (_id) => {
-    return state.vessels.find(vessel => vessel._id === _id)
-  },
-  getVessels (state) {
-    return state.vessels
-  }
+  
 }
 
 const mutations = {
@@ -31,21 +26,12 @@ const mutations = {
 
 const actions = {
   async getVessels ({commit}) {
-    
     commit('SET_VESSELS', await VesselService.fetchVessels())
-
   },
 
-  getVessel ({commit}, vesselid) {
-    return new Promise((resolve, reject) => {
-      axios.get(`http://localhost:7878/api/v1/vessel/${vesselid}`)
-        .then((response) => {
-          commit('SET_VESSEL', response.data.data)
-          resolve(response)
-        })
-        .catch((error) => { reject(error) })
-    })
-
+  async getVessel ({commit}, vesselid) {   
+      const vessel = await VesselService.getVessel(vesselid) 
+      commit('SET_VESSEL', vessel)         
   },
 
   async addVessel (_, vessel) {

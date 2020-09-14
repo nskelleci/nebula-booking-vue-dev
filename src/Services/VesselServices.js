@@ -31,6 +31,15 @@ export default {
         //   this.vessels = response.data.data
       })
       .catch((error) => { notification.notifyMe(error) })
-  }
+  },
+
+  async getVessel (vesselid) {
+      return await axios.get(`${apiUri.apiUri.URI}/vessel/${vesselid}`)
+        .then((response) => {
+          return response.data.data
+        })
+        .catch((error) => { reject(error) })
+    }
 }
+
 

@@ -51,38 +51,21 @@ export default {
   },
   data () {
     return {
-    //   vesselId : this.$route.params.id,
-      vessel : {}
+    
     }
   },
   computed : {
-  
+    vessel () {
+      return this.$store.state.vessel.vessel
+    }
   },
   methods : {
-  
-    getVessel () {
-      return new Promise((resolve, reject) => {
-        axios.get(`http://localhost:7878/api/v1/vessel/${this.$route.params.id}`)
-          .then((response) => {
-            //commit('SET_VESSEL', response.data.data)
-            this.vessel = response.data.data
-            resolve(response)
-          })
-          .catch((error) => { reject(error) })
-      })
-    }
     
   },
   created ()  { 
-    // this.findVessel()
-    // this.getVessel()
-    //console.log('created', this.$store.state.vessel.vessels)
-    this.getVessel()
-
+    this.$store.dispatch('getVessel', this.$route.params.id)
   },
   mounted () {
-    //console.log('mounted', this.$store.state.vessel.vessels)
-
   }
 }
 </script>
