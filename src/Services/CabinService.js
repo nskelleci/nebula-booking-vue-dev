@@ -1,10 +1,11 @@
 import axios from '@/axios.js'
 import notification from '../assets/utils/notify'
+const apiUri = require('../Helpers/URI')  
 
 export default {
 
   async addCabin (cabin)  {
-    return await axios.post('http://localhost:7878/api/v1/cabin/add', cabin)
+    return await axios.post(`${apiUri.apiUri.URI}/cabin/add`, cabin)
       .then((response) => {
         notification.notifyMe(response.data)
         return response.data        
@@ -13,7 +14,7 @@ export default {
   },
 
   async updateCabin (cabin) {
-    return await axios.put(`http://localhost:7878/api/v1/cabin/update/${cabin._id}`, cabin)
+    return await axios.put(`${apiUri.apiUri.URI}/cabin/update/${cabin._id}`, cabin)
       .then((response) => {
         notification.notifyMe(response.data)
         return response.data.data
@@ -22,7 +23,7 @@ export default {
    
   },
   async fetchCabins (vesselid) {
-    return await axios.get(`http://localhost:7878/api/v1/cabin/vessel/${vesselid}`)
+    return await axios.get(`${apiUri.apiUri.URI}/cabin/vessel/${vesselid}`)
       .then((response) => {
         return response.data.data
       })

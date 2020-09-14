@@ -1,11 +1,12 @@
 import axios from '@/axios.js'
 import notification from '../assets/utils/notify'
+const apiUri = require('../Helpers/URI')  
 
   
 export default {
   
   async addBedType (bedtype)  {
-    return await axios.post('http://localhost:7878/api/v1/bedtype/add', bedtype)
+    return await axios.post(`${apiUri.apiUri.URI}/bedtype/add`, bedtype)
       .then((response) => {
         notification.notifyMe(response.data)
         return response.data        
@@ -14,7 +15,7 @@ export default {
   },
 
   async updateBedType (bedtype) {
-    return await axios.put(`http://localhost:7878/api/v1/bedtype/update/${bedtype._id}`, bedtype)
+    return await axios.put(`${apiUri.apiUri.URI}/bedtype/update/${bedtype._id}`, bedtype)
       .then((response) => {
         notification.notifyMe(response.data)
         return response.data.data
@@ -23,7 +24,7 @@ export default {
    
   },
   async fetchBedTypes (vesselid) {
-    return await axios.get(`http://localhost:7878/api/v1/bedtype/vessel/${vesselid}`)
+    return await axios.get(`${apiUri.apiUri.URI}/bedtype/vessel/${vesselid}`)
       .then((response) => {
         return response.data.data
       })
