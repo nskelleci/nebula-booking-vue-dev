@@ -4,5 +4,5 @@ WORKDIR /
 COPY . .
 
 RUN npm install
-CMD vue-cli-service build
+CMD npm run build
 EXPOSE 80
