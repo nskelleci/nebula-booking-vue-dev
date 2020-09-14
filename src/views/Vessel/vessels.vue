@@ -94,11 +94,10 @@
             </vs-td>
 
             <vs-td class="whitespace-no-wrap">
-              <feather-icon icon="InfoIcon" svgClasses="w-5 h-5 hover:text-primary stroke-current" @click="vesselDetail(vessel)" />
-              <feather-icon icon="EditIcon" svgClasses="w-5 h-5 hover:text-primary stroke-current" @click.stop="editData(vessel)" />
-              <feather-icon icon="TrashIcon" svgClasses="w-5 h-5 hover:text-danger stroke-current" class="ml-2" @click.stop="deleteData(vessel._id)" />
+              <feather-icon icon="InfoIcon" svgClasses="w-7 h-7 hover:text-primary stroke-current" @click="vesselDetail(vessel)" />
+              <feather-icon icon="EditIcon" svgClasses="w-7 h-7 hover:text-primary stroke-current" class="ml-4" @click.stop="editData(vessel)" />
+              <feather-icon icon="TrashIcon" svgClasses="w-7 h-7 hover:text-danger stroke-current" class="ml-4" @click.stop="deleteData(vessel._id)" />
             </vs-td>
-
           </vs-tr>
         </tbody>
       </template>

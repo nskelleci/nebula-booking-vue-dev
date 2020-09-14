@@ -30,20 +30,20 @@ export default [
   {
     url: null,
     name: 'Dashboard',
-    tag: '2',
-    tagColor: 'warning',
+    // tag: '2',
+    // tagColor: 'warning',
     icon: 'HomeIcon',
     i18n: 'Dashboard',
     submenu: [
       {
-        url: '/dashboard/analytics',
-        name: 'Analytics',
+        //url: '/dashboard/analytics',
+        name: 'Admin Dashboard',
         slug: 'dashboard-analytics',
         i18n: 'Analytics'
       },
       {
-        url: '/dashboard/ecommerce',
-        name: 'eCommerce',
+        //url: '/dashboard/ecommerce',
+        name: 'Agency Dashboard',
         slug: 'dashboard-ecommerce',
         i18n: 'eCommerce'
       }
@@ -70,7 +70,7 @@ export default [
         ]
       },
       {
-        url: '/Cruise',
+        //url: '/Cruise',
         name: 'Cruise',
         slug: 'cruise',
         icon: 'MessageSquareIcon',
@@ -86,17 +86,17 @@ export default [
     items: [
       {
         url: null,
-        name: 'Data List',
-        tag: 'new',
-        tagColor: 'primary',
+        name: 'Bookings',
+        //tag: 'new',
+        //tagColor: 'primary',
         icon: 'ListIcon',
-        i18n: 'DataList',
+        i18n: 'Bookings',
         submenu: [
           {
-            url: '/ui-elements/data-list/list-view',
-            name: 'List View',
-            slug: 'data-list-list-view',
-            i18n: 'ListView'
+            //url: '/ui-elements/data-list/list-view',
+            name: 'Book a Cruise',
+            slug: 'book-a-cruise',
+            i18n: 'Book a Cruise'
           }
         ]
       }
