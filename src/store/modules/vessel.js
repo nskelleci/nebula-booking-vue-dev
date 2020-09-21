@@ -1,4 +1,3 @@
-import axios from '@/axios.js'
 import VesselService from '../../Services/VesselServices'
 const state = {
   vessels : [],
@@ -30,8 +29,8 @@ const actions = {
   },
 
   async getVessel ({commit}, vesselid) {   
-      const vessel = await VesselService.getVessel(vesselid) 
-      commit('SET_VESSEL', vessel)         
+    const vessel = await VesselService.getVessel(vesselid) 
+    commit('SET_VESSEL', vessel)         
   },
 
   async addVessel (_, vessel) {

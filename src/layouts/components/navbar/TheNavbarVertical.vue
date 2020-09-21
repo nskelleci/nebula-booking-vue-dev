@@ -36,9 +36,9 @@
 
 
 <script>
-import Bookmarks            from './components/Bookmarks.vue'
-import SearchBar            from './components/SearchBar.vue'
-import NotificationDropDown from './components/NotificationDropDown.vue'
+//import Bookmarks            from './components/Bookmarks.vue'
+//import SearchBar            from './components/SearchBar.vue'
+//import NotificationDropDown from './components/NotificationDropDown.vue'
 import ProfileDropDown      from './components/ProfileDropDown.vue'
 
 export default {
@@ -50,9 +50,6 @@ export default {
     }
   },
   components: {
-    Bookmarks,
-    SearchBar,
-    NotificationDropDown,
     ProfileDropDown
   },
   computed: {
@@ -70,11 +67,13 @@ export default {
     },
 
     // NAVBAR STYLE
+    // eslint-disable-next-line vue/return-in-computed-property
     classObj () {
       if      (this.verticalNavMenuWidth === 'default') return 'navbar-default'
       else if (this.verticalNavMenuWidth === 'reduced') return 'navbar-reduced'
       else if (this.verticalNavMenuWidth)               return 'navbar-full'
     }
+    
   },
   methods: {
     showSidebar () {

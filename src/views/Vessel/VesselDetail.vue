@@ -13,8 +13,7 @@
                             <li class="p-2 sm:p-0">Name : {{vessel.name}}</li>
                             <li class="p-2 sm:p-0">Flag : {{vessel.flag}}</li>
                             <li class="p-2 sm:p-0">IMO : 89808908909</li>
-                            <li class="p-2 sm:p-0">Cabin Count : 400</li>
-                            
+                            <li class="p-2 sm:p-0">Cabin Count :{{cabins.length}}</li>                            
                         </ul>
                     </div>
                 </div>
@@ -42,7 +41,6 @@
 import BedTypes from './BedType/BedTypes.vue'
 import CabinCategories from './CabinCategory/CabinCategories'
 import Cabins from './Cabin/Cabins'
-import axios from '@/axios.js'
 export default {
   components: {
     BedTypes,
@@ -51,12 +49,14 @@ export default {
   },
   data () {
     return {
-    
     }
   },
   computed : {
     vessel () {
       return this.$store.state.vessel.vessel
+    },
+    cabins () {
+      return this.$store.state.cabin.cabins
     }
   },
   methods : {
@@ -66,6 +66,7 @@ export default {
     this.$store.dispatch('getVessel', this.$route.params.id)
   },
   mounted () {
+    
   }
 }
 </script>

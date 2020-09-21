@@ -34,12 +34,10 @@ export default {
   },
 
   async getVessel (vesselid) {
-      return await axios.get(`${apiUri.apiUri.URI}/vessel/${vesselid}`)
-        .then((response) => {
-          return response.data.data
-        })
-        .catch((error) => { reject(error) })
-    }
+    return await axios.get(`${apiUri.apiUri.URI}/vessel/${vesselid}`)
+      .then((response) => {
+        return response.data.data
+      })
+      .catch((error) => { return (error) })
+  }
 }
-
-
