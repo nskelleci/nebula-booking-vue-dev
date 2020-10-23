@@ -21,6 +21,7 @@ import cabinCategory from './modules/cabinCategory'
 import bedType from './modules/bedType'
 import cabin from './modules/cabin'
 import country from './modules/country'
+import port from './modules/port'
 
 Vue.use(Vuex)
 
@@ -34,7 +35,8 @@ export default new Vuex.Store({
     cabinCategory,
     bedType,
     cabin,
-    country
+    country,
+    port
   },
 
   strict: process.env.NODE_ENV !== 'production'
