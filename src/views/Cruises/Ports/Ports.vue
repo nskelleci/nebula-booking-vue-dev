@@ -84,17 +84,15 @@
             <vs-td class="img-container">
               <!-- <img :src="tr.img" class="product-img" /> -->
             </vs-td>
-
+            <vs-td>
+              <p class="product-name font-medium truncate">{{ port.country.name }}</p>
+            </vs-td>
             <vs-td>
               <p class="product-name font-medium truncate">{{ port.name }}</p>
             </vs-td>
 
-            <vs-td>
-              <p class="product-category">{{ port.flag }}</p>
-            </vs-td>
-
             <vs-td class="whitespace-no-wrap">
-              <feather-icon icon="InfoIcon" svgClasses="w-7 h-7 hover:text-primary stroke-current" @click="portDetail(port)" />
+              <!-- <feather-icon icon="InfoIcon" svgClasses="w-7 h-7 hover:text-primary stroke-current" @click="portDetail(port)" /> -->
               <feather-icon icon="EditIcon" svgClasses="w-7 h-7 hover:text-primary stroke-current" class="ml-4" @click.stop="editData(port)" />
               <feather-icon icon="TrashIcon" svgClasses="w-7 h-7 hover:text-danger stroke-current" class="ml-4" @click.stop="deleteData(port._id)" />
             </vs-td>

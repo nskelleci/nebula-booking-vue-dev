@@ -29,9 +29,9 @@
 
         <vs-input-number label="Capacity : " v-model="capacity"  name="cabin-capacity" v-validate="'required'" />
         <span class="text-danger text-sm" v-show="errors.has('cabin-capacity')">{{ errors.first('cabin-capacity') }}</span>
-        <h7>Cabin Category</h7>
+        <h5>Cabin Category</h5>
         <v-select v-model="cabinCategory" label="name" :options="cabinCategories" :dir="$vs.rtl ? 'rtl' : 'ltr'" /><br>
-        <h7>Bed Type</h7>
+        <h5>Bed Type</h5>
         <v-select v-model="bedType" label="name" :options="bedTypes" :dir="$vs.rtl ? 'rtl' : 'ltr'" /><br>
 
       </div>

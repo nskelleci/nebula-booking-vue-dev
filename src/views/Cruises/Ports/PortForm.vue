@@ -19,7 +19,8 @@
     <component :is="scrollbarTag" class="scroll-area--data-list-add-new" :settings="settings" :key="$vs.rtl">
 
     <div class="p-6">
-
+        <h5>Country</h5>
+        <v-select v-model="country" label="name" :options="countries" :dir="$vs.rtl ? 'rtl' : 'ltr'" /><br>
         <!-- NAME -->
         <vs-input label="Name" v-model="portName" class="mt-5 w-full" name="port-name" v-validate="'required'" />
         <span class="text-danger text-sm" v-show="errors.has('port-name')">{{ errors.first('port-name') }}</span>
@@ -36,6 +37,7 @@
 
 <script>
 import VuePerfectScrollbar from 'vue-perfect-scrollbar'
+import vSelect from 'vue-select'
 
 export default {
   props: {
@@ -49,13 +51,16 @@ export default {
     }
   },
   components: {
-    VuePerfectScrollbar
+    VuePerfectScrollbar,
+    'v-select': vSelect
+
   },
   data () {
     return {
 
       dataId: null,
       portName: '',
+      country:null,
       settings: { // perfectscrollbar settings
         maxScrollbarLength: 60,
         wheelSpeed: .60
@@ -69,9 +74,9 @@ export default {
         this.initValues()
         this.$validator.reset()
       } else {
-        const { _id, name} = JSON.parse(JSON.stringify(this.data))
+        const { _id, name, country} = JSON.parse(JSON.stringify(this.data))
         this.dataId = _id
-      
+        this.country = country
         this.portName = name
         this.initValues()
       }
@@ -92,22 +97,27 @@ export default {
       }
     },
     isFormValid () {
-      return !this.errors.any() && this.portName
+      return !this.errors.any() && this.portName && this.country
     },
-    scrollbarTag () { return this.$store.getters.scrollbarTag }
+    scrollbarTag () { return this.$store.getters.scrollbarTag },
+    countries () {
+      return this.$store.state.country.countries
+    }
   },
   methods: {
     initValues () {
       if (this.data._id) return
       this.dataId = null
       this.portName = ''
+      this.country = null
     },
     submitData () {
       this.$validator.validateAll().then(result => {
         if (result) {
           const obj = {
             _id: this.dataId,
-            name: this.portName
+            name: this.portName,
+            country : this.country
           }
 
           if (this.dataId !== null && this.dataId.length >= 0) {
@@ -122,6 +132,9 @@ export default {
         }
       })
     }
+  },
+  created () {
+    this.$store.dispatch('getCountries')
   }
 }
 </script>
