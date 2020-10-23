@@ -55,6 +55,16 @@ const router = new Router({
           path : '/Vessels/:id',
           name : 'vessel-detail',
           component : () => import ('./views/Vessel/VesselDetail.vue')
+        },
+        {
+          path : '/Countries/',
+          name : 'countries',
+          component : () => import ('./views/Cruises/Countrys/Countries.vue')
+        },
+        {
+          path : '/Ports/',
+          name : 'ports',
+          component : () => import ('./views/Cruises/Ports/Ports.vue')
         }
       ]
     },

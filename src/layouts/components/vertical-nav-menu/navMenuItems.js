@@ -75,7 +75,28 @@ export default [
         slug: 'cruise',
         icon: 'MessageSquareIcon',
         i18n: 'Cruise'
-      }
+      },
+      {
+        url: null,
+        name: 'Cruise Settings',
+        slug: 'cruise-settings',
+        icon: 'MailIcon',
+        i18n: 'Cruise Settings',
+        submenu: [
+          {
+            url: '/countries/',
+            name: 'Countries',
+            slug: 'countries',
+            i18n: 'Countries'
+          },
+          {
+            url: '/Ports/',
+            name: 'Ports',
+            slug: 'ports',
+            i18n: 'Ports'
+          }
+        ]
+      },
       
     ]
   },
