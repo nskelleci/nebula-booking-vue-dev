@@ -11,7 +11,7 @@
 <template>
   <vs-sidebar click-not-close position-right parent="body" default-index="1" color="primary" class="add-new-data-sidebar items-no-padding" spacer v-model="isSidebarActiveLocal">
     <div class="mt-6 flex items-center justify-between px-6">
-        <h4>{{ Object.entries(this.data).length === 0 ? "ADD NEW" : "UPDATE" }} CRUISE TYPE </h4>
+        <h4>{{ Object.entries(this.data).length === 0 ? "ADD NEW" : "UPDATE" }} MARKET </h4>
         <feather-icon icon="XIcon" @click.stop="isSidebarActiveLocal = false" class="cursor-pointer"></feather-icon>
     </div>
     <vs-divider class="mb-0"></vs-divider>
@@ -21,8 +21,8 @@
     <div class="p-6">
 
         <!-- NAME -->
-        <vs-input label="Name" v-model="cruisetypeName" class="mt-5 w-full" name="cruisetype-name" v-validate="'required'" />
-        <span class="text-danger text-sm" v-show="errors.has('cruisetype-name')">{{ errors.first('cruisetype-name') }}</span>
+        <vs-input label="Name" v-model="marketName" class="mt-5 w-full" name="market-name" v-validate="'required'" />
+        <span class="text-danger text-sm" v-show="errors.has('market-name')">{{ errors.first('market-name') }}</span>
         <!-- Upload -->
     </div>
     </component>
@@ -55,7 +55,7 @@ export default {
     return {
 
       dataId: null,
-      cruisetypeName: '',
+      marketName: '',
       settings: { // perfectscrollbar settings
         maxScrollbarLength: 60,
         wheelSpeed: .60
@@ -72,7 +72,7 @@ export default {
         const { _id, name} = JSON.parse(JSON.stringify(this.data))
         this.dataId = _id
       
-        this.cruisetypeName = name
+        this.marketName = name
         this.initValues()
       }
       // Object.entries(this.data).length === 0 ? this.initValues() : { this.dataId, this.dataName, this.dataCategory, this.dataOrder_status, this.dataPrice } = JSON.parse(JSON.stringify(this.data))
@@ -92,7 +92,7 @@ export default {
       }
     },
     isFormValid () {
-      return !this.errors.any() && this.cruisetypeName
+      return !this.errors.any() && this.marketName
     },
     scrollbarTag () { return this.$store.getters.scrollbarTag }
   },
@@ -100,22 +100,22 @@ export default {
     initValues () {
       if (this.data._id) return
       this.dataId = null
-      this.cruisetypeName = ''
+      this.marketName = ''
     },
     submitData () {
       this.$validator.validateAll().then(result => {
         if (result) {
           const obj = {
             _id: this.dataId,
-            name: this.cruisetypeName
+            name: this.marketName
           }
 
           if (this.dataId !== null && this.dataId.length >= 0) {
-            this.$store.dispatch('updateCruiseType', obj).catch(err => { console.error(err) })
+            this.$store.dispatch('updateMarket', obj).catch(err => { console.error(err) })
             //VesselService.updateVessel(obj)
           } else {
             delete obj._id
-            this.$store.dispatch('addCruiseType', obj).catch(err => { console.error(err) })
+            this.$store.dispatch('addMarket', obj).catch(err => { console.error(err) })
           }
           this.$emit('closeSidebar')
           this.initValues()

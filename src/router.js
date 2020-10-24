@@ -65,6 +65,21 @@ const router = new Router({
           path : '/Ports/',
           name : 'ports',
           component : () => import ('./views/Cruises/Ports/Ports.vue')
+        },
+        {
+          path : '/CruiseTypes/',
+          name : 'cruisetypes',
+          component : () => import ('./views/Cruises/CruiseTypes/CruiseTypes.vue')
+        },
+        {
+          path : '/CruiseSeasons/',
+          name : 'cruiseseasons',
+          component : () => import ('./views/Cruises/CruiseSeans/CruiseSeasons.vue')
+        },
+        {
+          path : '/Markets/',
+          name : 'markets',
+          component : () => import ('./views/Cruises/Markets/Markets.vue')
         }
       ]
     },

@@ -94,10 +94,27 @@ export default [
             name: 'Ports',
             slug: 'ports',
             i18n: 'Ports'
+          },
+          {
+            url: '/CruiseTypes/',
+            name: 'Cruise Types',
+            slug: 'cruisetypes',
+            i18n: 'CruiseTypes'
+          },
+          {
+            url: '/CruiseSeasons/',
+            name: 'Cruise Seasons',
+            slug: 'cruiseseasons',
+            i18n: 'cruiseseasons'
+          },
+          {
+            url: '/Markets/',
+            name: 'Markets',
+            slug: 'markets',
+            i18n: 'markets'
           }
         ]
-      },
-      
+      }
     ]
   },
   {

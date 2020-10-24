@@ -10,9 +10,9 @@
 <template>
   <div id="data-list-thumb-view" class="data-list-container">
 
-    <country-form :isSidebarActive="addNewDataSidebar" @closeSidebar="toggleDataSidebar" :data="sidebarData" />
+    <cruiseseason-form :isSidebarActive="addNewDataSidebar" @closeSidebar="toggleDataSidebar" :data="sidebarData" />
 
-    <vs-table ref="table"   v-model="selected" pagination :max-items="itemsPerPage" search :data="countries">
+    <vs-table ref="table"   v-model="selected" pagination :max-items="itemsPerPage" search :data="cruiseseasons">
 
       <div slot="header" class="flex flex-wrap-reverse items-center flex-grow justify-between">
 
@@ -48,7 +48,7 @@
         <!-- ITEMS PER PAGE -->
         <vs-dropdown vs-trigger-click class="cursor-pointer mb-4 mr-4">
           <div class="p-4 border border-solid d-theme-border-grey-light rounded-full d-theme-dark-bg cursor-pointer flex items-center justify-between font-medium">
-            <span class="mr-2">{{ currentPage * itemsPerPage - (itemsPerPage - 1) }} - {{ countries.length - currentPage * itemsPerPage > 0 ? currentPage * itemsPerPage : countries.length }} of {{ queriedItems }}</span>
+            <span class="mr-2">{{ currentPage * itemsPerPage - (itemsPerPage - 1) }} - {{ cruiseseasons.length - currentPage * itemsPerPage > 0 ? currentPage * itemsPerPage : cruiseseasons.length }} of {{ queriedItems }}</span>
             <feather-icon icon="ChevronDownIcon" svgClasses="h-4 w-4" />
           </div>
           <!-- <vs-button class="btn-drop" type="line" color="primary" icon-pack="feather" icon="icon-chevron-down"></vs-button> -->
@@ -71,27 +71,27 @@
       </div>
 
       <template slot="thead">
+        <vs-th>Image</vs-th>
         <vs-th sort-key="name">Name</vs-th>
+        <vs-th sort-key="category">Flag</vs-th>        
         <vs-th>Action</vs-th>
       </template>
 
       <template slot-scope="{data}">
         <tbody>
-          <vs-tr :data="country" :key="_id" v-for="(country,_id) in data" >
+          <vs-tr :data="cruiseseason" :key="_id" v-for="(cruiseseason,_id) in data" >
 
             <vs-td class="img-container">
               <!-- <img :src="tr.img" class="product-img" /> -->
             </vs-td>
-
             <vs-td>
-              <p class="product-name font-medium truncate">{{ country.name }}</p>
+              <p class="product-name font-medium truncate">{{ cruiseseason.name }}</p>
             </vs-td>
 
-
             <vs-td class="whitespace-no-wrap">
-              <!-- <feather-icon icon="InfoIcon" svgClasses="w-7 h-7 hover:text-primary stroke-current" @click="vesselDetail(vessel)" /> -->
-              <feather-icon icon="EditIcon" svgClasses="w-7 h-7 hover:text-primary stroke-current" class="ml-4" @click.stop="editData(country)" />
-              <feather-icon icon="TrashIcon" svgClasses="w-7 h-7 hover:text-danger stroke-current" class="ml-4" @click.stop="deleteData(country._id)" />
+              <!-- <feather-icon icon="InfoIcon" svgClasses="w-7 h-7 hover:text-primary stroke-current" @click="portDetail(port)" /> -->
+              <feather-icon icon="EditIcon" svgClasses="w-7 h-7 hover:text-primary stroke-current" class="ml-4" @click.stop="editData(cruiseseason)" />
+              <feather-icon icon="TrashIcon" svgClasses="w-7 h-7 hover:text-danger stroke-current" class="ml-4" @click.stop="deleteData(cruiseseason._id)" />
             </vs-td>
           </vs-tr>
         </tbody>
@@ -103,19 +103,18 @@
 
 <script>
 
-import CountryForm  from './CountryForm'
+import CruiseseasonForm  from './CruiseSeasonsForm'
 import router from '../../../router'
 //import moduleDataList from '@/store/data-list/moduleDataList.js'
 
 export default {
   components: {
-    CountryForm
+    CruiseseasonForm
   },
   data () {
     return {
       selected: [],
       //vessels: [],
-      vesselsUpdated : false,
       itemsPerPage: 20,
       isMounted: false,
       addNewDataSidebar: false,
@@ -137,8 +136,8 @@ export default {
       return []
     // return this.$refs.table ? this.$refs.table.queriedResults.length : this.products.length
     },
-    countries () {
-      return this.$store.state.country.countries
+    cruiseseasons () {
+      return this.$store.state.cruiseSeason.cruiseseasons
     }
   },
   methods: {
@@ -153,17 +152,10 @@ export default {
     },
     toggleDataSidebar (val = false) {
       this.addNewDataSidebar = val
-    }
-    // async fetchVessels () {      
-    //   this.vessels = await VesselService.fetchVessels()
-    // },
-    
-    // vesselDetail (vessel) {
-    //   router.push({name : 'vessel-detail', params: {id: vessel._id} })
-    // }
+    },
   },
   created () {
-    this.$store.dispatch('getCountries')
+    this.$store.dispatch('getCruiseSeasons')
   },
   updated () {
    

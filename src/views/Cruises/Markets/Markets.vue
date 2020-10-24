@@ -10,7 +10,7 @@
 <template>
   <div id="data-list-thumb-view" class="data-list-container">
 
-    <country-form :isSidebarActive="addNewDataSidebar" @closeSidebar="toggleDataSidebar" :data="sidebarData" />
+    <market-form :isSidebarActive="addNewDataSidebar" @closeSidebar="toggleDataSidebar" :data="sidebarData" />
 
     <vs-table ref="table"   v-model="selected" pagination :max-items="itemsPerPage" search :data="countries">
 
@@ -77,21 +77,21 @@
 
       <template slot-scope="{data}">
         <tbody>
-          <vs-tr :data="country" :key="_id" v-for="(country,_id) in data" >
+          <vs-tr :data="market" :key="_id" v-for="(market,_id) in data" >
 
             <vs-td class="img-container">
               <!-- <img :src="tr.img" class="product-img" /> -->
             </vs-td>
 
             <vs-td>
-              <p class="product-name font-medium truncate">{{ country.name }}</p>
+              <p class="product-name font-medium truncate">{{ market.name }}</p>
             </vs-td>
 
 
             <vs-td class="whitespace-no-wrap">
               <!-- <feather-icon icon="InfoIcon" svgClasses="w-7 h-7 hover:text-primary stroke-current" @click="vesselDetail(vessel)" /> -->
-              <feather-icon icon="EditIcon" svgClasses="w-7 h-7 hover:text-primary stroke-current" class="ml-4" @click.stop="editData(country)" />
-              <feather-icon icon="TrashIcon" svgClasses="w-7 h-7 hover:text-danger stroke-current" class="ml-4" @click.stop="deleteData(country._id)" />
+              <feather-icon icon="EditIcon" svgClasses="w-7 h-7 hover:text-primary stroke-current" class="ml-4" @click.stop="editData(market)" />
+              <feather-icon icon="TrashIcon" svgClasses="w-7 h-7 hover:text-danger stroke-current" class="ml-4" @click.stop="deleteData(market._id)" />
             </vs-td>
           </vs-tr>
         </tbody>
@@ -103,13 +103,13 @@
 
 <script>
 
-import CountryForm  from './CountryForm'
+import MarketForm  from './MarketForm'
 import router from '../../../router'
 //import moduleDataList from '@/store/data-list/moduleDataList.js'
 
 export default {
   components: {
-    CountryForm
+    MarketForm
   },
   data () {
     return {
@@ -138,7 +138,7 @@ export default {
     // return this.$refs.table ? this.$refs.table.queriedResults.length : this.products.length
     },
     countries () {
-      return this.$store.state.country.countries
+      return this.$store.state.market.markets
     }
   },
   methods: {
@@ -163,7 +163,7 @@ export default {
     // }
   },
   created () {
-    this.$store.dispatch('getCountries')
+    this.$store.dispatch('getMarkets')
   },
   updated () {
    

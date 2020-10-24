@@ -11,7 +11,7 @@
 <template>
   <vs-sidebar click-not-close position-right parent="body" default-index="1" color="primary" class="add-new-data-sidebar items-no-padding" spacer v-model="isSidebarActiveLocal">
     <div class="mt-6 flex items-center justify-between px-6">
-        <h4>{{ Object.entries(this.data).length === 0 ? "ADD NEW" : "UPDATE" }} CRUISE TYPE </h4>
+        <h4>{{ Object.entries(this.data).length === 0 ? "ADD NEW" : "UPDATE" }} CRUISE SEASONS </h4>
         <feather-icon icon="XIcon" @click.stop="isSidebarActiveLocal = false" class="cursor-pointer"></feather-icon>
     </div>
     <vs-divider class="mb-0"></vs-divider>
@@ -19,10 +19,9 @@
     <component :is="scrollbarTag" class="scroll-area--data-list-add-new" :settings="settings" :key="$vs.rtl">
 
     <div class="p-6">
-
-        <!-- NAME -->
-        <vs-input label="Name" v-model="cruisetypeName" class="mt-5 w-full" name="cruisetype-name" v-validate="'required'" />
-        <span class="text-danger text-sm" v-show="errors.has('cruisetype-name')">{{ errors.first('cruisetype-name') }}</span>
+        <h5>Seasons</h5>
+        <vs-input label="Name" v-model="cruiseSeasonName" class="mt-5 w-full" name="cruiseSeason-name" v-validate="'required'" />
+        <span class="text-danger text-sm" v-show="errors.has('cruiseSeason-name')">{{ errors.first('cruiseSeason-name') }}</span>
         <!-- Upload -->
     </div>
     </component>
@@ -36,7 +35,6 @@
 
 <script>
 import VuePerfectScrollbar from 'vue-perfect-scrollbar'
-
 export default {
   props: {
     isSidebarActive: {
@@ -49,13 +47,14 @@ export default {
     }
   },
   components: {
-    VuePerfectScrollbar
+    VuePerfectScrollbar,
+
   },
   data () {
     return {
 
       dataId: null,
-      cruisetypeName: '',
+      cruiseSeasonName: '',
       settings: { // perfectscrollbar settings
         maxScrollbarLength: 60,
         wheelSpeed: .60
@@ -71,8 +70,7 @@ export default {
       } else {
         const { _id, name} = JSON.parse(JSON.stringify(this.data))
         this.dataId = _id
-      
-        this.cruisetypeName = name
+        this.cruiseSeasonName = name
         this.initValues()
       }
       // Object.entries(this.data).length === 0 ? this.initValues() : { this.dataId, this.dataName, this.dataCategory, this.dataOrder_status, this.dataPrice } = JSON.parse(JSON.stringify(this.data))
@@ -92,36 +90,42 @@ export default {
       }
     },
     isFormValid () {
-      return !this.errors.any() && this.cruisetypeName
+      return !this.errors.any() && this.cruiseSeasonName
     },
-    scrollbarTag () { return this.$store.getters.scrollbarTag }
+    scrollbarTag () { return this.$store.getters.scrollbarTag },
+    seasons () {
+      return this.$store.state.cruiseseason.cruiseseasons
+    }
   },
   methods: {
     initValues () {
       if (this.data._id) return
       this.dataId = null
-      this.cruisetypeName = ''
+      this.cruiseSeasonName = ''
     },
     submitData () {
       this.$validator.validateAll().then(result => {
         if (result) {
           const obj = {
             _id: this.dataId,
-            name: this.cruisetypeName
+            name: this.cruiseSeasonName,
           }
 
           if (this.dataId !== null && this.dataId.length >= 0) {
-            this.$store.dispatch('updateCruiseType', obj).catch(err => { console.error(err) })
+            this.$store.dispatch('updateCruiseSeason', obj).catch(err => { console.error(err) })
             //VesselService.updateVessel(obj)
           } else {
             delete obj._id
-            this.$store.dispatch('addCruiseType', obj).catch(err => { console.error(err) })
+            this.$store.dispatch('addCruiseSeason', obj).catch(err => { console.error(err) })
           }
           this.$emit('closeSidebar')
           this.initValues()
         }
       })
     }
+  },
+  created () {
+    
   }
 }
 </script>

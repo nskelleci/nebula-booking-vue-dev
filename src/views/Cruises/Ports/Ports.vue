@@ -118,7 +118,6 @@ export default {
     return {
       selected: [],
       //vessels: [],
-      portsUpdated : false,
       itemsPerPage: 20,
       isMounted: false,
       addNewDataSidebar: false,

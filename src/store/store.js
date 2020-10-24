@@ -22,6 +22,9 @@ import bedType from './modules/bedType'
 import cabin from './modules/cabin'
 import country from './modules/country'
 import port from './modules/port'
+import cruiseType from './modules/cruiseType'
+import cruiseSeason from './modules/cruiseSeason'
+import market from './modules/market'
 
 Vue.use(Vuex)
 
@@ -36,7 +39,10 @@ export default new Vuex.Store({
     bedType,
     cabin,
     country,
-    port
+    port,
+    cruiseType,
+    cruiseSeason,
+    market
   },
 
   strict: process.env.NODE_ENV !== 'production'
