@@ -11,6 +11,7 @@ const getters = {
 const mutations = {
   SET_VESSELS (state, vessels) {
     state.vessels = vessels
+    console.log(vessels);
   },
 
   ADD_VESSEL (state, vessel) {

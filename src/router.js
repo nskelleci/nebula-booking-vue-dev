@@ -80,6 +80,11 @@ const router = new Router({
           path : '/Markets/',
           name : 'markets',
           component : () => import ('./views/Cruises/Markets/Markets.vue')
+        },
+        {
+          path : '/Prices/',
+          name : 'prices',
+          component : () => import ('./views/Cruises/Prices/Prices.vue')
         }
       ]
     },
