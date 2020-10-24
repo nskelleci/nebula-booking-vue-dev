@@ -15,7 +15,7 @@ export default {
 
   async updateCruiseSeason (cruiseseason) {
     
-    return await axios.put(`${apiUri.apiUri.URI}/season/updateCruiseType/${cruiseseason._id}`, cruiseseason)
+    return await axios.put(`${apiUri.apiUri.URI}/season/updateSeason/${cruiseseason._id}`, cruiseseason)
       .then((response) => {
         notification.notifyMe(response.data)
         return response.data.data

@@ -7,21 +7,12 @@ const state = {
 const mutations = {
   SET_CRUISESEASONS (state, cruiseseasons) {
     state.cruiseseasons = cruiseseasons
-  },
-
-  SET_CRUISESEASON (state, cruiseseason) {
-    state.cruiseseason = cruiseseason
   }
 }
 
 const actions = {
   async getCruiseSeasons ({commit}) {
     commit('SET_CRUISESEASONS', await CruiseSeasonService.fetchCruiseSeasons())
-  },
-
-  async getCruiseSeason ({commit}, cruiseseasonid) {   
-    const cruise = await CruiseSeasonService.fetchCruiseSeasons(cruiseseasonid) 
-    commit('SET_CRUISESEASON', cruise)         
   },
 
   async addCruiseSeason (_, cruiseseason) {
@@ -36,7 +27,7 @@ const actions = {
 
   async updateCruiseSeason (_, cruiseseason) {
     await CruiseSeasonService.updateCruiseSeason(cruiseseason)
-    this.dispatch('getCruiseSeason')
+    this.dispatch('getCruiseSeasons')
   }
 
 }
