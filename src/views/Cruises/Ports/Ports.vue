@@ -99,6 +99,7 @@
           </vs-tr>
         </tbody>
       </template>
+
     </vs-table>
   </div>
   
@@ -156,6 +157,7 @@ export default {
     toggleDataSidebar (val = false) {
       this.addNewDataSidebar = val
     },
+
     // async fetchVessels () {      
     //   this.vessels = await VesselService.fetchVessels()
     // },
@@ -163,6 +165,7 @@ export default {
     portDetail (port) {
       router.push({name : 'port-detail', params: {id: port._id} })
     }
+    
   },
   created () {
     this.$store.dispatch('getPorts')

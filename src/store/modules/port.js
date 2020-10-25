@@ -37,9 +37,8 @@ const actions = {
   async updatePort (_, port) {
     await PortService.updatePort(port)
     this.dispatch('getPorts')
-          
-  }
 
+  }
 }
 
 export default {
