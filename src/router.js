@@ -95,6 +95,11 @@ const router = new Router({
           path : '/Agencies/',
           name : 'Agencies',
           component : () => import ('./views/Agencies/Agencies.vue')
+        },
+        {
+          path : '/Cruises/',
+          name : 'cruises',
+          component : () => import ('./views/Cruises/Cruises.vue')
         }
       ]
     },

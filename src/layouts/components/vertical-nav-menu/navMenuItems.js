@@ -74,7 +74,15 @@ export default [
         name: 'Cruise',
         slug: 'cruise',
         icon: 'MessageSquareIcon',
-        i18n: 'Cruise'
+        i18n: 'Cruise',
+        submenu: [
+          {
+            url: '/Cruises/',
+            name: 'Cruises',
+            slug: 'cruises',
+            i18n: 'cruises'
+          }
+        ]
       },
       {
         url: null,

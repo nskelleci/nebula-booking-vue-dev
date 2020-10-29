@@ -10,9 +10,9 @@
 <template>
   <div id="data-list-thumb-view" class="data-list-container">
 
-    <port-form :isSidebarActive="addNewDataSidebar" @closeSidebar="toggleDataSidebar" :data="sidebarData" />
+    <agency-form :isSidebarActive="addNewDataSidebar" @closeSidebar="toggleDataSidebar" :data="sidebarData" />
 
-    <vs-table ref="table"   v-model="selected" pagination :max-items="itemsPerPage" search :data="ports">
+    <vs-table ref="table"   v-model="selected" pagination :max-items="itemsPerPage" search :data="agency">
 
       <div slot="header" class="flex flex-wrap-reverse items-center flex-grow justify-between">
 
@@ -48,7 +48,7 @@
         <!-- ITEMS PER PAGE -->
         <vs-dropdown vs-trigger-click class="cursor-pointer mb-4 mr-4">
           <div class="p-4 border border-solid d-theme-border-grey-light rounded-full d-theme-dark-bg cursor-pointer flex items-center justify-between font-medium">
-            <span class="mr-2">{{ currentPage * itemsPerPage - (itemsPerPage - 1) }} - {{ ports.length - currentPage * itemsPerPage > 0 ? currentPage * itemsPerPage : ports.length }} of {{ queriedItems }}</span>
+            <span class="mr-2">{{ currentPage * itemsPerPage - (itemsPerPage - 1) }} - {{ agency.length - currentPage * itemsPerPage > 0 ? currentPage * itemsPerPage : agency.length }} of {{ queriedItems }}</span>
             <feather-icon icon="ChevronDownIcon" svgClasses="h-4 w-4" />
           </div>
           <!-- <vs-button class="btn-drop" type="line" color="primary" icon-pack="feather" icon="icon-chevron-down"></vs-button> -->
@@ -71,35 +71,48 @@
       </div>
 
       <template slot="thead">
-        <vs-th>Image</vs-th>
-        <vs-th sort-key="name">Name</vs-th>
-        <vs-th sort-key="category">Flag</vs-th>        
-        <vs-th>Action</vs-th>
+        <vs-th sort-key="agencycode">Agency Code</vs-th>
+        <vs-th sort-key="companyname">Company Name</vs-th>
+        <vs-th sort-key="email">Email</vs-th>
+        <vs-th sort-key="address">Address</vs-th>
+        <vs-th sort-key="authorizedperson">Authorized Person</vs-th>
+        <vs-th sort-key="agencytype">Agency Type</vs-th>
+        <vs-th sort-key="discounttype">Discount Type</vs-th>
       </template>
 
       <template slot-scope="{data}">
         <tbody>
-          <vs-tr :data="port" :key="_id" v-for="(port,_id) in data" >
-
-            <vs-td class="img-container">
-              <!-- <img :src="tr.img" class="product-img" /> -->
+          <vs-tr :data="agency" :key="_id" v-for="(agency,_id) in data" >
+            <vs-td>
+              <p class="product-name font-medium truncate">{{ agency.agencyCode }}</p>
             </vs-td>
             <vs-td>
-              <p class="product-name font-medium truncate">{{ port.country.name }}</p>
+              <p class="product-name font-medium truncate">{{ agency.companyName }}</p>
             </vs-td>
             <vs-td>
-              <p class="product-name font-medium truncate">{{ port.name }}</p>
+              <p class="product-name font-medium truncate">{{ agency.email }}</p>
+            </vs-td>
+            <vs-td>
+              <p class="product-name font-medium truncate">{{ agency.address }}</p>
+            </vs-td>
+            <vs-td>
+              <p class="product-name font-medium truncate">{{ agency.authorizedPerson }}</p>
+            </vs-td>
+            <vs-td>
+              <p class="product-name font-medium truncate">{{ agency.agencyType.name }}</p>
+            </vs-td>
+            <vs-td>
+              <p class="product-name font-medium truncate">{{ agency.agencyDiscountType }}</p>
             </vs-td>
 
             <vs-td class="whitespace-no-wrap">
-              <!-- <feather-icon icon="InfoIcon" svgClasses="w-7 h-7 hover:text-primary stroke-current" @click="portDetail(port)" /> -->
-              <feather-icon icon="EditIcon" svgClasses="w-7 h-7 hover:text-primary stroke-current" class="ml-4" @click.stop="editData(port)" />
-              <feather-icon icon="TrashIcon" svgClasses="w-7 h-7 hover:text-danger stroke-current" class="ml-4" @click.stop="deleteData(port._id)" />
+              <!-- <feather-icon icon="InfoIcon" svgClasses="w-7 h-7 hover:text-primary stroke-current" @click="vesselDetail(vessel)" /> -->
+              <feather-icon icon="EditIcon" svgClasses="w-7 h-7 hover:text-primary stroke-current" class="ml-4" @click.stop="editData(agency)" />
+              <feather-icon icon="TrashIcon" svgClasses="w-7 h-7 hover:text-danger stroke-current" class="ml-4" @click.stop="deleteData(agency._id)" />
             </vs-td>
           </vs-tr>
         </tbody>
       </template>
-
     </vs-table>
   </div>
   
@@ -107,18 +120,17 @@
 
 <script>
 
-import PortForm  from './CruiseForm'
-import router from '../../router'
+import AgencyForm  from './AgencyForm'
 //import moduleDataList from '@/store/data-list/moduleDataList.js'
 
 export default {
   components: {
-    PortForm
+    AgencyForm
   },
   data () {
     return {
       selected: [],
-      //vessels: [],
+      vesselsUpdated : false,
       itemsPerPage: 20,
       isMounted: false,
       addNewDataSidebar: false,
@@ -140,8 +152,9 @@ export default {
       return []
     // return this.$refs.table ? this.$refs.table.queriedResults.length : this.products.length
     },
-    ports () {
-      return this.$store.state.port.ports
+    
+    agency () {
+      return this.$store.state.agency.agencies
     }
   },
   methods: {
@@ -156,19 +169,10 @@ export default {
     },
     toggleDataSidebar (val = false) {
       this.addNewDataSidebar = val
-    },
-
-    // async fetchVessels () {      
-    //   this.vessels = await VesselService.fetchVessels()
-    // },
-    
-    portDetail (port) {
-      router.push({name : 'port-detail', params: {id: port._id} })
     }
-    
   },
   created () {
-    this.$store.dispatch('getPorts')
+    this.$store.dispatch('getAgencies')
   },
   updated () {
    
