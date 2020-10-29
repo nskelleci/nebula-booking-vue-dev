@@ -71,16 +71,17 @@
       </div>
 
       <template slot="thead">
-        <vs-th sort-key="name">Name</vs-th>
-        <vs-th>Action</vs-th>
+        <vs-th sort-key="vessel">Vessel</vs-th>
+        <vs-th sort-key="name">Cruise Type</vs-th>
+        <vs-th>Actions</vs-th>
       </template>
 
       <template slot-scope="{data}">
         <tbody>
           <vs-tr :data="cruisetype" :key="_id" v-for="(cruisetype,_id) in data" >
 
-            <vs-td class="img-container">
-              <!-- <img :src="tr.img" class="product-img" /> -->
+            <vs-td>
+              {{cruisetype.vessel.name}}
             </vs-td>
 
             <vs-td>

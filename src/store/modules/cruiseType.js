@@ -1,6 +1,7 @@
 import CruiseTypeService from '../../Services/CruiseTypeServices'
 const state = {
   cruisetypes : [],
+  cruiseTypesByVessel : [],
   cruisetype : {}
 }
 
@@ -11,12 +12,28 @@ const mutations = {
 
   SET_CRUISETYPE (state, cruisetype) {
     state.cruisetype = cruisetype
+  },
+
+  SET_CRUISETYPESBYVESSEL (state, cruisetypes) {
+    state.cruiseTypesByVessel = cruisetypes
   }
+}
+
+const getters = {
+  getFirstCruiseType: state => {
+    return state.cruiseTypesByVessel[0]
+  }
+
 }
 
 const actions = {
   async getCruiseTypes ({commit}) {
     commit('SET_CRUISETYPES', await CruiseTypeService.fetchCruiseTypes())
+  },
+
+  async getCruiseTypesByVessel ({commit}, vesselid) {
+    console.log("action icine gelen vesselid", vesselid)
+    commit('SET_CRUISETYPESBYVESSEL', await CruiseTypeService.fetchCruiseTypesbyVessel(vesselid))
   },
 
   async getCruiseType ({commit}, cruisetypeid) {   
@@ -44,5 +61,6 @@ const actions = {
 export default {
   state,
   mutations,
-  actions
+  actions,
+  getters
 }

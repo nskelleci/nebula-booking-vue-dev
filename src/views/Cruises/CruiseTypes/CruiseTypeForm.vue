@@ -19,7 +19,8 @@
     <component :is="scrollbarTag" class="scroll-area--data-list-add-new" :settings="settings" :key="$vs.rtl">
 
     <div class="p-6">
-
+        <h5>Cabin Category</h5>
+        <v-select v-model="vessel" label="name" :options="vessels" :dir="$vs.rtl ? 'rtl' : 'ltr'" /><br>
         <!-- NAME -->
         <vs-input label="Name" v-model="cruisetypeName" class="mt-5 w-full" name="cruisetype-name" v-validate="'required'" />
         <span class="text-danger text-sm" v-show="errors.has('cruisetype-name')">{{ errors.first('cruisetype-name') }}</span>
@@ -36,6 +37,7 @@
 
 <script>
 import VuePerfectScrollbar from 'vue-perfect-scrollbar'
+import vSelect from 'vue-select'
 
 export default {
   props: {
@@ -49,13 +51,15 @@ export default {
     }
   },
   components: {
-    VuePerfectScrollbar
+    VuePerfectScrollbar,
+    vSelect
   },
   data () {
     return {
 
       dataId: null,
       cruisetypeName: '',
+      vessel : null,
       settings: { // perfectscrollbar settings
         maxScrollbarLength: 60,
         wheelSpeed: .60
@@ -69,9 +73,9 @@ export default {
         this.initValues()
         this.$validator.reset()
       } else {
-        const { _id, name} = JSON.parse(JSON.stringify(this.data))
+        const { _id, name, vessel} = JSON.parse(JSON.stringify(this.data))
         this.dataId = _id
-      
+        this.vessel = vessel
         this.cruisetypeName = name
         this.initValues()
       }
@@ -94,20 +98,26 @@ export default {
     isFormValid () {
       return !this.errors.any() && this.cruisetypeName
     },
-    scrollbarTag () { return this.$store.getters.scrollbarTag }
+    scrollbarTag () { return this.$store.getters.scrollbarTag },
+
+    vessels () {
+      return this.$store.state.vessel.vessels
+    }
   },
   methods: {
     initValues () {
       if (this.data._id) return
       this.dataId = null
       this.cruisetypeName = ''
+      this.vessel = null
     },
     submitData () {
       this.$validator.validateAll().then(result => {
         if (result) {
           const obj = {
             _id: this.dataId,
-            name: this.cruisetypeName
+            name: this.cruisetypeName,
+            vessel : this.vessel
           }
 
           if (this.dataId !== null && this.dataId.length >= 0) {
@@ -122,6 +132,11 @@ export default {
         }
       })
     }
+  },
+  created () {
+    
+      this.$store.dispatch('getVessels')
+    
   }
 }
 </script>

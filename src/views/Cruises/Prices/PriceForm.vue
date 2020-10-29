@@ -11,7 +11,7 @@
 <template>
   <vs-sidebar click-not-close position-right parent="body" default-index="1" color="primary" class="add-new-data-sidebar items-no-padding" spacer v-model="isSidebarActiveLocal">
     <div class="mt-6 flex items-center justify-between px-6">
-        <h4>{{ Object.entries(this.data).length === 0 ? "ADD NEW" : "UPDATE" }} PORT </h4>
+        <h4>{{ Object.entries(this.data).length === 0 ? "ADD NEW" : "UPDATE" }} PRICE </h4>
         <feather-icon icon="XIcon" @click.stop="isSidebarActiveLocal = false" class="cursor-pointer"></feather-icon>
     </div>
     <vs-divider class="mb-0"></vs-divider>
@@ -19,11 +19,11 @@
     <component :is="scrollbarTag" class="scroll-area--data-list-add-new" :settings="settings" :key="$vs.rtl">
 
     <div class="p-6">
-        <h5>Country</h5>
-        <v-select v-model="country" label="name" :options="countries" :dir="$vs.rtl ? 'rtl' : 'ltr'" /><br>
+        <h5>Cabin Category</h5>
+        <v-select v-model="cabinCategory" label="name" :options="cabinCategories" :dir="$vs.rtl ? 'rtl' : 'ltr'" /><br>
         <!-- NAME -->
-        <vs-input label="Name" v-model="portName" class="mt-5 w-full" name="port-name" v-validate="'required'" />
-        <span class="text-danger text-sm" v-show="errors.has('port-name')">{{ errors.first('port-name') }}</span>
+        <vs-input-number label="Price" v-model="endUserPrice" :step="0.5" class="mt-5 w-full" name="price" v-validate="'required'" />
+        <span class="text-danger text-sm" v-show="errors.has('price')">{{ errors.first('price') }}</span>
         <!-- Upload -->
     </div>
     </component>
@@ -59,8 +59,14 @@ export default {
     return {
 
       dataId: null,
-      portName: '',
-      country:null,
+      endUserPrice: 0,
+      vessel : null,
+      cruiseType : null,
+      market : null,
+      season : null,
+      cabinCategory:null,
+    
+
       settings: { // perfectscrollbar settings
         maxScrollbarLength: 60,
         wheelSpeed: .60
@@ -74,10 +80,14 @@ export default {
         this.initValues()
         this.$validator.reset()
       } else {
-        const { _id, name, country} = JSON.parse(JSON.stringify(this.data))
+        const { _id, endUserPrice, vessel, cruiseType, cabinCategory, market, season} = JSON.parse(JSON.stringify(this.data))
         this.dataId = _id
-        this.country = country
-        this.portName = name
+        this.vessel = vessel
+        this.cruiseType = cruiseType
+        this.cabinCategory = cabinCategory
+        this.market = market
+        this.season = season
+        this.endUserPrice = endUserPrice
         this.initValues()
       }
       // Object.entries(this.data).length === 0 ? this.initValues() : { this.dataId, this.dataName, this.dataCategory, this.dataOrder_status, this.dataPrice } = JSON.parse(JSON.stringify(this.data))
@@ -97,27 +107,41 @@ export default {
       }
     },
     isFormValid () {
-      return !this.errors.any() && this.portName && this.country
+      return !this.errors.any() && this.cabinCategory && this.endUserPrice
     },
     scrollbarTag () { return this.$store.getters.scrollbarTag },
-    countries () {
-      return this.$store.state.country.countries
+    cabinCategories () {
+      return this.$store.state.cabinCategory.cabinCategories
+    },
+    initFilter () {
+      return   this.$store.state.price.priceFilter
+
     }
   },
   methods: {
     initValues () {
       if (this.data._id) return
+
       this.dataId = null
-      this.portName = ''
-      this.country = null
+      this.cabinCategory = null
+      this.endUserPrice = null
+
+      this.vessel = this.initFilter.selectedVessel
+      this.cruiseType = this.initFilter.selectedCruiseType
+      this.market = this.initFilter.selectedMarket
+      this.season = this.initFilter.selectedSeason
     },
     submitData () {
       this.$validator.validateAll().then(result => {
         if (result) {
           const obj = {
             _id: this.dataId,
-            name: this.portName,
-            country : this.country
+            vessel: this.vessel,
+            cruiseType : this.cruiseType,
+            market : this.market,
+            season : this.season,
+            cabinCategory : this.cabinCategory,
+            endUserPrice : this.endUserPrice
           }
 
           if (this.dataId !== null && this.dataId.length >= 0) {
@@ -125,7 +149,7 @@ export default {
             //VesselService.updateVessel(obj)
           } else {
             delete obj._id
-            this.$store.dispatch('addPort', obj).catch(err => { console.error(err) })
+            this.$store.dispatch('addPrice', obj).catch(err => { console.error(err) })
           }
           this.$emit('closeSidebar')
           this.initValues()
@@ -134,7 +158,9 @@ export default {
     }
   },
   created () {
-    this.$store.dispatch('getCountries')
+  },
+  mounted () {
+
   }
 }
 </script>

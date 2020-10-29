@@ -21,10 +21,19 @@ export default {
       .catch((error) => { notification.notifyMe(error)  })
   },
 
+  async fetchCruiseTypesbyVessel (vesselid) {
+  
+    return await axios.get(`${apiUri.apiUri.URI}/cruiseType/vessel/${vesselid}`)
+      .then((response) => {
+        return response.data.data
+        
+      })
+      .catch((error) => { notification.notifyMe(error) })
+  },
+
   async fetchCruiseTypes () {
-    // 'http://localhost:7878/api/v1/country'
-    //console.log('dasdasd', apiUri.apiUri.URI)
-    return await axios.get(`${apiUri.apiUri.URI}/cruiseType`)
+  
+    return await axios.get(`${apiUri.apiUri.URI}/cruiseType/`)
       .then((response) => {
         return response.data.data
         

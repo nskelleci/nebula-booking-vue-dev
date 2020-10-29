@@ -85,6 +85,16 @@ const router = new Router({
           path : '/Prices/',
           name : 'prices',
           component : () => import ('./views/Cruises/Prices/Prices.vue')
+        },
+        {
+          path : '/AgencyTypes/',
+          name : 'agencytypes',
+          component : () => import ('./views/Agencies/AgencyTypes/AgencyTypes.vue')
+        },
+        {
+          path : '/Agencies/',
+          name : 'Agencies',
+          component : () => import ('./views/Agencies/Agencies.vue')
         }
       ]
     },

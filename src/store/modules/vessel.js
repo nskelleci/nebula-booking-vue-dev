@@ -4,14 +4,9 @@ const state = {
   vessel : {}
 }
 
-const getters = {
-  
-}
-
 const mutations = {
   SET_VESSELS (state, vessels) {
     state.vessels = vessels
-    console.log(vessels);
   },
 
   ADD_VESSEL (state, vessel) {
@@ -22,6 +17,12 @@ const mutations = {
   }
 
 
+}
+
+const getters = {
+  getFirstVessel: state => {
+    return state.vessels[0]
+  }
 }
 
 const actions = {
@@ -57,5 +58,6 @@ export default {
   state,
   getters,
   mutations,
-  actions
+  actions,
+  getters
 }

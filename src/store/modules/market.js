@@ -13,7 +13,12 @@ const mutations = {
     state.market = market
   }
 
+}
 
+const getters = {
+  getFirstMarket: state => {
+    return state.markets[0]
+  }
 }
 
 const actions = {
@@ -46,5 +51,6 @@ const actions = {
 export default {
   state,
   mutations,
-  actions
+  actions,
+  getters
 }

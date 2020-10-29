@@ -25,6 +25,9 @@ import port from './modules/port'
 import cruiseType from './modules/cruiseType'
 import cruiseSeason from './modules/cruiseSeason'
 import market from './modules/market'
+import price from './modules/price'
+import agency from './modules/agency'
+import agencyType from './modules/agencyType'
 
 Vue.use(Vuex)
 
@@ -42,8 +45,13 @@ export default new Vuex.Store({
     port,
     cruiseType,
     cruiseSeason,
-    market
+    market,
+    price,
+    agency,
+    agencyType
   },
 
-  strict: process.env.NODE_ENV !== 'production'
+  // strict: process.env.NODE_ENV !== 'production'
+  strict: false
+
 })

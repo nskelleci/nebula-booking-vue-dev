@@ -10,6 +10,13 @@ const mutations = {
   }
 }
 
+
+const getters = {
+  getFirstSeason: state => {
+    return state.cruiseseasons[0]
+  }
+}
+
 const actions = {
   async getCruiseSeasons ({commit}) {
     commit('SET_CRUISESEASONS', await CruiseSeasonService.fetchCruiseSeasons())
@@ -35,5 +42,6 @@ const actions = {
 export default {
   state,
   mutations,
-  actions
+  actions,
+  getters
 }

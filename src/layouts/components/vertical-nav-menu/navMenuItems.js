@@ -112,6 +112,34 @@ export default [
             name: 'Markets',
             slug: 'markets',
             i18n: 'markets'
+          },
+          {
+            url: '/prices/',
+            name: 'Prices',
+            slug: 'prices',
+            i18n: 'prices'
+          }
+
+        ]
+      },
+      {
+        url: null,
+        name: 'Agency Settings',
+        slug: 'agency-settings',
+        icon: 'MailIcon',
+        i18n: 'Agency Settings',
+        submenu: [
+          {
+            url: '/agencytypes/',
+            name: 'Agency Type',
+            slug: 'agencytypes',
+            i18n: 'agencytypes'
+          },
+          {
+            url: '/agencies/',
+            name: 'Agencies',
+            slug: 'agencies',
+            i18n: 'agencies'
           }
         ]
       }
