@@ -20,14 +20,17 @@
 
     <div class="p-6">
       <div class="vx-row">
-        <div class="vx-col sm:w-1/3 w-full mb-2">
+        <div class="vx-col sm:w-3/3 w-full mb-2">
           <vs-input label="Name" v-model="cruisename" class="mt-5 w-full" name="cruisename" v-validate="'required|min:3'" />
           <span class="text-danger text-sm" v-show="errors.has('cruisename')">{{ errors.first('cruisename') }}</span>
         </div>
-        <div class="vx-col sm:w-2/3 w-full mb-2">
+      </div>
+
+      <div class="vx-row">
+        <div class="vx-col sm:w-3/3 w-full mb-2">
           <div class="vs-component vs-con-input-label vs-input mt-5 w-full vs-input-primary">
             <label for="" class="vs-input--label">Description</label>
-            <vs-textarea counter="256" label="Description" v-model="textarea" />
+            <vs-textarea counter="256" label="Description" v-model="description" />
         </div>
         </div>
       </div>
@@ -42,13 +45,13 @@
          <div class="vx-col sm:w-1/3 w-full mb-2">
           <div class="vs-component vs-con-input-label vs-input mt-5 w-full vs-input-primary">
             <label for="" class="vs-input--label">Cruise Types</label>
-            <v-select label="name" :options="cruiseTypes" :dir="$vs.rtl ? 'rtl' : 'ltr'" v-validate="'required'" /><br>
+            <v-select label="name" :options="cruiseTypes" v-model="selectedCruiseType" :dir="$vs.rtl ? 'rtl' : 'ltr'" v-validate="'required'" /><br>
           </div>
          </div>
          <div class="vx-col sm:w-1/3 w-full mb-2">
            <div class="vs-component vs-con-input-label vs-input mt-5 w-full vs-input-primary">
             <label for="" class="vs-input--label">Season</label>
-            <v-select label="name" :options="seasons" :dir="$vs.rtl ? 'rtl' : 'ltr'" v-validate="'required'" /><br>
+            <v-select label="name" :options="seasons" v-model="selectedSeasons" :dir="$vs.rtl ? 'rtl' : 'ltr'" v-validate="'required'" /><br>
         </div>
          </div>
       </div>
@@ -74,31 +77,31 @@
         <div class="vx-col sm:w-2/6 ">
           <div class="vs-component vs-con-input-label vs-input w-full vs-input-primary">
             <label for="" class="vs-input--label">Date</label><br>
-            <flat-pickr class="w-full"  :config="configPortDatePicker" v-model="scheduleItem.portDate" placeholder="Date" v-validate="'required'"  /><br>
+            <flat-pickr ref="portDate" class="w-full"  :config="configPortDatePicker" v-model="scheduleItem.portDate" placeholder="Date" v-validate="'required'"  /><br>
           </div>
         </div>
         <div class="vx-col sm:w-2/6">
           <div class="vs-component vs-con-input-label vs-input w-full vs-input-primary">
               <label for="" class="vs-input--label">Port</label>
-              <v-select label="name" class="w-full" :options="ports" v-model="scheduleItem.port" :dir="$vs.rtl ? 'rtl' : 'ltr'" v-validate="'required'" /><br>
+              <v-select ref="port" label="name" class="w-full" :options="ports" v-model="scheduleItem.port" :dir="$vs.rtl ? 'rtl' : 'ltr'" v-validate="'required'" /><br>
           </div>
         </div>
         <div class="vx-col sm:w-1/6">
           <div class="vs-component vs-con-input-label vs-input w-full vs-input-primary">
             <label for="" class="vs-input--label">Arrival Time</label>
-            <flat-pickr :config="configPortTime" class="w-full" v-model="scheduleItem.arrivalTime" placeholder="Arrival Time" />
+            <flat-pickr ref="arrivalTime" :config="configPortTime" class="w-full" v-model="scheduleItem.arrivalTime" placeholder="Arrival Time" />
           </div>
         </div>
         <div class="vx-col sm:w-1/6">
           <div class="vs-component vs-con-input-label vs-input w-full vs-input-primary">
             <label for="" class="vs-input--label">Departure Time</label>
-            <flat-pickr :config="configPortTime" class="w-full" v-model="scheduleItem.departureTime" placeholder="Departure Time" />
+            <flat-pickr ref="departureTime" :config="configPortTime" class="w-full" v-model="scheduleItem.departureTime" placeholder="Departure Time" />
           </div>
         </div>
         <div class="vx-col sm:w-1/6">
           <div class="vs-component vs-con-input-label vs-input w-full vs-input-primary">
              <label for="" class="vs-input--label"></label>
-            <vs-button type="flat" color="success" radius size="large" icon-pack="feather" icon="icon-plus-circle" @click="addTimeLine()">
+            <vs-button type="flat" color="success" radius size="large" icon-pack="feather" icon="icon-plus-circle" @click="addSchedule()">
             </vs-button>
           </div>
         </div>
@@ -109,6 +112,7 @@
                 <vs-th>Port</vs-th>
                 <vs-th>Arrival Time</vs-th>
                 <vs-th>Departure Time</vs-th>
+                <vs-th>Delete</vs-th>
             </template>
 
             <template slot-scope="{data}">
@@ -116,7 +120,7 @@
                     <vs-td :data="data[index].portDate">
                         {{data[index].portDate}}
                     </vs-td>
-                    <vs-td :data="data[index].port.name">
+                    <vs-td :data="data[index].port">
                         {{data[index].port.name}}
                     </vs-td>
                     <vs-td :data="data[index].arrivalTime">
@@ -124,6 +128,9 @@
                     </vs-td>
                     <vs-td :data="data[index].departureTime">
                         {{data[index].departureTime}}
+                    </vs-td>
+                    <vs-td>
+                        <vs-button size="small" @click="delSchedule(index)" icon-pack="feather" icon="icon-trash" color="danger"></vs-button>
                     </vs-td>
                 </vs-tr>
             </template>
@@ -196,11 +203,11 @@ export default {
         enableSeconds: false,
         noCalendar: true
       },
-      textarea: '',
+      description: '',
       counterDanger: false,
-     
+      selectedCruiseType:'',
+      selectedSeasons:'',
       portName: '',
-      country:null,
       settings: { // perfectscrollbar settings
         maxScrollbarLength: 60,
         wheelSpeed: .60,
@@ -217,9 +224,8 @@ export default {
         this.initValues()
         this.$validator.reset()
       } else {
-        const { _id, name, country} = JSON.parse(JSON.stringify(this.data))
+        const { _id, name} = JSON.parse(JSON.stringify(this.data))
         this.dataId = _id
-        this.country = country
         this.portName = name
         this.initValues()
       }
@@ -255,9 +261,8 @@ export default {
       }
     },
     isFormValid () {
-      return !this.errors.any() && this.portName && this.country
+      return !this.errors.any() && this.cruisename && this.fromDate && this.toDate && this.description && this.selectedVessel && this.selectedCruiseType && this.selectedSeasons && this.schedule.length>0? true : false;
     },
-
     scrollbarTag () { 
       return this.$store.getters.scrollbarTag 
     },
@@ -284,7 +289,6 @@ export default {
       if (this.data._id) return
       this.dataId = null
       this.portName = ''
-      this.country = null
     },
     onFromChange (selectedDates, dateStr) {
       this.$set(this.configTodateTimePicker, 'minDate', dateStr)
@@ -300,19 +304,27 @@ export default {
         if (result) {
           const obj = {
             _id: this.dataId,
-            name: this.portName,
-            country : this.country
+            name:this.cruisename,
+            checkinDate:this.fromDate,
+            checkoutDate:this.toDate,
+            description:this.description,
+            vessel:this.selectedVessel,
+            cruiseType:this.selectedCruiseType,
+            season:this.selectedSeasons,
+            schedule:this.schedule
           }
-
+          console.log(obj);
+          
           if (this.dataId !== null && this.dataId.length >= 0) {
-            this.$store.dispatch('updatePort', obj).catch(err => { console.error(err) })
+            this.$store.dispatch('updateCruise', obj).catch(err => { console.error(err) })
             //VesselService.updateVessel(obj)
           } else {
             delete obj._id
-            this.$store.dispatch('addPort', obj).catch(err => { console.error(err) })
+            this.$store.dispatch('addCruise', obj).catch(err => { console.error(err) })
           }
           this.$emit('closeSidebar')
           this.initValues()
+          
         }
       })
     },
@@ -333,9 +345,21 @@ export default {
         this.scheduleButton.name = 'Done'
       } 
     },
-    addTimeLine(){
-      this.schedule.push(this.scheduleItem);
-
+    addSchedule(){
+      var scheculeItem = {
+          portDate : this.$refs.portDate.value,
+          arrivalTime : this.$refs.arrivalTime.value,
+          departureTime : this.$refs.departureTime.value,
+          port:this.$refs.port.value,
+      };
+      this.schedule.push(scheculeItem);
+    },
+    delSchedule(index){
+      this.schedule.splice(index, 1);
+      this.schedule.sort(function(a,b){
+        return new Date(b.portDate) - new Date(a.portDate);
+      });
+      this.schedule.reverse();
     }
   },
   created () {

@@ -28,6 +28,7 @@ import market from './modules/market'
 import price from './modules/price'
 import agency from './modules/agency'
 import agencyType from './modules/agencyType'
+import cruise from './modules/cruise'
 
 Vue.use(Vuex)
 
@@ -48,7 +49,8 @@ export default new Vuex.Store({
     market,
     price,
     agency,
-    agencyType
+    agencyType,
+    cruise
   },
 
   // strict: process.env.NODE_ENV !== 'production'

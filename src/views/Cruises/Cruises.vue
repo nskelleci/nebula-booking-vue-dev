@@ -12,7 +12,7 @@
 
     <port-form :isSidebarActive="addNewDataSidebar" @closeSidebar="toggleDataSidebar" :data="sidebarData" />
 
-    <vs-table ref="table"   v-model="selected" pagination :max-items="itemsPerPage" search :data="ports">
+    <vs-table ref="table"   v-model="selected" pagination :max-items="itemsPerPage" search :data="cruises">
 
       <div slot="header" class="flex flex-wrap-reverse items-center flex-grow justify-between">
 
@@ -48,7 +48,7 @@
         <!-- ITEMS PER PAGE -->
         <vs-dropdown vs-trigger-click class="cursor-pointer mb-4 mr-4">
           <div class="p-4 border border-solid d-theme-border-grey-light rounded-full d-theme-dark-bg cursor-pointer flex items-center justify-between font-medium">
-            <span class="mr-2">{{ currentPage * itemsPerPage - (itemsPerPage - 1) }} - {{ ports.length - currentPage * itemsPerPage > 0 ? currentPage * itemsPerPage : ports.length }} of {{ queriedItems }}</span>
+            <span class="mr-2">{{ currentPage * itemsPerPage - (itemsPerPage - 1) }} - {{ cruises.length - currentPage * itemsPerPage > 0 ? currentPage * itemsPerPage : cruises.length }} of {{ queriedItems }}</span>
             <feather-icon icon="ChevronDownIcon" svgClasses="h-4 w-4" />
           </div>
           <!-- <vs-button class="btn-drop" type="line" color="primary" icon-pack="feather" icon="icon-chevron-down"></vs-button> -->
@@ -140,8 +140,8 @@ export default {
       return []
     // return this.$refs.table ? this.$refs.table.queriedResults.length : this.products.length
     },
-    ports () {
-      return this.$store.state.port.ports
+    cruises () {
+      return this.$store.state.cruise.cruises
     }
   },
   methods: {
@@ -168,7 +168,7 @@ export default {
     
   },
   created () {
-    this.$store.dispatch('getPorts')
+    this.$store.dispatch('getCruises')
   },
   updated () {
    
