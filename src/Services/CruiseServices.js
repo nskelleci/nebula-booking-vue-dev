@@ -22,7 +22,7 @@ export default {
   },
 
   async fetchCruises () {
-    return await axios.get(`${apiUri.apiUri.URI}/cruise/getCruises/`)
+    return await axios.get(`${apiUri.apiUri.URI}/cruise/GetAll/`)
       .then((response) => {
         return response.data.data
       })

@@ -117,8 +117,8 @@
 
             <template slot-scope="{data}">
                 <vs-tr :key="index" v-for="(item, index) in data">
-                    <vs-td :data="data[index].portDate">
-                        {{data[index].portDate}}
+                    <vs-td :data="data[index].date">
+                        {{data[index].date}}
                     </vs-td>
                     <vs-td :data="data[index].port">
                         {{data[index].port.name}}
@@ -182,10 +182,10 @@ export default {
       fromDate: null,
       toDate: null,
       scheduleItem:{
-          portDate : null,
-          arrivalTime : null,
-          departureTime : null,
-          port:null,
+        portDate : null,
+        arrivalTime : null,
+        departureTime : null,
+        port:null
       },
       configFromdateTimePicker: {
         minDate: new Date(),
@@ -210,10 +210,10 @@ export default {
       portName: '',
       settings: { // perfectscrollbar settings
         maxScrollbarLength: 60,
-        wheelSpeed: .60,
+        wheelSpeed: .60
       },
       selectedVessel:null,
-      schedule:[],
+      schedule:[]
     }
 
   },
@@ -245,7 +245,7 @@ export default {
     },
     selectedVessel () {
       this.$store.dispatch('getCruiseTypesByVessel', this.selectedVessel._id)
-    },
+    }
   },
   computed: {
     isSidebarActiveLocal: {
@@ -261,7 +261,7 @@ export default {
       }
     },
     isFormValid () {
-      return !this.errors.any() && this.cruisename && this.fromDate && this.toDate && this.description && this.selectedVessel && this.selectedCruiseType && this.selectedSeasons && this.schedule.length>0? true : false;
+      return !!(!this.errors.any() && this.cruisename && this.fromDate && this.toDate && this.description && this.selectedVessel && this.selectedCruiseType && this.selectedSeasons && this.schedule.length > 0)
     },
     scrollbarTag () { 
       return this.$store.getters.scrollbarTag 
@@ -305,15 +305,15 @@ export default {
           const obj = {
             _id: this.dataId,
             name:this.cruisename,
-            checkinDate:this.fromDate,
-            checkoutDate:this.toDate,
+            checkInDate:this.fromDate,
+            checkOutDate:this.toDate,
             description:this.description,
             vessel:this.selectedVessel,
             cruiseType:this.selectedCruiseType,
             season:this.selectedSeasons,
             schedule:this.schedule
           }
-          console.log(obj);
+          console.log(obj)
           
           if (this.dataId !== null && this.dataId.length >= 0) {
             this.$store.dispatch('updateCruise', obj).catch(err => { console.error(err) })
@@ -345,21 +345,21 @@ export default {
         this.scheduleButton.name = 'Done'
       } 
     },
-    addSchedule(){
-      var scheculeItem = {
-          portDate : this.$refs.portDate.value,
-          arrivalTime : this.$refs.arrivalTime.value,
-          departureTime : this.$refs.departureTime.value,
-          port:this.$refs.port.value,
-      };
-      this.schedule.push(scheculeItem);
+    addSchedule () {
+      const scheduleItem = {
+        date : this.$refs.portDate.value,
+        arrivalTime : this.$refs.arrivalTime.value,
+        departureTime : this.$refs.departureTime.value,
+        port:this.$refs.port.value
+      }
+      this.schedule.push(scheduleItem)
     },
-    delSchedule(index){
-      this.schedule.splice(index, 1);
-      this.schedule.sort(function(a,b){
-        return new Date(b.portDate) - new Date(a.portDate);
-      });
-      this.schedule.reverse();
+    delSchedule (index) {
+      this.schedule.splice(index, 1)
+      this.schedule.sort(function (a, b) {
+        return new Date(b.date) - new Date(a.date)
+      })
+      this.schedule.reverse()
     }
   },
   created () {
@@ -367,7 +367,7 @@ export default {
     this.$store.dispatch('getCruiseSeasons')
     this.$store.dispatch('getCruiseTypes')
     this.$store.dispatch('getPorts')
-  },
+  }
  
 }
 </script>
