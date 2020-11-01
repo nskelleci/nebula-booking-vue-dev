@@ -19,38 +19,90 @@
     <component :is="scrollbarTag" class="scroll-area--data-list-add-new" :settings="settings" :key="$vs.rtl">
 
     <div class="p-6">
-        <vs-input label="Name" v-model="cruisename" class="mt-5 w-full" name="cruisename" v-validate="'required|min:3'" />
-        <span class="text-danger text-sm" v-show="errors.has('cruisename')">{{ errors.first('cruisename') }}</span>
-
-        <div class="vs-component vs-con-input-label vs-input mt-5 w-full vs-input-primary">
-            <label for="" class="vs-input--label">Vessels</label>
-            <v-select label="name" :options="vessels" :dir="$vs.rtl ? 'rtl' : 'ltr'" v-validate="'required'" /><br>
+      <div class="vx-row">
+        <div class="vx-col sm:w-1/3 w-full mb-2">
+          <vs-input label="Name" v-model="cruisename" class="mt-5 w-full" name="cruisename" v-validate="'required|min:3'" />
+          <span class="text-danger text-sm" v-show="errors.has('cruisename')">{{ errors.first('cruisename') }}</span>
         </div>
-        <div class="vs-component vs-con-input-label vs-input w-full vs-input-primary">
-            <label for="" class="vs-input--label">Cruise Types</label>
-            <v-select label="name" :options="cruisetypes" :dir="$vs.rtl ? 'rtl' : 'ltr'" v-validate="'required'" /><br>
-        </div>
-        <div class="vs-component vs-con-input-label vs-input w-full vs-input-primary">
-            <label for="" class="vs-input--label">Season</label>
-            <v-select label="name" :options="seasons" :dir="$vs.rtl ? 'rtl' : 'ltr'" v-validate="'required'" /><br>
-        </div>
-
-        <div class="vs-component vs-con-input-label vs-input w-full vs-input-primary">
-            <label for="" class="vs-input--label">Start Date/Time</label><br>
-              <flat-pickr class="w-full" :config="configdateTimePicker" v-model="startDate" placeholder="Date Time" v-validate="'required'" /><br>
-        </div>
-
-        <div class="mt-5 vs-component vs-con-input-label vs-input w-full vs-input-primary">
-            <label for="" class="vs-input--label">End Date/Time</label><br>
-              <flat-pickr class="w-full" :config="configdateTimePicker" v-model="endDate" placeholder="Date Time" v-validate="'required'" /><br>
-        </div>
-
-        <div class="vs-component vs-con-input-label vs-input mt-5 w-full vs-input-primary">
+        <div class="vx-col sm:w-2/3 w-full mb-2">
+          <div class="vs-component vs-con-input-label vs-input mt-5 w-full vs-input-primary">
             <label for="" class="vs-input--label">Description</label>
             <vs-textarea counter="256" label="Description" :counter-danger.sync="this.counterDanger" v-model="textarea" />
         </div>
-      
-     
+        </div>
+      </div>
+        
+      <div class="vx-row">
+         <div class="vx-col sm:w-1/3 w-full mb-2">
+            <div class="vs-component vs-con-input-label vs-input mt-5 w-full vs-input-primary">
+              <label for="" class="vs-input--label">Vessels</label>
+              <v-select label="name" :options="vessels" :dir="$vs.rtl ? 'rtl' : 'ltr'" v-validate="'required'" /><br>
+            </div>
+         </div>
+         <div class="vx-col sm:w-1/3 w-full mb-2">
+          <div class="vs-component vs-con-input-label vs-input mt-5 w-full vs-input-primary">
+            <label for="" class="vs-input--label">Cruise Types</label>
+            <v-select label="name" :options="cruisetypes" :dir="$vs.rtl ? 'rtl' : 'ltr'" v-validate="'required'" /><br>
+          </div>
+         </div>
+         <div class="vx-col sm:w-1/3 w-full mb-2">
+           <div class="vs-component vs-con-input-label vs-input mt-5 w-full vs-input-primary">
+            <label for="" class="vs-input--label">Season</label>
+            <v-select label="name" :options="seasons" :dir="$vs.rtl ? 'rtl' : 'ltr'" v-validate="'required'" /><br>
+        </div>
+         </div>
+      </div>
+       
+      <div class="vx-row">
+         <div class="vx-col sm:w-1/2 w-full mb-2">
+          <div class="vs-component vs-con-input-label vs-input w-full vs-input-primary">
+            <label for="" class="vs-input--label">Start Date/Time</label><br>
+            <flat-pickr class="w-full"  :config="configFromdateTimePicker" v-model="fromDate" placeholder="Start Date" v-validate="'required'"  @on-change="onFromChange" /><br>
+        </div>
+         </div>
+         <div class="vx-col sm:w-1/2 w-full mb-2">
+            <div class=" vs-component vs-con-input-label vs-input w-full vs-input-primary">
+            <label for="" class="vs-input--label">End Date/Time</label><br>
+            <flat-pickr class="w-full" :config="configTodateTimePicker" v-model="toDate" placeholder="End Date" @on-change="onToChange" v-validate="'required'" /><br>
+        </div>
+         </div>
+      </div>
+      <vs-divider>Schedule</vs-divider>
+      <vs-button type="flat" size="small" :disabled="disabled" :color="scheduleButton.color" icon-pack="feather" :icon="scheduleButton.icon" @click="changeAddSchedule()">{{scheduleButton.name}}</vs-button>
+
+      <div class="vx-row" v-if="addSchedule">
+        <div class="vx-col sm:w-2/6 ">
+          <div class="vs-component vs-con-input-label vs-input w-full vs-input-primary">
+            <label for="" class="vs-input--label">Date</label><br>
+            <flat-pickr class="w-full"  :config="configPortDatePicker" v-model="portDate" placeholder="Date" v-validate="'required'"  /><br>
+          </div>
+        </div>
+        <div class="vx-col sm:w-2/6">
+          <div class="vs-component vs-con-input-label vs-input w-full vs-input-primary">
+              <label for="" class="vs-input--label">Port</label>
+              <v-select label="name" class="w-full" :options="ports" :dir="$vs.rtl ? 'rtl' : 'ltr'" v-validate="'required'" /><br>
+          </div>
+        </div>
+        <div class="vx-col sm:w-1/6">
+          <div class="vs-component vs-con-input-label vs-input w-full vs-input-primary">
+            <label for="" class="vs-input--label">Arrival Time</label>
+            <flat-pickr :config="configPortTime" class="w-full" v-model="arrivalTime" placeholder="Arrival Time" />
+          </div>
+        </div>
+        <div class="vx-col sm:w-1/6">
+          <div class="vs-component vs-con-input-label vs-input w-full vs-input-primary">
+            <label for="" class="vs-input--label">Departure Time</label>
+            <flat-pickr :config="configPortTime" class="w-full" v-model="departureTime" placeholder="Departure Time" />
+          </div>
+        </div>
+        <div class="vx-col sm:w-1/6">
+          <div class="vs-component vs-con-input-label vs-input w-full vs-input-primary">
+             <label for="" class="vs-input--label"></label>
+            <vs-button type="flat" color="success" radius size="large" icon-pack="feather" icon="icon-plus-circle" @click="addPort()">
+            </vs-button>
+          </div>
+        </div>
+      </div>
     </div>
     </component>
 
@@ -64,8 +116,8 @@
 <script>
 import VuePerfectScrollbar from 'vue-perfect-scrollbar'
 import vSelect from 'vue-select'
-import flatPickr from 'vue-flatpickr-component';
-import 'flatpickr/dist/flatpickr.css';
+import flatPickr from 'vue-flatpickr-component'
+import 'flatpickr/dist/flatpickr.css'
 
 export default {
   props: {
@@ -85,17 +137,36 @@ export default {
   },
   data () {
     return {
+      addSchedule : false,
+      disabled : true,
+      scheduleButton : {
+        name : 'Add Schedule',
+        color : 'primary',
+        icon : null,
+        disabled : true
+      },
       dataId: null,
       cruisename: '',
-      startDate: null,
-        configdateTimePicker: {
-          enableTime: true,
-          dateFormat: 'd-m-Y H:i'
+      fromDate: null,
+      toDate: null,
+      portDate : null,
+      arrivalTime : null,
+      departureTime : null,
+      configFromdateTimePicker: {
+        minDate: new Date(),
+        maxDate: null
       },
-      endDate: null,
-        configdateTimePicker: {
-          enableTime: true,
-          dateFormat: 'd-m-Y H:i'
+      configTodateTimePicker: {
+        minDate: null
+      },
+      configPortDatePicker: {
+        minDate: this.fromDate,
+        maxDate : this.toDate
+      },
+      configPortTime: {
+        enableTime: true,
+        enableSeconds: false,
+        noCalendar: true
       },
       textarea: '',
       counterDanger: false,
@@ -122,6 +193,18 @@ export default {
         this.initValues()
       }
       // Object.entries(this.data).length === 0 ? this.initValues() : { this.dataId, this.dataName, this.dataCategory, this.dataOrder_status, this.dataPrice } = JSON.parse(JSON.stringify(this.data))
+    },
+
+    configPortDatePicker : {
+      deep : true,
+      async handler () {
+        if (this.configPortDatePicker.minDate !== undefined && this.configPortDatePicker.maxDate !== undefined) {
+          this.disabled = false
+        } else {
+          this.disabled = true
+        }
+      }
+     
     }
   },
   computed: {
@@ -137,7 +220,6 @@ export default {
         }
       }
     },
-
     isFormValid () {
       return !this.errors.any() && this.portName && this.country
     },
@@ -170,6 +252,15 @@ export default {
       this.portName = ''
       this.country = null
     },
+    onFromChange (selectedDates, dateStr) {
+      this.$set(this.configTodateTimePicker, 'minDate', dateStr)
+      this.$set(this.configPortDatePicker, 'minDate', dateStr)
+    },
+    onToChange (selectedDates, dateStr) {
+      this.$set(this.configFromdateTimePicker, 'maxDate', dateStr)
+      this.$set(this.configPortDatePicker, 'maxDate', dateStr)
+
+    },
     submitData () {
       this.$validator.validateAll().then(result => {
         if (result) {
@@ -190,6 +281,23 @@ export default {
           this.initValues()
         }
       })
+    },
+    changeAddSchedule () {
+      if (this.addSchedule) {
+        this.addSchedule = false
+        this.scheduleButton.color = 'primary'
+        this.scheduleButton.icon = null
+        this.scheduleButton.name = 'Add Schedule'
+        this.portDate = null
+        this.arrivalTime = null
+        this.departureTime = null
+      } else {
+        this.addSchedule = true
+        this.scheduleButton.color = 'success'
+
+        this.scheduleButton.icon = 'icon-check'
+        this.scheduleButton.name = 'Done'
+      } 
     }
   },
   created () {
@@ -209,7 +317,7 @@ export default {
 
   ::v-deep .vs-sidebar {
     z-index: 52010;
-    width: 400px;
+    width: 820px;
     max-width: 90vw;
 
     .img-upload {
