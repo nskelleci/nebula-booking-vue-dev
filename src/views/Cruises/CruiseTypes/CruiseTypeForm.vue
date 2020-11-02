@@ -19,10 +19,12 @@
     <component :is="scrollbarTag" class="scroll-area--data-list-add-new" :settings="settings" :key="$vs.rtl">
 
     <div class="p-6">
-        <h5>Cabin Category</h5>
-        <v-select v-model="vessel" label="name" :options="vessels" :dir="$vs.rtl ? 'rtl' : 'ltr'" /><br>
+        <div class="vs-component vs-con-input-label vs-input mt-5 w-full vs-input-primary">
+          <label for="" class="vs-input--label">Vessels</label>
+          <v-select v-model="vessel" label="name" :options="vessels" :dir="$vs.rtl ? 'rtl' : 'ltr'" /><br>
+        </div>
         <!-- NAME -->
-        <vs-input label="Name" v-model="cruisetypeName" class="mt-5 w-full" name="cruisetype-name" v-validate="'required'" />
+        <vs-input label="Name" v-model="cruisetypeName" class="mt-1 w-full" name="cruisetype-name" v-validate="'required'" />
         <span class="text-danger text-sm" v-show="errors.has('cruisetype-name')">{{ errors.first('cruisetype-name') }}</span>
         <!-- Upload -->
     </div>
