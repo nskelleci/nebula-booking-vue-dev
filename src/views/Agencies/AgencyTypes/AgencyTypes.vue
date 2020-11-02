@@ -84,7 +84,7 @@
             </vs-td>
 
             <vs-td>
-              <p class="product-name font-medium truncate">{{ agency.discount }}</p>
+              <p class="product-name font-medium truncate">%{{ agency.discount }}</p>
             </vs-td>
 
 
