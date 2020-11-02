@@ -87,16 +87,19 @@
           </div>
         </div>
         <div class="vx-col sm:w-1/6">
-          <div class="vs-component vs-con-input-label vs-input w-full vs-input-primary">
-            <label for="" class="vs-input--label">Arrival Time</label>
-            <flat-pickr ref="arrivalTime" :config="configPortTime" class="w-full" v-model="scheduleItem.arrivalTime" placeholder="Arrival Time" />
-          </div>
+              <div class="vs-component vs-con-input-label vs-input w-full vs-input-primary">
+                <label for="" class="vs-input--label">Arrival Time</label>
+                <flat-pickr ref="arrivalTime" :config="configPortTime" class="w-full" v-model="scheduleItem.arrivalTime" placeholder="Arrival Time" />
+              </div>
+            <vs-button color="danger" size="small" @click="clearArrivalTime()">Clear Time</vs-button>
+
         </div>
         <div class="vx-col sm:w-1/6">
           <div class="vs-component vs-con-input-label vs-input w-full vs-input-primary">
             <label for="" class="vs-input--label">Departure Time</label>
             <flat-pickr ref="departureTime" :config="configPortTime" class="w-full" v-model="scheduleItem.departureTime" placeholder="Departure Time" />
           </div>
+          <vs-button color="danger" size="small" @click="clearDepartureTime()">Clear Time</vs-button>
         </div>
         <div class="vx-col sm:w-1/6">
           <div class="vs-component vs-con-input-label vs-input w-full vs-input-primary">
@@ -118,7 +121,7 @@
             <template slot-scope="{data}">
                 <vs-tr :key="index" v-for="(item, index) in data">
                     <vs-td :data="data[index].date">
-                        {{data[index].date}}
+                        {{data[index].date | formatShortDate}}
                     </vs-td>
                     <vs-td :data="data[index].port">
                         {{data[index].port.name}}
@@ -142,6 +145,8 @@
       <vs-button class="mr-6" @click="submitData" :disabled="!isFormValid">Submit</vs-button>
       <vs-button type="border" color="danger" @click="isSidebarActiveLocal = false">Cancel</vs-button>
     </div>
+
+    
   </vs-sidebar>
 </template>
 
@@ -224,9 +229,16 @@ export default {
         this.initValues()
         this.$validator.reset()
       } else {
-        const { _id, name} = JSON.parse(JSON.stringify(this.data))
+        const { _id, name, description, checkInDate, checkOutDate, vessel, season, cruiseType, schedule} = JSON.parse(JSON.stringify(this.data))
         this.dataId = _id
-        this.portName = name
+        this.cruisename = name
+        this.description = description
+        this.fromDate = checkInDate
+        this.toDate = checkOutDate
+        this.selectedVessel = vessel
+        this.selectedSeasons = season
+        this.selectedCruiseType = cruiseType
+        this.schedule = schedule
         this.initValues()
       }
       // Object.entries(this.data).length === 0 ? this.initValues() : { this.dataId, this.dataName, this.dataCategory, this.dataOrder_status, this.dataPrice } = JSON.parse(JSON.stringify(this.data))
@@ -288,7 +300,20 @@ export default {
     initValues () {
       if (this.data._id) return
       this.dataId = null
-      this.portName = ''
+      this.cruisename = ''
+      this.description = ''
+      this.selectedVessel = null
+      this.selectedCruiseType = null
+      this.selectedSeasons = null
+      this.fromDate = null
+      this.toDate = null
+      this.schedule = [] 
+      this.portDate = null
+      this.arrivalTime = null
+      this.departureTime = null
+      this.port = null
+      this.disabled = true
+      this.addScheduleForm = false
     },
     onFromChange (selectedDates, dateStr) {
       this.$set(this.configTodateTimePicker, 'minDate', dateStr)
@@ -360,6 +385,15 @@ export default {
         return new Date(b.date) - new Date(a.date)
       })
       this.schedule.reverse()
+    },
+    clearArrivalTime () {
+      this.scheduleItem.arrivalTime = null
+      this.$refs.arrivalTime.value = null
+    },
+    clearDepartureTime () {
+      this.scheduleItem.departureTime = null
+      this.$refs.departureTime.value = null
+
     }
   },
   created () {
@@ -367,6 +401,8 @@ export default {
     this.$store.dispatch('getCruiseSeasons')
     this.$store.dispatch('getCruiseTypes')
     this.$store.dispatch('getPorts')
+    this.scheduleItem.arrivalTime = null
+    this.scheduleItem.departureTime = null
   }
  
 }

@@ -205,9 +205,11 @@ export default {
     },
     firstMarket () {
       this.selectedMarket = this.firstMarket
+     
     },
     firstVessel () {
       this.selectedVessel = this.firstVessel
+      
     },
     FirstCruiseType () {
       this.selectedCruiseType = this.FirstCruiseType
@@ -216,7 +218,6 @@ export default {
     selectedVessel () {
       this.$store.dispatch('getCruiseTypesByVessel', this.selectedVessel._id)
       this.$store.dispatch('getCabinCategories', this.selectedVessel._id)
-
       this.filter.selectedVessel = this.selectedVessel
       this.updateFilter(this.filter)
       // this.selectedCruiseType = this.FirstCruiseType
@@ -276,6 +277,15 @@ export default {
   },
   mounted () {
     // this.isMounted = true
+  },
+  beforeDestroy () {
+    const filter = {
+      'selectedVessel' : null,
+      'selectedCruiseType' : null,
+      'selectedMarket' : null,
+      'selectedSeason' : null
+    }
+    this.$store.commit('SET_VALUES', filter)
   }
   
 }

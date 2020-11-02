@@ -9,6 +9,11 @@
 
 <template>
   <div id="data-list-thumb-view" class="data-list-container">
+    <div class="demo-alignment">
+       <vs-popup fullscreen title="fullscreen" :active.sync="popupActive">
+        <prices :data="this.filter"/>
+      </vs-popup>
+  </div>
 
     <port-form :isSidebarActive="addNewDataSidebar" @closeSidebar="toggleDataSidebar" :data="sidebarData" />
 
@@ -77,44 +82,80 @@
         <vs-th>Action</vs-th>
       </template> -->
 
-      <!-- <template slot-scope="{data}">
+      <template>
         <tbody>
-          <vs-tr :data="port" :key="_id" v-for="(port,_id) in data" >
-
-            <vs-td class="img-container">
-            </vs-td>
-            <vs-td>
-              <p class="product-name font-medium truncate">{{ port.country.name }}</p>
-            </vs-td>
-            <vs-td>
-              <p class="product-name font-medium truncate">{{ port.name }}</p>
-            </vs-td>
-
-            <vs-td class="whitespace-no-wrap">
-              <feather-icon icon="EditIcon" svgClasses="w-7 h-7 hover:text-primary stroke-current" class="ml-4" @click.stop="editData(port)" />
-              <feather-icon icon="TrashIcon" svgClasses="w-7 h-7 hover:text-danger stroke-current" class="ml-4" @click.stop="deleteData(port._id)" />
-            </vs-td>
-          </vs-tr>
+          <div class="vx-row" >
+            <div :data="item" :key="_id" v-for="(item, _id) in cruises" class="vx-col w-full sm:w-1/2 lg:w-1/3 mb-base" >
+                <vx-card>
+                    <img src="../../assets/images/uploads/gemini-out1.jpg" alt="content-img" class="responsive rounded-lg">
+                    <div class="my-6">
+                        <h4 class="mb-2">{{item.name}} ({{item.vessel.name}})</h4>
+                        <p class="text-grey">{{item.description}}</p>
+                        <p>{{item.checkInDate | formatShortDate }} - {{item.checkOutDate | formatShortDate}}</p>
+                    </div>
+                    <vs-divider></vs-divider>
+                    <div class="flex justify-between flex-wrap">
+                        <span>
+                            <p class="text-xl">{{item.cruiseType.name}}</p>
+                            <p class="text-grey">{{item.season.name}}</p>
+                        </span>
+                        
+                        
+                    </div>
+                     <div class="flex justify-between flex-wrap">
+                       <span>
+                        <vs-button class="mt-4 mr-2 shadow-lg" type="gradient" color="#7367F0" gradient-color-secondary="#CE9FFC" @click="openPricePopup(item)">Price List</vs-button>
+                       </span>
+                       <span>
+                        <vs-button class="mt-4 mr-2 shadow-lg" type="gradient" color="#7367F0" gradient-color-secondary="#CE9FFC" @click.stop="editData(item)" >Edit</vs-button>
+                       </span>
+                     </div>
+                </vx-card>
+            </div>
+            <!-- <div class="vx-col w-full sm:w-1/2 lg:w-1/3 mb-base">
+                <vx-card>
+                    <img src="../../assets/images/uploads/gemini-out1.jpg" alt="content-img" class="responsive rounded-lg">
+                    <div class="my-6">
+                        <h4 class="mb-2">2. Voyage (Gemini)</h4>
+                        <p class="text-grey">Mykonos, Rhodes, Santorini, Athens (description)</p>
+                        <p>01.04.2021 - 05.04.2021</p>
+                    </div>
+                    <vs-divider></vs-divider>
+                    <div class="flex justify-between flex-wrap">
+                        <span>
+                            <p class="text-xl">3 Days Cruises</p>
+                            <p class="text-grey">Normal Season</p>
+                        </span>
+                        
+                          <vs-button class="mt-4 mr-2 shadow-lg" type="gradient" color="#7367F0" gradient-color-secondary="#CE9FFC">Edit</vs-button>
+                        
+                    </div>
+                </vx-card>
+            </div> -->
+          </div>
         </tbody>
-      </template> -->
+      </template>
 
     </vs-table>
-  </div>
   
+  </div>
 </template>
 
 <script>
 
 import PortForm  from './CruiseForm'
 import router from '../../router'
+import prices from '../Cruises/Prices/Prices'
 //import moduleDataList from '@/store/data-list/moduleDataList.js'
 
 export default {
   components: {
-    PortForm
+    PortForm,
+    prices
   },
   data () {
     return {
+      popupActive: false,
       selected: [],
       //vessels: [],
       itemsPerPage: 20,
@@ -155,15 +196,16 @@ export default {
     toggleDataSidebar (val = false) {
       this.addNewDataSidebar = val
     },
-
-    // async fetchVessels () {      
-    //   this.vessels = await VesselService.fetchVessels()
-    // },
-    
-    portDetail (port) {
-      router.push({name : 'port-detail', params: {id: port._id} })
+    async openPricePopup (item) {
+      const filter = {
+        'selectedVessel' : item.vessel,
+        'selectedCruiseType' : item.cruiseType,
+        'selectedSeason' : item.season,
+        'selectedMarket' : null
+      }
+      await this.$store.commit('SET_VALUES', filter)
+      this.popupActive = true
     }
-    
   },
   created () {
     this.$store.dispatch('getCruises')
