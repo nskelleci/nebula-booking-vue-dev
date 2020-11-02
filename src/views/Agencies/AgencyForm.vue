@@ -43,7 +43,12 @@
             <v-select label="name" :options="agencyTypes" :value="agencyType" @input="agencyTypeSelect" :dir="$vs.rtl ? 'rtl' : 'ltr'" /><br>
         </div>
 
-        <div class="vs-component vs-con-input-label vs-input mt-5 w-full vs-input-primary">
+        <div class="vs-component vs-con-input-label vs-input w-full vs-input-primary">
+            <label for="" class="vs-input--label">Market</label>
+            <v-select label="name" :options="markets" :value="market" @input="marketSelect" :dir="$vs.rtl ? 'rtl' : 'ltr'" /><br>
+        </div>
+
+        <div class="vs-component vs-con-input-label vs-input w-full vs-input-primary">
             <label for="" class="vs-input--label">Discount Type</label>
             <v-select :options="['Percentage','Flat Rate']" @input="discountType" :value="this.agencyDiscountType" :dir="$vs.rtl ? 'rtl' : 'ltr'" /><br>
         </div>
@@ -97,6 +102,7 @@ export default {
       address: '',
       authorizedPerson: '',
       agencyType : null,
+      market:'',
       phone: '',
       agencyDiscountType : null,
       settings: {
@@ -112,7 +118,7 @@ export default {
         this.initValues()
         this.$validator.reset()
       } else {
-        const { _id, companyName, email,  agencyType, address, authorizedPerson, phone, agencyDiscountType} = JSON.parse(JSON.stringify(this.data))
+        const { _id, companyName, email,  agencyType, address,market, authorizedPerson, phone, agencyDiscountType} = JSON.parse(JSON.stringify(this.data))
         this.dataId = _id
       
         this.companyName = companyName
@@ -124,6 +130,7 @@ export default {
         this.authorizedPerson = authorizedPerson
         this.phone = phone
         this.agencyDiscountType = agencyDiscountType
+        this.market=market
         this.initValues()
       }
       // Object.entries(this.data).length === 0 ? this.initValues() : { this.dataId, this.dataName, this.dataCategory, this.dataOrder_status, this.dataPrice } = JSON.parse(JSON.stringify(this.data))
@@ -144,9 +151,9 @@ export default {
     },
     isFormValid () {
       if (Object.entries(this.data).length === 0) {
-        return !this.errors.any() && this.email &&  this.password && this.companyName && this.address && this.authorizedPerson && this.agencyType && this.phone && this.agencyDiscountType
+        return !this.errors.any() && this.email &&  this.password && this.companyName && this.address && this.authorizedPerson && this.agencyType && this.phone && this.agencyDiscountType && this.market
       } else {
-        return !this.errors.any() && this.email && this.companyName && this.address && this.authorizedPerson && this.agencyType && this.phone && this.agencyDiscountType
+        return !this.errors.any() && this.email && this.companyName && this.address && this.authorizedPerson && this.agencyType && this.phone && this.agencyDiscountType && this.market
       }
      
     },
@@ -154,6 +161,10 @@ export default {
 
     agencyTypes () {
       return this.$store.state.agencyType.agencytypes
+    },
+
+    markets () {
+      return this.$store.state.market.markets
     }
 
   },
@@ -168,6 +179,7 @@ export default {
       this.authorizedPerson = ''
       this.agencyType = null
       this.phone = ''
+      this.market='',
       this.agencyDiscountType  = null
     },
     submitData () {
@@ -182,6 +194,7 @@ export default {
             authorizedPerson: this.authorizedPerson,
             agencyType: this.agencyType._id,
             phone: this.phone,
+            market: this.market._id,
             agencyDiscountType: this.agencyDiscountType
           }
 
@@ -193,6 +206,7 @@ export default {
             authorizedPerson: this.authorizedPerson,
             agencyType: this.agencyType._id,
             phone: this.phone,
+            market: this.market._id,
             agencyDiscountType: this.agencyDiscountType
           }
 
@@ -214,6 +228,11 @@ export default {
       this.agencyType = value
     },
 
+    marketSelect (value) {
+      console.log(value)
+      this.market = value
+    },
+
     discountType (value) {
       this.agencyDiscountType = value
     }
@@ -221,6 +240,7 @@ export default {
   },
   created () {
     this.$store.dispatch('getAgencyTypes')
+    this.$store.dispatch('getMarkets')
   }
 }
 </script>

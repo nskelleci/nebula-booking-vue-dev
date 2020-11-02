@@ -72,18 +72,19 @@
 
       <template slot="thead">
         <vs-th sort-key="name">Name</vs-th>
+         <vs-th sort-key="discount">Discount</vs-th>
         <vs-th>Action</vs-th>
       </template>
 
       <template slot-scope="{data}">
         <tbody>
           <vs-tr :data="agency" :key="_id" v-for="(agency,_id) in data" >
-            <vs-td class="img-container">
-              <!-- <img :src="tr.img" class="product-img" /> -->
+            <vs-td>
+              <p class="product-name font-medium truncate">{{ agency.name }}</p>
             </vs-td>
 
             <vs-td>
-              <p class="product-name font-medium truncate">{{ agency.name }}</p>
+              <p class="product-name font-medium truncate">{{ agency.discount }}</p>
             </vs-td>
 
 

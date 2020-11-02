@@ -77,6 +77,7 @@
         <vs-th sort-key="address">Address</vs-th>
         <vs-th sort-key="authorizedperson">Authorized Person</vs-th>
         <vs-th sort-key="agencytype">Agency Type</vs-th>
+        <vs-th sort-key="marekt">Market</vs-th>
         <vs-th sort-key="discounttype">Discount Type</vs-th>
       </template>
 
@@ -100,6 +101,9 @@
             </vs-td>
             <vs-td>
               <p class="product-name font-medium truncate">{{ agency.agencyType.name }}</p>
+            </vs-td>
+             <vs-td>
+              <p class="product-name font-medium truncate">{{ agency.market.name }}</p>
             </vs-td>
             <vs-td>
               <p class="product-name font-medium truncate">{{ agency.agencyDiscountType }}</p>

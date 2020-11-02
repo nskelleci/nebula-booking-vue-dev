@@ -20,10 +20,12 @@
 
     <div class="p-6">
 
-        <!-- NAME -->
         <vs-input label="Name" v-model="agencyName" class="mt-5 w-full" name="agency-name" v-validate="'required'" />
         <span class="text-danger text-sm" v-show="errors.has('agency-name')">{{ errors.first('agency-name') }}</span>
-        <!-- Upload -->
+
+        <vs-input-number min="0" max="99" label="Discount" v-model="discount" class="mt-5 w-full" name="discount" v-validate="'required|max:12'" />
+        <span class="text-danger text-sm" v-show="errors.has('discount')">{{ errors.first('discount') }}</span>
+
     </div>
     </component>
 
@@ -53,9 +55,9 @@ export default {
   },
   data () {
     return {
-
       dataId: null,
       agencyName: '',
+      discount:'',
       settings: { // perfectscrollbar settings
         maxScrollbarLength: 60,
         wheelSpeed: .60
@@ -69,10 +71,10 @@ export default {
         this.initValues()
         this.$validator.reset()
       } else {
-        const { _id, name} = JSON.parse(JSON.stringify(this.data))
+        const { _id, name, discount} = JSON.parse(JSON.stringify(this.data))
         this.dataId = _id
-      
         this.agencyName = name
+        this.discount = discount
         this.initValues()
       }
       // Object.entries(this.data).length === 0 ? this.initValues() : { this.dataId, this.dataName, this.dataCategory, this.dataOrder_status, this.dataPrice } = JSON.parse(JSON.stringify(this.data))
@@ -92,7 +94,7 @@ export default {
       }
     },
     isFormValid () {
-      return !this.errors.any() && this.agencyName
+      return !this.errors.any() && this.agencyName && this.discount
     },
     scrollbarTag () { return this.$store.getters.scrollbarTag }
   },
@@ -101,13 +103,15 @@ export default {
       if (this.data._id) return
       this.dataId = null
       this.agencyName = ''
+      this.discount = ''
     },
     submitData () {
       this.$validator.validateAll().then(result => {
         if (result) {
           const obj = {
             _id: this.dataId,
-            name: this.agencyName
+            name: this.agencyName,
+            discount: this.discount
           }
 
           if (this.dataId !== null && this.dataId.length >= 0) {

@@ -23,10 +23,13 @@
           <label for="" class="vs-input--label">Vessels</label>
           <v-select v-model="vessel" label="name" :options="vessels" :dir="$vs.rtl ? 'rtl' : 'ltr'" /><br>
         </div>
-        <!-- NAME -->
+  
         <vs-input label="Name" v-model="cruisetypeName" class="mt-1 w-full" name="cruisetype-name" v-validate="'required'" />
         <span class="text-danger text-sm" v-show="errors.has('cruisetype-name')">{{ errors.first('cruisetype-name') }}</span>
-        <!-- Upload -->
+
+        <vs-input-number min="0" max="99" label="Tax" v-model="tax" class="mt-5 w-full" name="tax" v-validate="'required|max:12'" />
+        <span class="text-danger text-sm" v-show="errors.has('tax')">{{ errors.first('tax') }}</span>
+  
     </div>
     </component>
 
@@ -62,6 +65,7 @@ export default {
       dataId: null,
       cruisetypeName: '',
       vessel : null,
+      tax:'',
       settings: { // perfectscrollbar settings
         maxScrollbarLength: 60,
         wheelSpeed: .60
@@ -75,10 +79,11 @@ export default {
         this.initValues()
         this.$validator.reset()
       } else {
-        const { _id, name, vessel} = JSON.parse(JSON.stringify(this.data))
+        const { _id, name, vessel, tax} = JSON.parse(JSON.stringify(this.data))
         this.dataId = _id
         this.vessel = vessel
         this.cruisetypeName = name
+        this.tax = tax
         this.initValues()
       }
       // Object.entries(this.data).length === 0 ? this.initValues() : { this.dataId, this.dataName, this.dataCategory, this.dataOrder_status, this.dataPrice } = JSON.parse(JSON.stringify(this.data))
@@ -98,7 +103,7 @@ export default {
       }
     },
     isFormValid () {
-      return !this.errors.any() && this.cruisetypeName
+      return !this.errors.any() && this.cruisetypeName && this.vessel && this.tax
     },
     scrollbarTag () { return this.$store.getters.scrollbarTag },
 
@@ -112,6 +117,7 @@ export default {
       this.dataId = null
       this.cruisetypeName = ''
       this.vessel = null
+      this.tax = ''
     },
     submitData () {
       this.$validator.validateAll().then(result => {
@@ -119,7 +125,8 @@ export default {
           const obj = {
             _id: this.dataId,
             name: this.cruisetypeName,
-            vessel : this.vessel
+            vessel : this.vessel,
+            tax : this.tax
           }
 
           if (this.dataId !== null && this.dataId.length >= 0) {
@@ -136,9 +143,7 @@ export default {
     }
   },
   created () {
-    
       this.$store.dispatch('getVessels')
-    
   }
 }
 </script>

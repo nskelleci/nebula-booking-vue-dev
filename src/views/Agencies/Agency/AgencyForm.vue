@@ -38,12 +38,12 @@
         <vs-input label="Phone Number" v-model="phone" class="mt-5 w-full" name="agency-phone-number" v-validate="'required'" />
         <span class="text-danger text-sm" v-show="errors.has('agency-phone-number')">{{ errors.first('agency-phone-number') }}</span>
 
-        <div class="vs-component vs-con-input-label vs-input mt-5 w-full vs-input-primary">
+        <div class="vs-component vs-con-input-label vs-input w-full vs-input-primary">
             <label for="" class="vs-input--label">Agency Type</label>
             <v-select label="name" :options="agencyTypes" :value="agencyType" @input="agencyTypeSelect" :dir="$vs.rtl ? 'rtl' : 'ltr'" /><br>
         </div>
 
-        <div class="vs-component vs-con-input-label vs-input mt-5 w-full vs-input-primary">
+        <div class="vs-component vs-con-input-label vs-input w-full vs-input-primary">
             <label for="" class="vs-input--label">Discount Type</label>
             <v-select :options="['Percentage','Flat Rate']" @input="discountType" :value="this.agencyDiscountType" :dir="$vs.rtl ? 'rtl' : 'ltr'" /><br>
         </div>

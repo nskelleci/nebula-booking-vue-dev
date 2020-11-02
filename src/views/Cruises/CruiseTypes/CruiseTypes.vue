@@ -73,6 +73,7 @@
       <template slot="thead">
         <vs-th sort-key="vessel">Vessel</vs-th>
         <vs-th sort-key="name">Cruise Type</vs-th>
+        <vs-th sort-key="tax">Tax</vs-th>
         <vs-th>Actions</vs-th>
       </template>
 
@@ -88,6 +89,9 @@
               <p class="product-name font-medium truncate">{{ cruisetype.name }}</p>
             </vs-td>
 
+            <vs-td>
+              <p class="product-name font-medium truncate">%{{ cruisetype.tax }}</p>
+            </vs-td>
 
             <vs-td class="whitespace-no-wrap">
               <!-- <feather-icon icon="InfoIcon" svgClasses="w-7 h-7 hover:text-primary stroke-current" @click="vesselDetail(vessel)" /> -->
