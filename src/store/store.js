@@ -29,7 +29,7 @@ import price from './modules/price'
 import agency from './modules/agency'
 import agencyType from './modules/agencyType'
 import cruise from './modules/cruise'
-
+import booking from './modules/booking'
 Vue.use(Vuex)
 
 export default new Vuex.Store({
@@ -50,7 +50,8 @@ export default new Vuex.Store({
     price,
     agency,
     agencyType,
-    cruise
+    cruise,
+    booking
   },
 
   // strict: process.env.NODE_ENV !== 'production'

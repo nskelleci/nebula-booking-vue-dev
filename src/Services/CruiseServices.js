@@ -35,5 +35,13 @@ export default {
         return response.data.data
       })
       .catch((error) => { return (error) })
+  },
+
+  async getCruisesbyCruiseType (cruisetype) {
+    return await axios.get(`${apiUri.apiUri.URI}/cruise/getCruisesbyCruiseType/${cruisetype}`)
+      .then((response) => {
+        return response.data.data
+      })
+      .catch((error) => { return (error) })
   }
 }

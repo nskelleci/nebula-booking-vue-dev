@@ -242,6 +242,7 @@ export default {
     filter : {
       deep:true,
       async handler (filter) {
+        console.log(filter);
         this.$store.commit('SET_VALUES', filter) 
         await this.$store.dispatch('getFilteredPrices', filter)
       }

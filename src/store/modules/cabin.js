@@ -1,7 +1,8 @@
 import CabinService from '../../Services/CabinService'
 
 const state = {
-  cabins : []
+  cabins : [],
+  avaliableCabinsbyCruiseCategory:[]
 }
 
 const getters = {
@@ -10,6 +11,9 @@ const getters = {
 const mutations = {
   SET_CABINS (state, Cabins) {
     state.cabins = Cabins
+  },
+  SET_AVALIABLE_CABINS_BY_CRUISE_CABIN_CATEGORY(state,cabins){
+    state.avaliableCabinsbyCruiseCategory=cabins
   }
 }
 const actions = {
@@ -20,7 +24,6 @@ const actions = {
 
 
   async addCabin (_, cabin) {
-    console.log('add cabin : ', cabin)
     await CabinService.addCabin(cabin).then((response) => {
       if (response) {
         if (response.success) {
@@ -33,7 +36,12 @@ const actions = {
   async updateCabin (_, cabin) {
     await CabinService.updateCabin(cabin)
     this.dispatch('getCabins', cabin.vessel)          
-  }
+  },
+  async getAvaliableCabinsbyCruiseCabinCategory ({commit}, params) {  
+    console.log(params); 
+    commit('SET_AVALIABLE_CABINS_BY_CRUISE_CABIN_CATEGORY', await CabinService.fetchAvaliableCabinsbyCabinCategoryCruise(params)
+    )         
+}
 }
 
 export default {

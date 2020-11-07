@@ -28,6 +28,14 @@ export default {
         return response.data.data
       })
       .catch((error) => { notification.notifyMe(error) })
-  }
+  },
+  async fetchAvaliableCabinsbyCabinCategoryCruise (params) {
+    
+    return await axios.get(`${apiUri.apiUri.URI}/cabin/cruise/${params.cruise}/cabinCategory/${params.cabinCategory}`)
+      .then((response) => {
+        return response.data.data
+      })
+      .catch((error) => { notification.notifyMe(error) })
+  },
 }
 

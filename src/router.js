@@ -100,6 +100,11 @@ const router = new Router({
           path : '/Cruises/',
           name : 'cruises',
           component : () => import ('./views/Cruises/Cruises.vue')
+        },
+        {
+          path : '/Booking/',
+          name : 'booking',
+          component : () => import ('./views/Booking/Booking.vue')
         }
       ]
     },

@@ -32,7 +32,6 @@ const actions = {
   },
 
   async getCruiseTypesByVessel ({commit}, vesselid) {
-    console.log("action icine gelen vesselid", vesselid)
     commit('SET_CRUISETYPESBYVESSEL', await CruiseTypeService.fetchCruiseTypesbyVessel(vesselid))
   },
 

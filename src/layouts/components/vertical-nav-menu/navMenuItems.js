@@ -161,16 +161,14 @@ export default [
       {
         url: null,
         name: 'Bookings',
-        //tag: 'new',
-        //tagColor: 'primary',
         icon: 'ListIcon',
         i18n: 'Bookings',
         submenu: [
           {
-            //url: '/ui-elements/data-list/list-view',
-            name: 'Book a Cruise',
-            slug: 'book-a-cruise',
-            i18n: 'Book a Cruise'
+            url: '/Booking/',
+            name: 'Booking',
+            slug: 'booking',
+            i18n: 'booking'
           }
         ]
       }
