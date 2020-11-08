@@ -160,8 +160,8 @@
                             <div class="flex justify-between" vs-align="center" vs-type="flex" vs-justify="center" v-for="(item,index) in selected" :key="index">
                                   <span class="text-grey"><b>{{ item.number }}</b> {{ item.description }} ({{item.capacity}})</span>
                                     
-                                    <vs-input-number min="1" :value="numberOfPeople[index].adult" @input="updateItemQuantity($event, index)" class="inline-flex" />
-                                    
+                                    <vs-input-number min="1" :value="selected[index].numberOfAdult" @input="updateAdultQuantity($event, index)" class="inline-flex" />
+                                    <vs-input-number min="1" :value="selected[index].numberOfChild" @input="updateChildQuantity($event, index)" class="inline-flex" />
 
                                   <span>$598</span>
                             </div>
@@ -194,32 +194,12 @@ export default {
   data () {
     return {
       // TAB 2
-      bookingDetail : {
-        cabin : {},
-        numberOfAdult : 0,
-        numberOfChild : 0
-      },
       bookingDetails : [],
-      numberOfPeople:[],
       selected: [],
       itemsPerPage: 10,
       isMounted: false,
-      fullName: '',
-      mobileNum: '',
-      pincode: '',
-      houseNum: '',
-      area: '',
-      landmark: '',
-      city: '',
-      state: '',
-      addressType: 1,
-      addressTypeOptions: [
-        { text: 'Home', value: 1 },
-        { text: 'Office', value: 2 }
-      ],
       // TAB 3
-      paymentMethod: 'debit-card',
-      cvv: '',
+
       cruiseType:[],
       cruisesList:[],
       cabinCategory:[],
@@ -259,15 +239,22 @@ export default {
     }
   },
   methods: {
-    updateItemQuantity (event, index) {
-      //const itemIndex = Math.abs(index + 1 - this.cartItems.length)
-      console.log(event, index);
-      //this.$store.dispatch('eCommerce/updateItemQuantity', { quantity: event, index: itemIndex })
-      //this.selected[index].capacity=event
-
-      this.numberOfPeople[index].adult=event
-      console.log(this.numberOfPeople);
+    updateAdultQuantity (event, index) {
+      console.log("updateAdultQuantity");
+      console.log(this.selected[index]);
+      this.selected[index].numberOfAdult=event
     },
+
+    updateChildQuantity(event, index) {
+      console.log("updateChildQuantity");
+      console.log(this.selected[index]);
+      this.selected[index].numberOfChild=event
+    },
+
+    handleSelected(tr) {
+      this.$vs.notify({title: `${tr.description}`,text: `Number: ${tr.number}`})
+    },
+
     // TAB 1
     async cruiseTypes() {
       this.loadingBar(true);
@@ -275,21 +262,6 @@ export default {
       this.cruiseType= this.$store.state.cruiseType.cruisetypes
       this.loadingBar(false);
     },
-    handleSelected(tr) {
-      this.$vs.notify({
-        title: `${tr.description}`,
-        text: `Number: ${tr.number}`
-      })
-      
-      this.numberOfPeople.push({
-          "tr":tr,
-          "adult":0,
-          "child":0
-      });
-      console.log(this.numberOfPeople);
-    },
-
-
 
     async selectedCruiseType(value){
       this.loadingBar(true);
@@ -352,6 +324,13 @@ export default {
       }
       await this.$store.dispatch('getAvaliableCabinsbyCruiseCabinCategory',params)
       this.cabins=this.$store.state.cabin.avaliableCabinsbyCruiseCategory;
+
+      for(let item in this.cabins){
+        this.cabins[item].numberOfAdult=0;
+        this.cabins[item].numberOfChild=0;
+      }
+      
+      console.log(this.cabins)
       this.loadingBar(false);
       this.stepNextTab();
     },
