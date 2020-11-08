@@ -72,8 +72,114 @@
                     <p>Please check all information</p>
                 </vx-card>
             </tab-content>
-            
+
+
+            <!-- tab 4 content -->
+            <tab-content title="Cabin" icon="feather icon-bar-chart" class="mb-5">
+              <div class="vx-row">
+              <div class="vx-col lg:w-3/5 w-full relative">
+                <vs-table ref="table" multiple v-model="selected" pagination :max-items="itemsPerPage" search :data="cabins" @selected="handleSelected">
+                      <div slot="header" class="flex flex-wrap-reverse items-center flex-grow justify-between">
+                        <!-- ITEMS PER PAGE -->
+                        <vs-dropdown vs-trigger-click class="cursor-pointer mb-4 mr-4 items-per-page-handler">
+                          <div class="p-4 border border-solid d-theme-border-grey-light rounded-full d-theme-dark-bg cursor-pointer flex items-center justify-between font-medium">
+                            <span class="mr-2">
+                              {{ currentPage * itemsPerPage - (itemsPerPage - 1) }} -
+                              {{
+                                cabins.length - currentPage * itemsPerPage > 0
+                                  ? currentPage * itemsPerPage
+                                  : cabins.length
+                              }}
+                              of {{ queriedItems }}
+                              </span>
+                            <feather-icon icon="ChevronDownIcon" svgClasses="h-4 w-4" />
+                          </div>
+                          <!-- <vs-button class="btn-drop" type="line" color="primary" icon-pack="feather" icon="icon-chevron-down"></vs-button> -->
+                          <vs-dropdown-menu>
+                            <vs-dropdown-item @click="itemsPerPage = 10">
+                              <span>10</span>
+                            </vs-dropdown-item>
+                            <vs-dropdown-item @click="itemsPerPage = 30">
+                              <span>30</span>
+                            </vs-dropdown-item>
+                            <vs-dropdown-item @click="itemsPerPage = 50">
+                              <span>50</span>
+                            </vs-dropdown-item>
+                          </vs-dropdown-menu>
+                        </vs-dropdown>
+                      </div>
+
+                      <template slot="thead">
+                        <vs-th sort-key="number">Number</vs-th>
+                        <vs-th sort-key="description">Description</vs-th>
+                        <vs-th sort-key="capacity">Capacity</vs-th>
+                        <vs-th sort-key="cabinCategory">Cabin Category</vs-th>
+                        <vs-th sort-key="bedType">Bed Type</vs-th>
+                      </template>
+
+                      <template slot-scope="{ data }">
+                        <tbody>
+                          <vs-tr :data="cabin" :key="_id" v-for="(cabin, _id) in data">
+                            <vs-td>
+                              <p class="product-name font-large truncate">
+                                <vs-chip color="primary">
+                                    <span>{{ cabin.number }}</span> 
+                                </vs-chip>
+                              </p>
+                            </vs-td>
+
+                            <vs-td>
+                              <p class="product-category">{{ cabin.description | title }}</p>
+                            </vs-td>
+                          
+                            <vs-td>
+                            <vs-chip color="success">
+                              <span>{{cabin.capacity}}</span>
+                            </vs-chip>
+                            </vs-td>
+                            
+
+                            <vs-td>
+                              <p class="product-category">
+                                {{ cabin.cabinCategory.name | title }}
+                              </p>
+                            </vs-td>
+
+                            <vs-td>
+                              <p class="product-category">{{ cabin.bedType.name | title }}</p>
+                            </vs-td>
+                          </vs-tr>
+                        </tbody>
+                      </template>
+                     
+                    </vs-table>
+              </div>
+              <div class="vx-col lg:w-2/5 w-full relative">
+                        <vx-card>
+                            <p class="font-semibold mb-3">Cabin Details</p>
+                            <div class="flex justify-between" vs-align="center" vs-type="flex" vs-justify="center" v-for="(item,index) in selected" :key="index">
+                                  <span class="text-grey"><b>{{ item.number }}</b> {{ item.description }} ({{item.capacity}})</span>
+                                    
+                                    <vs-input-number min="1" :value="numberOfPeople[index].adult" @input="updateItemQuantity($event, index)" class="inline-flex" />
+                                    
+
+                                  <span>$598</span>
+                            </div>
+                            <vs-divider />
+
+                            <div class="flex justify-between font-semibold mb-3">
+                                <span>Total</span>
+                                <span>$574.3</span>
+                            </div>
+
+                            <vs-button class="w-full" @click="$refs.checkoutWizard.nextTab()">PLACE ORDER</vs-button>
+                        </vx-card>
+                    </div>
+                     </div>
+            </tab-content>
         </form-wizard>
+        <div class="grid-layout-container alignment-block">
+</div>
     </div>
 </template>
 
@@ -88,6 +194,16 @@ export default {
   data () {
     return {
       // TAB 2
+      bookingDetail : {
+        cabin : {},
+        numberOfAdult : 0,
+        numberOfChild : 0
+      },
+      bookingDetails : [],
+      numberOfPeople:[],
+      selected: [],
+      itemsPerPage: 10,
+      isMounted: false,
       fullName: '',
       mobileNum: '',
       pincode: '',
@@ -107,6 +223,7 @@ export default {
       cruiseType:[],
       cruisesList:[],
       cabinCategory:[],
+      cabins:[],
       filter : {
         'selectedVessel' : null,
         'selectedCruiseType' : null,
@@ -115,6 +232,7 @@ export default {
       },
       selectedCruise:null,
       isLoading:false,
+      endUserPrice:null,
     }
   },
   watch:{
@@ -126,8 +244,30 @@ export default {
         }
     }
   },
+  computed: {
+    adultCount(index){
+      return adult[index]=0;
+    },
+    currentPage () {
+      if (this.isMounted) {
+        return this.$refs.table.currentx
+      }
+      return 0
+    },
+    queriedItems () {
+      return this.$refs.table ? this.$refs.table.queriedResults.length : this.cabins.length
+    }
+  },
   methods: {
+    updateItemQuantity (event, index) {
+      //const itemIndex = Math.abs(index + 1 - this.cartItems.length)
+      console.log(event, index);
+      //this.$store.dispatch('eCommerce/updateItemQuantity', { quantity: event, index: itemIndex })
+      //this.selected[index].capacity=event
 
+      this.numberOfPeople[index].adult=event
+      console.log(this.numberOfPeople);
+    },
     // TAB 1
     async cruiseTypes() {
       this.loadingBar(true);
@@ -135,6 +275,21 @@ export default {
       this.cruiseType= this.$store.state.cruiseType.cruisetypes
       this.loadingBar(false);
     },
+    handleSelected(tr) {
+      this.$vs.notify({
+        title: `${tr.description}`,
+        text: `Number: ${tr.number}`
+      })
+      
+      this.numberOfPeople.push({
+          "tr":tr,
+          "adult":0,
+          "child":0
+      });
+      console.log(this.numberOfPeople);
+    },
+
+
 
     async selectedCruiseType(value){
       this.loadingBar(true);
@@ -174,27 +329,31 @@ export default {
 
     // TAB 3
     async getMarket(){
-    this.loadingBar(true);
-    //filter için Market objesini oluşturduk
-    this.filter.selectedMarket={
-      _id:"5f948cbb1a3a980011ad3686", //Turkish Market ID
-      name:""
-    }
+      this.loadingBar(true);
+      //filter için Market objesini oluşturduk
+      this.filter.selectedMarket={
+        _id:"5f948cbb1a3a980011ad3686", //Turkish Market ID
+        name:""
+      }
 
-    await this.$store.dispatch('getFilteredPrices', this.filter)
-    this.cabinCategory = this.$store.state.price.filteredPrices
-    this.loadingBar(false);
-    this.stepNextTab();
+      await this.$store.dispatch('getFilteredPrices', this.filter)
+      this.cabinCategory = this.$store.state.price.filteredPrices
+      this.loadingBar(false);
+      this.stepNextTab();
 
     },
 
     async selectedCabinCategory(value){
+      this.loadingBar(true);
+      this.endUserPrice=value.endUserPrice
       const params = {
         cruise : this.selectedCruise,
         cabinCategory: value.cabinCategory._id
       }
       await this.$store.dispatch('getAvaliableCabinsbyCruiseCabinCategory',params)
-      console.log(this.$store.state.cabin.avaliableCabinsbyCruiseCategory);
+      this.cabins=this.$store.state.cabin.avaliableCabinsbyCruiseCategory;
+      this.loadingBar(false);
+      this.stepNextTab();
     },
 
     // TAB 3
@@ -239,6 +398,9 @@ export default {
   },
   created(){
     this.cruiseTypes();
+  },
+  mounted () {
+    this.isMounted = true
   }
 }
 </script>

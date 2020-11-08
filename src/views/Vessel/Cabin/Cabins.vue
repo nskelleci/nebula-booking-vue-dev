@@ -9,14 +9,9 @@
 
 <template>
   <div id="data-list-list-view" class="data-list-container">
-    <CabinForm
-      :isSidebarActive="addNewDataSidebar"
-      @closeSidebar="toggleDataSidebar"
-      :data="sidebarData"
-    />
+    <CabinForm :isSidebarActive="addNewDataSidebar" @closeSidebar="toggleDataSidebar" :data="sidebarData"/>
 
-    <vs-table
-      ref="table"
+    <vs-table ref="table"
       multiple
       v-model="selected"
       pagination
