@@ -17,6 +17,6 @@ Vue.filter('title', function (value, replacer = '_') {
 
 Vue.filter('formatShortDate', function (value) {
   if (value) {
-    return moment(String(value)).format('MM/DD/YYYY')
+    return moment(String(value)).format('DD/MM/YYYY')
   }
 })

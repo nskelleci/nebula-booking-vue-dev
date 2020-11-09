@@ -90,7 +90,7 @@
             </vs-td>
 
             <vs-td>
-              <p class="product-name font-medium truncate">%{{ cruisetype.tax }}</p>
+              <p class="product-name font-medium truncate">{{ cruisetype.tax }}</p>
             </vs-td>
 
             <vs-td class="whitespace-no-wrap">

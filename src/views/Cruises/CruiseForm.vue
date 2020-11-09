@@ -377,6 +377,7 @@ export default {
         departureTime : this.$refs.departureTime.value,
         port:this.$refs.port.value
       }
+      console.log(this.$refs.portDate.value+"----");
       this.schedule.push(scheduleItem)
     },
     delSchedule (index) {

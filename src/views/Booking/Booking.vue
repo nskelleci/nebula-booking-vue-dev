@@ -77,106 +77,105 @@
             <!-- tab 4 content -->
             <tab-content title="Cabin" icon="feather icon-bar-chart" class="mb-5">
               <div class="vx-row">
-              <div class="vx-col lg:w-3/5 w-full relative">
-                <vs-table ref="table" multiple v-model="selected" pagination :max-items="itemsPerPage" search :data="cabins" @selected="handleSelected">
-                      <div slot="header" class="flex flex-wrap-reverse items-center flex-grow justify-between">
-                        <!-- ITEMS PER PAGE -->
-                        <vs-dropdown vs-trigger-click class="cursor-pointer mb-4 mr-4 items-per-page-handler">
-                          <div class="p-4 border border-solid d-theme-border-grey-light rounded-full d-theme-dark-bg cursor-pointer flex items-center justify-between font-medium">
-                            <span class="mr-2">
-                              {{ currentPage * itemsPerPage - (itemsPerPage - 1) }} -
-                              {{
-                                cabins.length - currentPage * itemsPerPage > 0
-                                  ? currentPage * itemsPerPage
-                                  : cabins.length
-                              }}
-                              of {{ queriedItems }}
-                              </span>
-                            <feather-icon icon="ChevronDownIcon" svgClasses="h-4 w-4" />
-                          </div>
-                          <!-- <vs-button class="btn-drop" type="line" color="primary" icon-pack="feather" icon="icon-chevron-down"></vs-button> -->
-                          <vs-dropdown-menu>
-                            <vs-dropdown-item @click="itemsPerPage = 10">
-                              <span>10</span>
-                            </vs-dropdown-item>
-                            <vs-dropdown-item @click="itemsPerPage = 30">
-                              <span>30</span>
-                            </vs-dropdown-item>
-                            <vs-dropdown-item @click="itemsPerPage = 50">
-                              <span>50</span>
-                            </vs-dropdown-item>
-                          </vs-dropdown-menu>
-                        </vs-dropdown>
-                      </div>
+                <div class="vx-col lg:w-3/5 w-full relative">
+                  <vs-table ref="table" multiple v-model="selected" pagination :max-items="itemsPerPage" search :data="cabins" @selected="handleSelected">
+                        <div slot="header" class="flex flex-wrap-reverse items-center flex-grow justify-between">
+                          <!-- ITEMS PER PAGE -->
+                          <vs-dropdown vs-trigger-click class="cursor-pointer mb-4 mr-4 items-per-page-handler">
+                            <div class="p-4 border border-solid d-theme-border-grey-light rounded-full d-theme-dark-bg cursor-pointer flex items-center justify-between font-medium">
+                              <span class="mr-2">
+                                {{ currentPage * itemsPerPage - (itemsPerPage - 1) }} -
+                                {{
+                                  cabins.length - currentPage * itemsPerPage > 0
+                                    ? currentPage * itemsPerPage
+                                    : cabins.length
+                                }}
+                                of {{ queriedItems }}
+                                </span>
+                              <feather-icon icon="ChevronDownIcon" svgClasses="h-4 w-4" />
+                            </div>
+                            <!-- <vs-button class="btn-drop" type="line" color="primary" icon-pack="feather" icon="icon-chevron-down"></vs-button> -->
+                            <vs-dropdown-menu>
+                              <vs-dropdown-item @click="itemsPerPage = 10">
+                                <span>10</span>
+                              </vs-dropdown-item>
+                              <vs-dropdown-item @click="itemsPerPage = 30">
+                                <span>30</span>
+                              </vs-dropdown-item>
+                              <vs-dropdown-item @click="itemsPerPage = 50">
+                                <span>50</span>
+                              </vs-dropdown-item>
+                            </vs-dropdown-menu>
+                          </vs-dropdown>
+                        </div>
 
-                      <template slot="thead">
-                        <vs-th sort-key="number">Number</vs-th>
-                        <vs-th sort-key="description">Description</vs-th>
-                        <vs-th sort-key="capacity">Capacity</vs-th>
-                        <vs-th sort-key="cabinCategory">Cabin Category</vs-th>
-                        <vs-th sort-key="bedType">Bed Type</vs-th>
-                      </template>
+                        <template slot="thead">
+                          <vs-th sort-key="number">Number</vs-th>
+                          <vs-th sort-key="description">Description</vs-th>
+                          <vs-th sort-key="capacity">Capacity</vs-th>
+                          <vs-th sort-key="cabinCategory">Cabin Category</vs-th>
+                          <vs-th sort-key="bedType">Bed Type</vs-th>
+                        </template>
 
-                      <template slot-scope="{ data }">
-                        <tbody>
-                          <vs-tr :data="cabin" :key="_id" v-for="(cabin, _id) in data">
-                            <vs-td>
-                              <p class="product-name font-large truncate">
-                                <vs-chip color="primary">
-                                    <span>{{ cabin.number }}</span> 
-                                </vs-chip>
-                              </p>
-                            </vs-td>
+                        <template slot-scope="{ data }">
+                          <tbody>
+                            <vs-tr :data="cabin" :key="_id" v-for="(cabin, _id) in data">
+                              <vs-td>
+                                <p class="product-name font-large truncate">
+                                  <vs-chip color="primary">
+                                      <span>{{ cabin.number }}</span> 
+                                  </vs-chip>
+                                </p>
+                              </vs-td>
 
-                            <vs-td>
-                              <p class="product-category">{{ cabin.description | title }}</p>
-                            </vs-td>
-                          
-                            <vs-td>
-                            <vs-chip color="success">
-                              <span>{{cabin.capacity}}</span>
-                            </vs-chip>
-                            </vs-td>
+                              <vs-td>
+                                <p class="product-category">{{ cabin.description | title }}</p>
+                              </vs-td>
                             
+                              <vs-td>
+                              <vs-chip color="success">
+                                <span>{{cabin.capacity}}</span>
+                              </vs-chip>
+                              </vs-td>
+                              
 
-                            <vs-td>
-                              <p class="product-category">
-                                {{ cabin.cabinCategory.name | title }}
-                              </p>
-                            </vs-td>
+                              <vs-td>
+                                <p class="product-category">
+                                  {{ cabin.cabinCategory.name | title }}
+                                </p>
+                              </vs-td>
 
-                            <vs-td>
-                              <p class="product-category">{{ cabin.bedType.name | title }}</p>
-                            </vs-td>
-                          </vs-tr>
-                        </tbody>
-                      </template>
-                     
-                    </vs-table>
+                              <vs-td>
+                                <p class="product-category">{{ cabin.bedType.name | title }}</p>
+                              </vs-td>
+                            </vs-tr>
+                          </tbody>
+                        </template>
+                      
+                      </vs-table>
+                </div>
+                <div class="vx-col lg:w-2/5 w-full relative">
+                          <vx-card>
+                              <p class="font-semibold mb-3">Cabin Details</p>
+                              <div class="flex justify-between" vs-align="center" vs-type="flex" vs-justify="center" v-for="(item,index) in selected" :key="index">
+                                    <span class="text-grey"><b>{{ item.number }}</b> ({{ item.capacity }})</span>
+                                    <span>{{item.bedType.name}}</span>
+                                    <vs-input-number label="Adult: " :min="0" :max="maxValue" :value="item.numberOfAdult" @input="updateAdultQuantity($event, index)" class="inline-flex" />
+                                    <vs-input-number label="Child: " :min="0" :max="maxValue" :value="item.numberOfChild" @input="updateChildQuantity($event, index)" class="inline-flex" />
+                              </div>
+                              <vs-divider />
+
+                              <div class="flex justify-between font-semibold mb-3">
+                                  <span>Total</span>
+                                  <span>$574.3</span>
+                              </div>
+
+                              <vs-button class="w-full" @click="$refs.checkoutWizard.nextTab()">PLACE ORDER</vs-button>
+                          </vx-card>
+                </div>
               </div>
-              <div class="vx-col lg:w-2/5 w-full relative">
-                        <vx-card>
-                            <p class="font-semibold mb-3">Cabin Details</p>
-                            <div class="flex justify-between" vs-align="center" vs-type="flex" vs-justify="center" v-for="(item,index) in selected" :key="index">
-                                  <span class="text-grey"><b>{{ item.number }}</b> {{ item.description }} ({{item.capacity}})</span>
-                                    
-                                    <vs-input-number min="1" :value="selected[index].numberOfAdult" @input="updateAdultQuantity($event, index)" class="inline-flex" />
-                                    <vs-input-number min="1" :value="selected[index].numberOfChild" @input="updateChildQuantity($event, index)" class="inline-flex" />
-
-                                  <span>$598</span>
-                            </div>
-                            <vs-divider />
-
-                            <div class="flex justify-between font-semibold mb-3">
-                                <span>Total</span>
-                                <span>$574.3</span>
-                            </div>
-
-                            <vs-button class="w-full" @click="$refs.checkoutWizard.nextTab()">PLACE ORDER</vs-button>
-                        </vx-card>
-                    </div>
-                     </div>
             </tab-content>
+
         </form-wizard>
         <div class="grid-layout-container alignment-block">
 </div>
@@ -193,13 +192,10 @@ const pricesView = () => import('./components/pricesView.vue')
 export default {
   data () {
     return {
-      // TAB 2
-      bookingDetails : [],
       selected: [],
       itemsPerPage: 10,
       isMounted: false,
-      // TAB 3
-
+      maxValue:null,
       cruiseType:[],
       cruisesList:[],
       cabinCategory:[],
@@ -240,21 +236,21 @@ export default {
   },
   methods: {
     updateAdultQuantity (event, index) {
-      console.log("updateAdultQuantity");
-      console.log(this.selected[index]);
-      this.selected[index].numberOfAdult=event
+        this.selected[index].numberOfAdult=event;
+
+        this.maxValue=this.selected[index].capacity
+
+        
     },
 
     updateChildQuantity(event, index) {
-      console.log("updateChildQuantity");
-      console.log(this.selected[index]);
-      this.selected[index].numberOfChild=event
+        this.selected[index].numberOfChild=event;       
     },
 
     handleSelected(tr) {
       this.$vs.notify({title: `${tr.description}`,text: `Number: ${tr.number}`})
     },
-
+  
     // TAB 1
     async cruiseTypes() {
       this.loadingBar(true);
@@ -296,6 +292,7 @@ export default {
           name:""
         },
         this.selectedCruise=value._id;
+        console.log(value);
         this.getMarket();
     },
 
@@ -324,13 +321,6 @@ export default {
       }
       await this.$store.dispatch('getAvaliableCabinsbyCruiseCabinCategory',params)
       this.cabins=this.$store.state.cabin.avaliableCabinsbyCruiseCategory;
-
-      for(let item in this.cabins){
-        this.cabins[item].numberOfAdult=0;
-        this.cabins[item].numberOfChild=0;
-      }
-      
-      console.log(this.cabins)
       this.loadingBar(false);
       this.stepNextTab();
     },

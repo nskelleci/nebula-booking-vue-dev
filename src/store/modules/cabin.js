@@ -37,10 +37,13 @@ const actions = {
     await CabinService.updateCabin(cabin)
     this.dispatch('getCabins', cabin.vessel)          
   },
-  async getAvaliableCabinsbyCruiseCabinCategory ({commit}, params) {  
-    console.log(params); 
-    commit('SET_AVALIABLE_CABINS_BY_CRUISE_CABIN_CATEGORY', await CabinService.fetchAvaliableCabinsbyCabinCategoryCruise(params)
-    )         
+  async getAvaliableCabinsbyCruiseCabinCategory ({commit}, params) {   
+    const cabins = await CabinService.fetchAvaliableCabinsbyCabinCategoryCruise(params)
+    for(let item in cabins){
+      cabins[item].numberOfAdult=0;
+      cabins[item].numberOfChild=0;
+    }
+    commit('SET_AVALIABLE_CABINS_BY_CRUISE_CABIN_CATEGORY', cabins)         
 }
 }
 

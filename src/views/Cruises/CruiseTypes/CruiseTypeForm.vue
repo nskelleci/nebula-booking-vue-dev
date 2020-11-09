@@ -27,7 +27,7 @@
         <vs-input label="Name" v-model="cruisetypeName" class="mt-1 w-full" name="cruisetype-name" v-validate="'required'" />
         <span class="text-danger text-sm" v-show="errors.has('cruisetype-name')">{{ errors.first('cruisetype-name') }}</span>
 
-        <vs-input-number min="0" max="99" label="Tax" v-model="tax" class="mt-5 w-full" name="tax" v-validate="'required|max:12'" />
+        <vs-input-number min="0" label="Tax" v-model="tax" class="mt-5 w-full" name="tax" v-validate="'required|max:12'" />
         <span class="text-danger text-sm" v-show="errors.has('tax')">{{ errors.first('tax') }}</span>
   
     </div>
