@@ -1,7 +1,6 @@
 import Vue from 'vue'
 import moment from 'moment'
 
-
 Vue.filter('title', function (value, replacer = '_') {
   if (!value) return ''
   value = value.toString()
@@ -17,6 +16,10 @@ Vue.filter('title', function (value, replacer = '_') {
 
 Vue.filter('formatShortDate', function (value) {
   if (value) {
-    return moment(String(value)).format('DD/MM/YYYY')
+    return moment(String(value)).format('YYYY-MM-DD')
   }
+
+
+
+  
 })
