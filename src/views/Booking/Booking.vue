@@ -160,8 +160,8 @@
                               <div class="flex justify-between" vs-align="center" vs-type="flex" vs-justify="center" v-for="(item,index) in selected" :key="index">
                                     <span class="text-grey"><b>{{ item.number }}</b> ({{ item.capacity }})</span>
                                     <span>{{item.bedType.name}}</span>
-                                    <vs-input-number label="Adult: " :min="0" :max="maxValue" :value="item.numberOfAdult" @input="updateAdultQuantity($event, index)" class="inline-flex" />
-                                    <vs-input-number label="Child: " :min="0" :max="maxValue" :value="item.numberOfChild" @input="updateChildQuantity($event, index)" class="inline-flex" />
+                                    <vs-input-number label="Adult: " :min="0" :max=" parseInt(item.numberOfAdult)  + parseInt(item.numberOfChild)  < item.capacity ? item.capacity : 0 " v-model="item.numberOfAdult"  class="inline-flex" />
+                                    <vs-input-number label="Child: " :min="0" :max="parseInt(item.numberOfAdult) + parseInt(item.numberOfChild) < item.capacity ? item.capacity : 0" v-model ="item.numberOfChild"  class="inline-flex" />
                               </div>
                               <vs-divider />
 
@@ -195,11 +195,11 @@ export default {
       selected: [],
       itemsPerPage: 10,
       isMounted: false,
-      maxValue:null,
       cruiseType:[],
       cruisesList:[],
       cabinCategory:[],
       cabins:[],
+      eventTemp:null,
       filter : {
         'selectedVessel' : null,
         'selectedCruiseType' : null,
@@ -218,7 +218,9 @@ export default {
         }else{
           this.$vs.loading.close();
         }
-    }
+    },
+
+
   },
   computed: {
     adultCount(index){
@@ -235,18 +237,6 @@ export default {
     }
   },
   methods: {
-    updateAdultQuantity (event, index) {
-        this.selected[index].numberOfAdult=event;
-
-        this.maxValue=this.selected[index].capacity
-
-        
-    },
-
-    updateChildQuantity(event, index) {
-        this.selected[index].numberOfChild=event;       
-    },
-
     handleSelected(tr) {
       this.$vs.notify({title: `${tr.description}`,text: `Number: ${tr.number}`})
     },

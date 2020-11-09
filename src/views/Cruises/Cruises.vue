@@ -11,7 +11,7 @@
   <div id="data-list-thumb-view" class="data-list-container">
     <div class="demo-alignment">
        <vs-popup fullscreen title="fullscreen" :active.sync="popupActive">
-        <prices :data="this.filter"/>
+        <prices :data="filter"/>
       </vs-popup>
   </div>
 
