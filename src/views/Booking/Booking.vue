@@ -208,23 +208,23 @@ export default {
       },
       selectedCruise:null,
       isLoading:false,
-      endUserPrice:null,
+      endUserPrice:null
     }
   },
   watch:{
-    isLoading:function(newData){
-        if(newData){
-          this.$vs.loading();
-        }else{
-          this.$vs.loading.close();
-        }
-    },
+    isLoading (newData) {
+      if (newData) {
+        this.$vs.loading()
+      } else {
+        this.$vs.loading.close()
+      }
+    }
 
 
   },
   computed: {
-    adultCount(index){
-      return adult[index]=0;
+    adultCount (index) {
+      return adult[index] = 0
     },
     currentPage () {
       if (this.isMounted) {
@@ -237,82 +237,82 @@ export default {
     }
   },
   methods: {
-    handleSelected(tr) {
-      this.$vs.notify({title: `${tr.description}`,text: `Number: ${tr.number}`})
+    handleSelected (tr) {
+      this.$vs.notify({title: `${tr.description}`, text: `Number: ${tr.number}`})
     },
   
     // TAB 1
-    async cruiseTypes() {
-      this.loadingBar(true);
+    async cruiseTypes () {
+      this.loadingBar(true)
       await this.$store.dispatch('getCruiseTypes')
-      this.cruiseType= this.$store.state.cruiseType.cruisetypes
-      this.loadingBar(false);
+      this.cruiseType = this.$store.state.cruiseType.cruisetypes
+      this.loadingBar(false)
     },
 
-    async selectedCruiseType(value){
-      this.loadingBar(true);
-      await this.$store.dispatch('getCruisebyCruiseType',value._id);
+    async selectedCruiseType (value) {
+      this.loadingBar(true)
+      await this.$store.dispatch('getCruisebyCruiseType', value._id)
 
       //filter için cruise tipi ve vessel id objelerini oluşturduk
-      this.filter.selectedCruiseType={
+      this.filter.selectedCruiseType = {
         _id:value._id,
-        name:""
+        name:''
       }
-      this.filter.selectedVessel={
+      this.filter.selectedVessel = {
         _id:value.vessel._id,
-        name:"",
-        flag:""
+        name:'',
+        flag:''
       }
-      this.getCruise();
-      this.loadingBar(false);
+      this.getCruise()
+      this.loadingBar(false)
     },
 
     // TAB 2
     getCruise () {
-        this.cruisesList = this.$store.state.booking.bookings;
-        console.log(this.cruisesList);
-        this.stepNextTab();
+      this.cruisesList = this.$store.state.booking.bookings
+      console.log(this.cruisesList)
+      this.stepNextTab()
     },
 
-    getSelectedCruise(value){
+    getSelectedCruise (value) {
 
-       //filter için Season objesini oluşturduk
-        this.filter.selectedSeason={
-          _id:value.season._id,
-          name:""
-        },
-        this.selectedCruise=value._id;
-        console.log(value);
-        this.getMarket();
+      //filter için Season objesini oluşturduk
+      this.filter.selectedSeason = {
+        _id:value.season._id,
+        name:''
+      },
+      this.selectedCruise = value._id
+      console.log(value)
+      this.getMarket()
     },
 
     // TAB 3
-    async getMarket(){
-      this.loadingBar(true);
+    async getMarket () {
+      this.loadingBar(true)
       //filter için Market objesini oluşturduk
-      this.filter.selectedMarket={
-        _id:"5f948cbb1a3a980011ad3686", //Turkish Market ID
-        name:""
+      this.filter.selectedMarket = {
+        _id:'5f948cbb1a3a980011ad3686', //Turkish Market ID
+        name:''
       }
 
       await this.$store.dispatch('getFilteredPrices', this.filter)
       this.cabinCategory = this.$store.state.price.filteredPrices
-      this.loadingBar(false);
-      this.stepNextTab();
+      this.loadingBar(false)
+      this.stepNextTab()
 
     },
 
-    async selectedCabinCategory(value){
-      this.loadingBar(true);
-      this.endUserPrice=value.endUserPrice
+    async selectedCabinCategory (value) {
+      this.loadingBar(true)
+      this.endUserPrice = value.endUserPrice
       const params = {
         cruise : this.selectedCruise,
         cabinCategory: value.cabinCategory._id
       }
-      await this.$store.dispatch('getAvaliableCabinsbyCruiseCabinCategory',params)
-      this.cabins=this.$store.state.cabin.avaliableCabinsbyCruiseCategory;
-      this.loadingBar(false);
-      this.stepNextTab();
+      await this.$store.dispatch('getAvaliableCabinsbyCruiseCabinCategory', params)
+      this.cabins = this.$store.state.cabin.avaliableCabinsbyCruiseCategory
+      this.loadingBar(false)
+      this.stepNextTab()
     },
 
     // TAB 3
@@ -341,11 +341,11 @@ export default {
       })
     },
 
-    stepNextTab(){
-      this.$refs.checkoutWizard.nextTab();
+    stepNextTab () {
+      this.$refs.checkoutWizard.nextTab()
     },
-    loadingBar(value){
-      this.isLoading=value
+    loadingBar (value) {
+      this.isLoading = value
     }
   },
   components: {
@@ -355,8 +355,8 @@ export default {
     FormWizard,
     TabContent
   },
-  created(){
-    this.cruiseTypes();
+  created () {
+    this.cruiseTypes()
   },
   mounted () {
     this.isMounted = true

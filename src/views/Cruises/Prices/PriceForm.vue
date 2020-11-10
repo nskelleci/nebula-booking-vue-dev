@@ -145,7 +145,7 @@ export default {
           }
 
           if (this.dataId !== null && this.dataId.length >= 0) {
-            this.$store.dispatch('updatePort', obj).catch(err => { console.error(err) })
+            this.$store.dispatch('updatePrice', obj).catch(err => { console.error(err) })
             //VesselService.updateVessel(obj)
           } else {
             delete obj._id

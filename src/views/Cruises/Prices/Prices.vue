@@ -101,7 +101,6 @@
       <template slot-scope="{data}">
         <tbody>
           <vs-tr :data="item" :key="_id" v-for="(item,_id) in data" >
-
             <vs-td>
               <p class="product-name font-medium truncate">{{ item.vessel.name }}</p>
             </vs-td>
@@ -251,6 +250,9 @@ export default {
   methods: {
     setSelected (value) {
       console.log(value)
+    },
+    async deleteData (priceId) {
+      await this.$store.dispatch('deletePrice', priceId)
     },
     async updateFilter (filter) {
       await this.$store.commit('SET_VALUES', filter)

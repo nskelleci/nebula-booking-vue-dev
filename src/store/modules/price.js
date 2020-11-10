@@ -25,9 +25,7 @@ const mutations = {
 
 const actions = {
   async getFilteredPrices ({commit}, filter) {
-    console.log('actiona gelen filter===', filter)
     commit('SET_FILTEREDPRICES', await PriceService.getPrices(filter))
-    console.log(state.filteredPrices)
   },
 
   updateFilter ({commit}, filter) {
@@ -42,15 +40,27 @@ const actions = {
         }
       }
     })
+  },
 
+  async updatePrice (_, price) {
+    await PriceService.updatePrice(price).then((response) => {
+      if (response) {
+        if (response.success) {
+          this.dispatch('getFilteredPrices', state.priceFilter)
+        }
+      }
+    })
+  },
+
+  async deletePrice (_, priceId) {
+    await PriceService.deletePrice(priceId).then((response) => {
+      if (response) {
+        if (response.success) {
+          this.dispatch('getFilteredPrices', state.priceFilter)
+        }
+      }
+    })
   }
-
-  // async updateVessel (_, vessel) {
-  //   await VesselService.updateVessel(vessel)
-  //   this.dispatch('getVessels')
-          
-  // }
-
 }
 
 export default {

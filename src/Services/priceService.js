@@ -16,9 +16,17 @@ export default {
     return await axios.put(`${apiUri.apiUri.URI}/price/updatePrice/${price._id}`, price)
       .then((response) => {
         notification.notifyMe(response.data)
-        return response.data.data
+        return response.data
       })
       .catch((error) => { notification.notifyMe(error)  })
+  },
+
+  async deletePrice (priceId) {
+    return await axios.delete(`${apiUri.apiUri.URI}/price/delete/${priceId}`)
+      .then((response) => {
+        notification.notifyMe(response.data)
+        return response.data
+      }).catch((error) => { notification.notifyMe(error) })
   },
 
   async getPrices (filter) {
