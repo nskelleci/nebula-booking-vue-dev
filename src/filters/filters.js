@@ -18,8 +18,4 @@ Vue.filter('formatShortDate', function (value) {
   if (value) {
     return moment(String(value)).format('YYYY-MM-DD')
   }
-
-
-
-  
 })
