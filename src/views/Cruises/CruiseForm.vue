@@ -382,10 +382,6 @@ export default {
     },
     delSchedule (index) {
       this.schedule.splice(index, 1)
-      this.schedule.sort(function (a, b) {
-        return new Date(b.date) - new Date(a.date)
-      })
-      this.schedule.reverse()
     },
     clearArrivalTime () {
       this.scheduleItem.arrivalTime = null

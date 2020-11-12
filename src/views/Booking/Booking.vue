@@ -155,27 +155,92 @@
                       </vs-table>
                 </div>
                 <div class="vx-col lg:w-2/5 w-full relative">
-                          <vx-card>
-                              <p class="font-semibold mb-3">Cabin Details</p>
-                              <div class="flex justify-between" vs-align="center" vs-type="flex" vs-justify="center" v-for="(item,index) in selected" :key="index">
-                                    <span class="text-grey"><b>{{ item.number }}</b> ({{ item.capacity }})</span>
-                                    <span>{{item.bedType.name}}</span>
-                                    <vs-input-number label="Adult: " :min="0" :max=" parseInt(item.numberOfAdult)  + parseInt(item.numberOfChild)  < item.capacity ? item.capacity : 0 " v-model="item.numberOfAdult"  class="inline-flex" />
-                                    <vs-input-number label="Child: " :min="0" :max="parseInt(item.numberOfAdult) + parseInt(item.numberOfChild) < item.capacity ? item.capacity : 0" v-model ="item.numberOfChild"  class="inline-flex" />
-                              </div>
-                              <vs-divider />
-
-                              <div class="flex justify-between font-semibold mb-3">
-                                  <span>Total</span>
-                                  <span>$574.3</span>
-                              </div>
-
-                              <vs-button class="w-full" @click="$refs.checkoutWizard.nextTab()">PLACE ORDER</vs-button>
-                          </vx-card>
+                  <vx-card>
+                      <p class="font-semibold mb-3">Cabin Details</p>
+                      <div class="flex justify-between" vs-align="center" vs-type="flex" vs-justify="center" v-for="(item,index) in selected" :key="index">
+                            <span class="text-grey"><b>{{ item.number }}</b> ({{ item.capacity }})</span>
+                            <span>{{item.bedType.name}}</span>
+                            <vs-input-number label="Adult: " :min="0" :max=" parseInt(item.numberOfAdult)  + parseInt(item.numberOfChild)  < item.capacity ? item.capacity : 0 " v-model="item.numberOfAdult"  class="inline-flex" />
+                            <vs-input-number label="Child: " :min="0" :max="parseInt(item.numberOfAdult) + parseInt(item.numberOfChild) < item.capacity ? item.capacity : 0" v-model ="item.numberOfChild"  class="inline-flex" />
+                      </div>
+                      <vs-divider />
+                      <div class="flex justify-between mb-2">
+                        <span class="text-grey">Total Passengers</span>
+                        <span>{{totalPassenger}}</span>
+                    </div>
+                    <vs-divider />
+                    <div class="flex justify-between font-semibold mb-3">
+                          <span>Total Cabin</span>
+                          <span>{{selected.length}}</span>
+                      </div>
+                      <vs-button v-if="isComplateCheck" class="w-full" @click="complate()">COMPLATE</vs-button>
+                  </vx-card>
                 </div>
               </div>
             </tab-content>
 
+            <!-- tab 5 content -->
+            <tab-content title="Booking" icon="feather icon-bar-chart" class="mb-5">
+              <div class="vx-row">
+                <div class="vx-col lg:w-5/5 w-full relative">
+                  <vx-card title="Passenger and Contact Details">
+                      <p>Please Enter Passenger Information</p>
+                      <vs-collapse type="margin" accordion>
+                        <vs-collapse-item v-for="(item,index) in passengerList" :key="index">
+                          
+                            <div slot="header"><vs-avatar icon-pack="feather" icon="icon-user" style="vertical-align: middle;" /> {{index+1}}. {{ item.isAdult ? 'Adult Passenger (ages 12+)' : 'Child Passenger (ages 0-12)' }} | Cabin Number <span class="text-warning font-medium">#{{item.cabinnumber}}</span></div>
+                            <div class="vx-row">
+                            <div class="vx-col sm:w-1/2 w-full mb-2">
+
+                              <vs-input class="w-full" v-validate="'required'" data-vv-validate-on="blur" :name="'first_name_'+index" label-placeholder="First Name" v-model="item.firstname" />
+                              <span class="text-danger text-sm" v-show="errors.has('first_name_'+index)">{{ errors.first('first_name_'+index) }}</span>
+
+                            </div>
+                            <div class="vx-col sm:w-1/2 w-full mb-2">
+                              <vs-input class="w-full" v-validate="'required'" data-vv-validate-on="blur" :name="'lastname_'+index" label-placeholder="Last Name" v-model="item.lastname" />
+                              <span class="text-danger text-sm" v-show="errors.has('lastname_'+index)">{{ errors.first('lastname_'+index) }}</span>
+                            </div>
+                          </div>
+                          <div class="vx-row">
+                            <div class="vx-col sm:w-1/2 w-full mb-2">
+                              <vs-input class="w-full"  v-validate="'required'" data-vv-validate-on="blur" :name="'idnumber_'+index" label-placeholder="ID Number" v-model="item.idnumber" />
+                              <span class="text-danger text-sm" v-show="errors.has('idnumber_'+index)">{{ errors.first('idnumber_'+index) }}</span>
+                            </div>
+                            <div class="vx-col sm:w-1/2 w-full mb-2">
+                              <vs-input class="w-full" v-validate="'required'" data-vv-validate-on="blur" :name="'passportnumber_'+index" label-placeholder="Passport Number" v-model="item.passportnumber" />
+                              <span class="text-danger text-sm" v-show="errors.has('passportnumber_'+index)">{{ errors.first('passportnumber_'+index) }}</span>
+                            </div>
+                          </div>
+                          <div class="vx-row">
+                            <div class="vx-col sm:w-1/2 w-full mb-2">
+                              <vs-input class="w-full" v-validate="'date_format:dd/MM/yyyy|date_between:10/09/1900,20/09/2016'" data-vv-validate-on="blur" :name="'dateofbirth_'+index" label-placeholder="Birth Date" v-model="item.dateofbirth" />
+                               <span class="text-danger text-sm" v-show="errors.has('dateofbirth_'+index)">{{ errors.first('dateofbirth_'+index) }}</span>
+                            </div>
+                            <div class="vx-col sm:w-1/2 w-full mb-6">
+                              <vs-input class="w-full" v-validate="'required'" data-vv-validate-on="blur" :name="'phonenumber_'+index" label-placeholder="Phone Number" v-model="item.phonenumber" />
+                              <span class="text-danger text-sm" v-show="errors.has('phonenumber_'+index)">{{ errors.first('phonenumber_'+index) }}</span>
+                            </div>
+                          </div>
+                          <div class="vx-row">
+                            <div class="vx-col sm:w-1/2 w-full mb-2">
+                              <vs-input class="w-full" v-validate="'required'" data-vv-validate-on="blur" :name="'emergencynumber_'+index" label-placeholder="Emergency Number" v-model="item.emergencynumber" />
+                              <span class="text-danger text-sm" v-show="errors.has('emergencynumber_'+index)">{{ errors.first('emergencynumber_'+index) }}</span>
+
+                            </div>
+                            <div class="vx-col sm:w-1/2 w-full mb-12">
+                              <vs-input class="w-full" v-validate="'required'" data-vv-validate-on="blur" :name="'email_'+index" label-placeholder="Email Address" v-model="item.email" />
+                              <span class="text-danger text-sm m" v-show="errors.has('email_'+index)">{{ errors.first('email_'+index) }}</span>
+                            </div>
+                          </div>
+                        </vs-collapse-item>
+                    </vs-collapse>
+                    <div class="col-md-12 bg-light text-right">
+                        <vs-button color="primary"  type="border" @click="bookingAllData()">Booking</vs-button>
+                    </div>
+                  </vx-card>
+                </div>
+              </div>
+            </tab-content>
         </form-wizard>
         <div class="grid-layout-container alignment-block">
 </div>
@@ -188,10 +253,11 @@ import 'vue-form-wizard/dist/vue-form-wizard.min.css'
 const cruiseTypeView = () => import('./components/cruiseTypeView.vue')
 const cruisesView = () => import('./components/cruisesView.vue')
 const pricesView = () => import('./components/pricesView.vue')
-
+const bookingView = () => import('./components/bookingView.vue')
 export default {
   data () {
     return {
+      selectedCabinNumber:null,
       selected: [],
       itemsPerPage: 10,
       isMounted: false,
@@ -208,7 +274,9 @@ export default {
       },
       selectedCruise:null,
       isLoading:false,
-      endUserPrice:null
+      endUserPrice:null,
+      passengerList:[],
+      isComplate:false,
     }
   },
   watch:{
@@ -219,8 +287,6 @@ export default {
         this.$vs.loading.close()
       }
     }
-
-
   },
   computed: {
     adultCount (index) {
@@ -234,13 +300,81 @@ export default {
     },
     queriedItems () {
       return this.$refs.table ? this.$refs.table.queriedResults.length : this.cabins.length
-    }
+    },
+    totalPassenger(){
+      let total=0;
+      for(let i =0;i<this.selected.length;i++){
+        total+=parseInt(this.selected[i].numberOfAdult)+parseInt(this.selected[i].numberOfChild)
+      }
+      console.log(this.selected);
+      return total
+    },
+    isSmallerScreen () {
+      return this.$store.state.windowWidth < 768
+    },
+
+    isComplateCheck(){
+      let isEnter=false
+      for(let i=0;i<this.selected.length;i++){
+        if((parseInt(this.selected[i].numberOfChild)+parseInt(this.selected[i].numberOfAdult)==0)){
+          return false;
+        }
+        isEnter=true
+      }
+      return isEnter;
+    },
   },
   methods: {
+    createPassangerArray(){
+       this.passengerList=[];
+       for(let i=0;i<this.selected.length;i++){
+         for(let j=0;j<parseInt(this.selected[i].numberOfAdult);j++){
+            let passanger={
+              cabinnumber:this.selected[i].number,
+              firstname:"",
+              lastname:"",
+              idnumber:"",
+              passportnumber:"",
+              dateofbirth:"",
+              phonenumber:"",
+              emergencynumber:"",
+              email:"",
+              isAdult:true
+            }
+            this.passengerList.push(passanger);
+         }
+         for(let j=0;j<parseInt(this.selected[i].numberOfChild);j++){
+            let passanger={
+              cabinnumber:this.selected[i].number,
+              firstname:"",
+              lastname:"",
+              idnumber:"",
+              passportnumber:"",
+              dateofbirth:"",
+              phonenumber:"",
+              emergencynumber:"",
+              email:"",
+              isAdult:false
+            }
+            this.passengerList.push(passanger);
+         }
+       }
+    },
+
+    bookingAllData(){
+      console.log(this.passengerList);
+    },
+
+    complate(){
+      this.$refs.checkoutWizard.nextTab()
+      this.createPassangerArray()
+      console.log(this.cabinPassenger);
+    },
+
     handleSelected (tr) {
       this.$vs.notify({title: `${tr.description}`, text: `Number: ${tr.number}`})
     },
-  
+
     // TAB 1
     async cruiseTypes () {
       this.loadingBar(true)
@@ -353,7 +487,8 @@ export default {
     cruisesView,
     pricesView,
     FormWizard,
-    TabContent
+    TabContent,
+    bookingView
   },
   created () {
     this.cruiseTypes()

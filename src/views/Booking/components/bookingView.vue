@@ -11,39 +11,52 @@
     <vx-card class="list-view-item overflow-hidden" v-on="$listeners">
 
         <template slot="no-body">
-            <div class="vx-row item-details no-gutter">
+             <div class="vx-row item-details no-gutter">
 
                 <!-- IMG COL -->
                 <div class="vx-col sm:w-1/4 w-full item-img-container bg-white flex items-center justify-center cursor-pointer">
-                    <img src="/img/gemini-out1.19829b92.jpg" class="grid-view-img p-4">
+                    <img src="https://images.r.cruisecritic.com/cruiserschoice/2019/cabin_compressed.jpg"  class="grid-view-img p-4">
                 </div>
+
                 <!-- ITEM NAME & DESC COL -->
                 <div class="vx-col sm:w-1/2">
                     <div class="p-4 pt-6">
                         <slot name="item-meta">
                             <h6 class="item-name font-semibold mb-1 hover:text-primary cursor-pointer">{{ item.cabinCategory.name }}</h6>
-                            <p class="font-medium text-grey mt-4">Cruise Type</p>
-                            <p class="text-success font-medium">{{ item.cruiseType.name }}</p>
+                            <p class="text-sm mb-4">Bed Type: <span class="font-semibold cursor-pointer">{{ item.bedType.description }}</span></p>
+                            <p class="item-description text-sm">{{ item.description }}</p>
                         </slot>
                     </div>
                 </div>
+
                 <!-- PURCHASE COL -->
                 <div class="vx-col sm:w-1/4 w-full flex items-center sm:border border-0 border-solid d-theme-border-grey-light border-r-0 border-t-0 border-b-0">
 
                     <div class="p-4 flex flex-col w-full">
-                        <div class="my-6">
-                            <h5 class="font-bold text-center">₺ {{ item.endUserPrice}}</h5>
-                            <span class="text-grey flex items-start justify-center mt-1">
-                                  <feather-icon icon="CheckCircleIcon" svgClasses="w-4 h-4" />
-                                <span class="text-sm ml-2">All in One</span>
-                            </span>
+
+                        <div class="text-warning flex self-end border border-solid border-warning py-1 px-2 rounded">
+                            <span class="text-sm mr-1">{{ item.number }}</span>
+                            <feather-icon icon="HashIcon" svgClasses="h-4 w-4" />
                         </div>
+
+                        <div class="my-6">
+                            <h5 class="font-bold text-center">{{ parseInt(item.numberOfAdult)+parseInt(item.numberOfChild)}}</h5>
+                            <span class="text-grey flex items-start justify-center mt-1">
+                                 <p class="text-sm ml-2">Adult: {{item.numberOfAdult}}</p><br>
+                             <p class="text-sm ml-2">Child: {{item.numberOfChild}}</p><br>
+                            </span>
+                             <span class="text-grey flex items-start justify-center mt-1">
+                                <p class="text-success text-sm">Capacity: {{item.capacity}}</p>
+                            </span>
+                            
+                        </div>
+
+                        <!-- SLOT: ACTION BUTTONS -->
                         <slot name="action-buttons" />
                     </div>
                 </div>
-                </div>
+            </div>
         </template>
-
     </vx-card>
 </template>
 
