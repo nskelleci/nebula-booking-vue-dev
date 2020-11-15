@@ -1,4 +1,4 @@
-import axios from '@/axios.js'
+import axios from '../axios'
 import notification from '../assets/utils/notify'
 const apiUri = require('../Helpers/URI')  
 export default {
@@ -13,10 +13,12 @@ export default {
         }})
       .then(response => {                
         notification.notifyMe(response.data)
+
+        const cookie = this.$cookie.get('access_token')
+        console.log(cookie)
         return response
       })
       .catch((error) => { return (error) })
   }
 
-  
 }

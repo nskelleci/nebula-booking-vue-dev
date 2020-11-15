@@ -1,4 +1,4 @@
-import axios from '@/axios.js'
+import axios from '../axios'
 import notification from '../assets/utils/notify'
 const apiUri = require('../Helpers/URI')  
 

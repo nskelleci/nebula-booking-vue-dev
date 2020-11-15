@@ -1,4 +1,4 @@
-import axios from '@/axios.js'
+import axios from '../axios'
 import notification from '../assets/utils/notify'
 const apiUri = require('../Helpers/URI')  
 export default {
@@ -22,7 +22,12 @@ export default {
   },
 
   async fetchCruises () {
-    return await axios.get(`${apiUri.apiUri.URI}/cruise/GetAll/`)
+    return await axios.get(`${apiUri.apiUri.URI}/cruise/GetAll/`, {
+      withCredentials:true,
+      headers: {
+        'Accept': 'application/json',
+        'Content-Type': 'application/json'
+      }})
       .then((response) => {
         return response.data.data
       })
