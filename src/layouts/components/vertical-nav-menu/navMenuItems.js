@@ -53,6 +53,8 @@ export default [
     header: 'Admin',
     icon: 'PackageIcon',
     i18n: 'Admin',
+    isAdmin : true,
+
     items: [
       {
         url: null,
@@ -67,7 +69,10 @@ export default [
             slug: 'vessels',
             i18n: 'Vessels'
           }
-        ]
+        ],
+        meta: {
+          rule: 'editor'
+        }
       },
       {
         //url: '/Cruise',

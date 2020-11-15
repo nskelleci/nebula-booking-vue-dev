@@ -276,7 +276,7 @@ export default {
       isLoading:false,
       endUserPrice:null,
       passengerList:[],
-      isComplate:false,
+      isComplate:false
     }
   },
   watch:{
@@ -301,74 +301,74 @@ export default {
     queriedItems () {
       return this.$refs.table ? this.$refs.table.queriedResults.length : this.cabins.length
     },
-    totalPassenger(){
-      let total=0;
-      for(let i =0;i<this.selected.length;i++){
-        total+=parseInt(this.selected[i].numberOfAdult)+parseInt(this.selected[i].numberOfChild)
+    totalPassenger () {
+      let total = 0
+      for (let i = 0; i < this.selected.length; i++) {
+        total += parseInt(this.selected[i].numberOfAdult) + parseInt(this.selected[i].numberOfChild)
       }
-      console.log(this.selected);
+      console.log(this.selected)
       return total
     },
     isSmallerScreen () {
       return this.$store.state.windowWidth < 768
     },
 
-    isComplateCheck(){
-      let isEnter=false
-      for(let i=0;i<this.selected.length;i++){
-        if((parseInt(this.selected[i].numberOfChild)+parseInt(this.selected[i].numberOfAdult)==0)){
-          return false;
+    isComplateCheck () {
+      let isEnter = false
+      for (let i = 0; i < this.selected.length; i++) {
+        if ((parseInt(this.selected[i].numberOfChild) + parseInt(this.selected[i].numberOfAdult) === 0)) {
+          return false
         }
-        isEnter=true
+        isEnter = true
       }
-      return isEnter;
-    },
+      return isEnter
+    }
   },
   methods: {
-    createPassangerArray(){
-       this.passengerList=[];
-       for(let i=0;i<this.selected.length;i++){
-         for(let j=0;j<parseInt(this.selected[i].numberOfAdult);j++){
-            let passanger={
-              cabinnumber:this.selected[i].number,
-              firstname:"",
-              lastname:"",
-              idnumber:"",
-              passportnumber:"",
-              dateofbirth:"",
-              phonenumber:"",
-              emergencynumber:"",
-              email:"",
-              isAdult:true
-            }
-            this.passengerList.push(passanger);
-         }
-         for(let j=0;j<parseInt(this.selected[i].numberOfChild);j++){
-            let passanger={
-              cabinnumber:this.selected[i].number,
-              firstname:"",
-              lastname:"",
-              idnumber:"",
-              passportnumber:"",
-              dateofbirth:"",
-              phonenumber:"",
-              emergencynumber:"",
-              email:"",
-              isAdult:false
-            }
-            this.passengerList.push(passanger);
-         }
-       }
+    createPassangerArray () {
+      this.passengerList = []
+      for (let i = 0; i < this.selected.length; i++) {
+        for (let j = 0; j < parseInt(this.selected[i].numberOfAdult); j++) {
+          const passanger = {
+            cabinnumber:this.selected[i].number,
+            firstname:'',
+            lastname:'',
+            idnumber:'',
+            passportnumber:'',
+            dateofbirth:'',
+            phonenumber:'',
+            emergencynumber:'',
+            email:'',
+            isAdult:true
+          }
+          this.passengerList.push(passanger)
+        }
+        for (let j = 0; j < parseInt(this.selected[i].numberOfChild); j++) {
+          const passanger = {
+            cabinnumber:this.selected[i].number,
+            firstname:'',
+            lastname:'',
+            idnumber:'',
+            passportnumber:'',
+            dateofbirth:'',
+            phonenumber:'',
+            emergencynumber:'',
+            email:'',
+            isAdult:false
+          }
+          this.passengerList.push(passanger)
+        }
+      }
     },
 
-    bookingAllData(){
-      console.log(this.passengerList);
+    bookingAllData () {
+      console.log(this.passengerList)
     },
 
-    complate(){
+    complate () {
       this.$refs.checkoutWizard.nextTab()
       this.createPassangerArray()
-      console.log(this.cabinPassenger);
+      console.log(this.cabinPassenger)
     },
 
     handleSelected (tr) {

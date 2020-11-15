@@ -39,72 +39,114 @@ const router = new Router({
         {
           path: '/Vessels',
           name: 'Vessel',
-          component: () => import('./views/Vessel/vessels.vue')
+          component: () => import('./views/Vessel/vessels.vue'),
+          meta: {
+            rule: 'manager'
+          }
         },
         {
           path: '/Vessels/add',
           name: 'Add-Vessel',
-          component: () => import('./views/Vessel/VesselForm.vue')
+          component: () => import('./views/Vessel/VesselForm.vue'),
+          meta: {
+            rule: 'manager'
+          }
         },
         {
           path: '/Vessels/edit/:id',
           name :'Edit Vessel',
-          component : () => import ('./views/Vessel/VesselForm.vue')
+          component : () => import ('./views/Vessel/VesselForm.vue'),
+          meta: {
+            rule: 'manager'
+          }
         },
         {
           path : '/Vessels/:id',
           name : 'vessel-detail',
-          component : () => import ('./views/Vessel/VesselDetail.vue')
+          component : () => import ('./views/Vessel/VesselDetail.vue'),
+          meta: {
+            rule: 'manager'
+          }
         },
         {
           path : '/Countries/',
           name : 'countries',
-          component : () => import ('./views/Cruises/Countrys/Countries.vue')
+          component : () => import ('./views/Cruises/Countrys/Countries.vue'),
+          meta: {
+            rule: 'manager'
+          }
         },
         {
           path : '/Ports/',
           name : 'ports',
-          component : () => import ('./views/Cruises/Ports/Ports.vue')
+          component : () => import ('./views/Cruises/Ports/Ports.vue'),
+          meta: {
+            rule: 'manager'
+          }
         },
         {
           path : '/CruiseTypes/',
           name : 'cruisetypes',
-          component : () => import ('./views/Cruises/CruiseTypes/CruiseTypes.vue')
+          component : () => import ('./views/Cruises/CruiseTypes/CruiseTypes.vue'),
+          meta: {
+            rule: 'manager'
+          }
         },
         {
           path : '/CruiseSeasons/',
           name : 'cruiseseasons',
-          component : () => import ('./views/Cruises/CruiseSeans/CruiseSeasons.vue')
+          component : () => import ('./views/Cruises/CruiseSeans/CruiseSeasons.vue'),
+          meta: {
+            rule: 'manager'
+          }
         },
         {
           path : '/Markets/',
           name : 'markets',
-          component : () => import ('./views/Cruises/Markets/Markets.vue')
+          component : () => import ('./views/Cruises/Markets/Markets.vue'),
+          meta: {
+            rule: 'manager'
+          }
         },
         {
           path : '/Prices/',
           name : 'prices',
-          component : () => import ('./views/Cruises/Prices/Prices.vue')
+          component : () => import ('./views/Cruises/Prices/Prices.vue'),
+          meta: {
+            rule: 'manager'
+          }
         },
         {
           path : '/AgencyTypes/',
           name : 'agencytypes',
-          component : () => import ('./views/Agencies/AgencyTypes/AgencyTypes.vue')
+          component : () => import ('./views/Agencies/AgencyTypes/AgencyTypes.vue'),
+          meta: {
+            rule: 'manager'
+          }
         },
         {
           path : '/Agencies/',
           name : 'Agencies',
-          component : () => import ('./views/Agencies/Agencies.vue')
+          component : () => import ('./views/Agencies/Agencies.vue'),
+          meta: {
+            rule: 'manager'
+          }
         },
         {
           path : '/Cruises/',
           name : 'cruises',
-          component : () => import ('./views/Cruises/Cruises.vue')
+          component : () => import ('./views/Cruises/Cruises.vue'),
+          meta: {
+            rule: 'manager'
+          }
         },
         {
           path : '/Booking/',
           name : 'booking',
-          component : () => import ('./views/Booking/Booking.vue')
+          component : () => import ('./views/Booking/Booking.vue'),
+          meta: {
+            rule: 'manager'
+          }
         }
       ]
     },
