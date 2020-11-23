@@ -91,27 +91,19 @@
 </template>
 
 <script>
-import authService from '../../Services/authService'
 export default{
   data () {
     return {
       
-        agencyCode: '',
-        password: ''
-      
-      
+      agencyCode: '',
+      password: ''            
       // checkbox_remember_me: false
     }
   },
   methods: {
     async login () {
-      await authService.login(this.agencyCode, this.password).then(response => {
-        if  (response) {
-          if (response.status === 200) {
-            console.log('successs')
-          }
-        }
-      }).catch(err => console.log(err))
+      const params = {agencyCode : this.agencyCode, password : this.password}
+      await this.$store.dispatch('login', params)
     }
   }
 }

@@ -163,7 +163,6 @@ export default {
       isNavbarDark      : false,
       navbarColor       : themeConfig.navbarColor || '#fff',
       navbarType        : themeConfig.navbarType  || 'floating',
-      navMenuItems,
       routerTransition  : themeConfig.routerTransition || 'none',
       routeTitle        : this.$route.meta.pageTitle,
       steps: [
@@ -214,6 +213,11 @@ export default {
     }
   },
   computed: {
+    navMenuItems () {
+      const user = JSON.parse(localStorage.getItem('agency')) 
+      const role = user.role      
+      return navMenuItems.filter(item => item.role.includes(role))
+    },
     bodyOverlay () { return this.$store.state.bodyOverlay },
     contentAreaClass () {
       if (this.mainLayoutType === 'vertical') {

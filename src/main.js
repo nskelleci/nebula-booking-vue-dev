@@ -40,6 +40,8 @@ import './assets/scss/main.scss'
 // Tailwind
 import '@/assets/css/main.css'
 
+import acl from './acl/acl'
+
 
 // Vue Router
 import router from './router'
@@ -76,11 +78,16 @@ window.toastr = require('toastr')
 
 
 Vue.use(VueToastr2)
+//ACL
+//import i18n from './i18n/i18n'
 
 Vue.config.productionTip = false
+
+
 
 new Vue({
   router,
   store,
+  acl,
   render: h => h(App)
 }).$mount('#app')

@@ -72,7 +72,6 @@
             <!-- /Group Header -->
 
             <template v-else-if="!item.header">
-
               <!-- Nav-Item -->
               <v-nav-menu-item
                 v-if="!item.submenu"
@@ -178,7 +177,6 @@ export default {
           }
         }
       }
-
       return clone
     },
     isVerticalNavMenuActive: {
@@ -337,6 +335,7 @@ export default {
   },
   mounted () {
     this.setVerticalNavMenuWidth()
+    console.log(this.navMenuItems)
   }
 }
 

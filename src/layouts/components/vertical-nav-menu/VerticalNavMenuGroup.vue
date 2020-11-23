@@ -51,8 +51,7 @@
 
       <!-- Group Items -->
       <ul ref="items" :style="styleItems" class="vs-sidebar-group-items">
-        <li v-for="(groupItem, index) in group.submenu" :key="index">
-
+        <li  v-for="(groupItem, index) in group.submenu" :key="index">
           <!-- If item is group -->
           <v-nav-menu-group
             v-if        = "groupItem.submenu"
@@ -74,9 +73,8 @@
               <span class="truncate">{{ groupItem.name }}</span>
               <vs-chip class="ml-auto" :color="groupItem.tagColor" v-if="groupItem.tag">{{ groupItem.tag }}</vs-chip>
           </v-nav-menu-item>
-
         </li>
-      </ul>
+     </ul>
       <!-- /Group Items -->
   </div>
 </template>
@@ -86,6 +84,7 @@
 import VNavMenuItem from './VerticalNavMenuItem.vue'
 
 export default {
+  //"groupItem.submenu"
   name  : 'v-nav-menu-group',
   props : {
     openHover  : { type: Boolean, default: false },
@@ -101,6 +100,7 @@ export default {
     openItems : false
   }),
   computed: {
+    
     verticalNavMenuItemsMin () { return this.$store.state.verticalNavMenuItemsMin },
     styleItems () {
       return { maxHeight: this.maxHeight }

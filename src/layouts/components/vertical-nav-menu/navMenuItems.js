@@ -34,6 +34,7 @@ export default [
     // tagColor: 'warning',
     icon: 'HomeIcon',
     i18n: 'Dashboard',
+    role : ['manager'],
     submenu: [
       {
         //url: '/dashboard/analytics',
@@ -46,6 +47,7 @@ export default [
         name: 'Agency Dashboard',
         slug: 'dashboard-ecommerce',
         i18n: 'eCommerce'
+
       }
     ]
   },
@@ -53,11 +55,10 @@ export default [
     header: 'Admin',
     icon: 'PackageIcon',
     i18n: 'Admin',
-    isAdmin : true,
-
+    role : 'manager',
     items: [
       {
-        url: null,
+        url: '/vessels/',
         name: 'Vessel',
         slug: 'Vessel',
         icon: 'MailIcon',
@@ -75,14 +76,15 @@ export default [
         }
       },
       {
-        //url: '/Cruise',
-        name: 'Cruise',
+        //url: '/Cruises',
+        name: 'Cruises',
+        rule : 'isManager',
         slug: 'cruise',
         icon: 'MessageSquareIcon',
         i18n: 'Cruise',
         submenu: [
           {
-            url: '/Cruises/',
+            url: '/Cruises',
             name: 'Cruises',
             slug: 'cruises',
             i18n: 'cruises'
@@ -162,6 +164,7 @@ export default [
     header: 'Agency',
     icon: 'LayersIcon',
     i18n: 'UI',
+    role : ['agency', 'manager'],
     items: [
       {
         url: null,

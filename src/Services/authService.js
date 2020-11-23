@@ -14,8 +14,6 @@ export default {
       .then(response => {                
         notification.notifyMe(response.data)
 
-        const cookie = this.$cookie.get('access_token')
-        console.log(cookie)
         return response
       })
       .catch((error) => { return (error) })

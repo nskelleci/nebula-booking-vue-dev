@@ -10,6 +10,7 @@
 
 <template>
   <div
+    v-if="canSee"
     class="vs-sidebar--item"
     :class="[
       {'vs-sidebar-item-active'            : activeLink},
@@ -52,6 +53,11 @@ export default {
     isDisabled  : { type: Boolean,                default: false            }
   },
   computed: {
+    canSee () {
+      const user = JSON.parse(localStorage.getItem('agency'))
+      this.$acl.check(user.role)
+      return this.to ? this.$acl.check(this.$router.match(this.to).meta.rule) : true
+    },
     activeLink () {
       return !!((this.to === this.$route.path || this.$route.meta.parent === this.slug) && this.to)
     }

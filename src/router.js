@@ -10,7 +10,8 @@
 
 import Vue from 'vue'
 import Router from 'vue-router'
-
+import store from './store/store'
+import acl from './acl/acl'
 Vue.use(Router)
 
 const router = new Router({
@@ -34,14 +35,17 @@ const router = new Router({
         {
           path: '/',
           name: 'home',
-          component: () => import('./views/Home.vue')
+          component: () => import('./views/Home.vue'),
+          meta: {
+            rule: 'isAgency'
+          }
         },
         {
           path: '/Vessels',
           name: 'Vessel',
           component: () => import('./views/Vessel/vessels.vue'),
           meta: {
-            rule: 'manager'
+            rule: 'isManager'
           }
         },
         {
@@ -49,7 +53,7 @@ const router = new Router({
           name: 'Add-Vessel',
           component: () => import('./views/Vessel/VesselForm.vue'),
           meta: {
-            rule: 'manager'
+            rule: 'isManager'
           }
         },
         {
@@ -57,7 +61,7 @@ const router = new Router({
           name :'Edit Vessel',
           component : () => import ('./views/Vessel/VesselForm.vue'),
           meta: {
-            rule: 'manager'
+            rule: 'isManager'
           }
         },
         {
@@ -65,7 +69,7 @@ const router = new Router({
           name : 'vessel-detail',
           component : () => import ('./views/Vessel/VesselDetail.vue'),
           meta: {
-            rule: 'manager'
+            rule: 'isManager'
           }
         },
         {
@@ -73,7 +77,7 @@ const router = new Router({
           name : 'countries',
           component : () => import ('./views/Cruises/Countrys/Countries.vue'),
           meta: {
-            rule: 'manager'
+            rule: 'isManager'
           }
         },
         {
@@ -81,7 +85,7 @@ const router = new Router({
           name : 'ports',
           component : () => import ('./views/Cruises/Ports/Ports.vue'),
           meta: {
-            rule: 'manager'
+            rule: 'isManager'
           }
         },
         {
@@ -89,7 +93,7 @@ const router = new Router({
           name : 'cruisetypes',
           component : () => import ('./views/Cruises/CruiseTypes/CruiseTypes.vue'),
           meta: {
-            rule: 'manager'
+            rule: 'isManager'
           }
         },
         {
@@ -97,7 +101,7 @@ const router = new Router({
           name : 'cruiseseasons',
           component : () => import ('./views/Cruises/CruiseSeans/CruiseSeasons.vue'),
           meta: {
-            rule: 'manager'
+            rule: 'isManager'
           }
         },
         {
@@ -105,7 +109,7 @@ const router = new Router({
           name : 'markets',
           component : () => import ('./views/Cruises/Markets/Markets.vue'),
           meta: {
-            rule: 'manager'
+            rule: 'isManager'
           }
         },
         {
@@ -113,7 +117,7 @@ const router = new Router({
           name : 'prices',
           component : () => import ('./views/Cruises/Prices/Prices.vue'),
           meta: {
-            rule: 'manager'
+            rule: 'isManager'
           }
         },
         {
@@ -121,7 +125,7 @@ const router = new Router({
           name : 'agencytypes',
           component : () => import ('./views/Agencies/AgencyTypes/AgencyTypes.vue'),
           meta: {
-            rule: 'manager'
+            rule: 'isManager'
           }
         },
         {
@@ -129,15 +133,15 @@ const router = new Router({
           name : 'Agencies',
           component : () => import ('./views/Agencies/Agencies.vue'),
           meta: {
-            rule: 'manager'
+            rule: 'isManager'
           }
         },
         {
-          path : '/Cruises/',
+          path : '/Cruises',
           name : 'cruises',
           component : () => import ('./views/Cruises/Cruises.vue'),
           meta: {
-            rule: 'manager'
+            rule: 'isManager'
           }
         },
         {
@@ -145,7 +149,7 @@ const router = new Router({
           name : 'booking',
           component : () => import ('./views/Booking/Booking.vue'),
           meta: {
-            rule: 'manager'
+            rule: 'isAgency'
           }
         }
       ]
@@ -163,22 +167,38 @@ const router = new Router({
         {
           path: '/pages/login',
           name: 'page-login',
-          component: () => import('@/views/pages/Login.vue')
+          component: () => import('@/views/pages/Login.vue'),
+          meta: {
+            rule : 'isPublic'
+          }
         },
         {
           path: '/pages/error-404',
           name: 'page-error-404',
-          component: () => import('@/views/pages/Error404.vue')
+          component: () => import('@/views/pages/Error404.vue'),
+          meta: {
+            rule : '*'
+          }
         }
       ]
     },
     // Redirect to 404 page, if no match found
     {
       path: '*',
-      redirect: '/pages/error-404'
+      redirect: '/pages/error-404',
+      meta: {
+        rule : '*'
+      }
     }
   ]
 })
+
+router.beforeEach((to, from, next) => {
+  const loggedin = this.$acl.check('public')
+  if (to.name !== 'page-login' && loggedin) next({ name: 'page-login' })
+  else next()
+})
+
 
 router.afterEach(() => {
   // Remove initial loading
