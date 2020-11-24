@@ -23,8 +23,8 @@ const actions = {
         if (response.status === 200) {          
           localStorage.setItem('agency', JSON.stringify(response.data.data))
           commit('SET_CURRENT_USER',  JSON.stringify(response.data.data))
-          commit('IS_LOGGEDIN', true)
-          router.push('/')
+          commit('IS_LOGGEDIN', true)          
+          // this.$acl.change(response.data.data.role)
         }
       }
     }).catch(err => console.log(err))

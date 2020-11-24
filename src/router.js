@@ -11,7 +11,6 @@
 import Vue from 'vue'
 import Router from 'vue-router'
 import store from './store/store'
-import acl from './acl/acl'
 Vue.use(Router)
 
 const router = new Router({
@@ -37,7 +36,8 @@ const router = new Router({
           name: 'home',
           component: () => import('./views/Home.vue'),
           meta: {
-            rule: 'isAgency'
+            rule: 'isAgency',
+            authRequired : true
           }
         },
         {
@@ -45,7 +45,8 @@ const router = new Router({
           name: 'Vessel',
           component: () => import('./views/Vessel/vessels.vue'),
           meta: {
-            rule: 'isManager'
+            rule: 'isManager',
+            authRequired : true
           }
         },
         {
@@ -53,7 +54,8 @@ const router = new Router({
           name: 'Add-Vessel',
           component: () => import('./views/Vessel/VesselForm.vue'),
           meta: {
-            rule: 'isManager'
+            rule: 'isManager',
+            authRequired : true
           }
         },
         {
@@ -61,7 +63,8 @@ const router = new Router({
           name :'Edit Vessel',
           component : () => import ('./views/Vessel/VesselForm.vue'),
           meta: {
-            rule: 'isManager'
+            rule: 'isManager',
+            authRequired : true
           }
         },
         {
@@ -69,7 +72,8 @@ const router = new Router({
           name : 'vessel-detail',
           component : () => import ('./views/Vessel/VesselDetail.vue'),
           meta: {
-            rule: 'isManager'
+            rule: 'isManager',
+            authRequired : true
           }
         },
         {
@@ -77,7 +81,8 @@ const router = new Router({
           name : 'countries',
           component : () => import ('./views/Cruises/Countrys/Countries.vue'),
           meta: {
-            rule: 'isManager'
+            rule: 'isManager',
+            authRequired : true
           }
         },
         {
@@ -85,7 +90,8 @@ const router = new Router({
           name : 'ports',
           component : () => import ('./views/Cruises/Ports/Ports.vue'),
           meta: {
-            rule: 'isManager'
+            rule: 'isManager',
+            authRequired : true
           }
         },
         {
@@ -93,7 +99,8 @@ const router = new Router({
           name : 'cruisetypes',
           component : () => import ('./views/Cruises/CruiseTypes/CruiseTypes.vue'),
           meta: {
-            rule: 'isManager'
+            rule: 'isManager',
+            authRequired : true
           }
         },
         {
@@ -101,7 +108,8 @@ const router = new Router({
           name : 'cruiseseasons',
           component : () => import ('./views/Cruises/CruiseSeans/CruiseSeasons.vue'),
           meta: {
-            rule: 'isManager'
+            rule: 'isManager',
+            authRequired : true
           }
         },
         {
@@ -109,7 +117,8 @@ const router = new Router({
           name : 'markets',
           component : () => import ('./views/Cruises/Markets/Markets.vue'),
           meta: {
-            rule: 'isManager'
+            rule: 'isManager',
+            authRequired : true
           }
         },
         {
@@ -117,7 +126,8 @@ const router = new Router({
           name : 'prices',
           component : () => import ('./views/Cruises/Prices/Prices.vue'),
           meta: {
-            rule: 'isManager'
+            rule: 'isManager',
+            authRequired : true
           }
         },
         {
@@ -125,7 +135,8 @@ const router = new Router({
           name : 'agencytypes',
           component : () => import ('./views/Agencies/AgencyTypes/AgencyTypes.vue'),
           meta: {
-            rule: 'isManager'
+            rule: 'isManager',
+            authRequired : true
           }
         },
         {
@@ -133,7 +144,8 @@ const router = new Router({
           name : 'Agencies',
           component : () => import ('./views/Agencies/Agencies.vue'),
           meta: {
-            rule: 'isManager'
+            rule: 'isManager',
+            authRequired : true
           }
         },
         {
@@ -141,7 +153,8 @@ const router = new Router({
           name : 'cruises',
           component : () => import ('./views/Cruises/Cruises.vue'),
           meta: {
-            rule: 'isManager'
+            rule: 'isManager',
+            authRequired : true
           }
         },
         {
@@ -149,7 +162,8 @@ const router = new Router({
           name : 'booking',
           component : () => import ('./views/Booking/Booking.vue'),
           meta: {
-            rule: 'isAgency'
+            rule: 'isAgency',
+            authRequired : true
           }
         }
       ]
@@ -160,6 +174,9 @@ const router = new Router({
     {
       path: '',
       component: () => import('@/layouts/full-page/FullPage.vue'),
+      meta : {
+        rule : 'isPublic'
+      },
       children: [
         // =============================================================================
         // PAGES
@@ -168,16 +185,18 @@ const router = new Router({
           path: '/pages/login',
           name: 'page-login',
           component: () => import('@/views/pages/Login.vue'),
-          meta: {
-            rule : 'isPublic'
+          meta : {
+            rule : 'isPublic',
+            authRequired : false
           }
         },
         {
-          path: '/pages/error-404',
-          name: 'page-error-404',
-          component: () => import('@/views/pages/Error404.vue'),
-          meta: {
-            rule : '*'
+          path: '/pages/notauthorized-403',
+          name: 'NotAuthorized',
+          component: () => import('@/views/pages/NotAuthorized.vue'),
+          meta : {
+            rule : 'isPublic',
+            authRequired : false
           }
         }
       ]
@@ -187,17 +206,35 @@ const router = new Router({
       path: '*',
       redirect: '/pages/error-404',
       meta: {
-        rule : '*'
+        rule : 'isPublic',
+        authRequired : false
       }
     }
   ]
 })
 
-router.beforeEach((to, from, next) => {
-  const loggedin = this.$acl.check('public')
-  if (to.name !== 'page-login' && loggedin) next({ name: 'page-login' })
-  else next()
-})
+// router.beforeEach((to, from, next) => {
+//   if (to.matched.some(record => record.meta.authRequired)) {
+//     if (localStorage.getItem('agency') === null) {
+//       next({path:'pages/login'})
+//     } else {
+//       next()
+//     }     
+//   } else if (localStorage.getItem('agency') !== null) {
+//     next()
+//   } else {
+//     next()
+//   }
+// })
+
+router.beforeEach(async (to, from, next) => {
+  if (to.matched.some(record => record.meta.authRequired) && localStorage.getItem('agency') === null) {
+    next({path:'pages/login'})
+  } else {
+    next()
+  }
+} 
+)
 
 
 router.afterEach(() => {

@@ -104,6 +104,7 @@ export default{
     async login () {
       const params = {agencyCode : this.agencyCode, password : this.password}
       await this.$store.dispatch('login', params)
+      this.$router.push(this.$router.currentRoute.query.to || '/') 
     }
   }
 }

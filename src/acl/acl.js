@@ -9,10 +9,10 @@ let initialRole = 'public'
 const userInfo = JSON.parse(localStorage.getItem('agency'))
 if (userInfo && userInfo.role) initialRole = userInfo.role
 
-console.log(initialRole)
+// console.log(initialRole)
 export default new AclCreate({
   initial  : initialRole,
-  notfound : '/pages/not-authorized',
+  notfound : '/pages/Error404.vue',
   router,
   acceptLocalRules : true,
   globalRules: {
