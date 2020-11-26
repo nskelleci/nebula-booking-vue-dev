@@ -1,16 +1,17 @@
 import CruiseService from '../../Services/CruiseServices'
+import BookingService from '../../Services/BookingService'
 const state = {
-  bookings : [],
-  booking : {}
+  CruisesbyCruiseTypes : [],
+  CruisesbyCruiseType : {}
 }
 
 const mutations = {
-  SET_BOOKINGS (state, bookings) {
-    state.bookings = bookings
+  SET_BOOKINGS (state, CruisesbyCruiseTypes) {
+    state.CruisesbyCruiseTypes = CruisesbyCruiseTypes
   },
 
-  SET_BOOKING (state, booking) {
-    state.booking = booking
+  SET_BOOKING (state, CruisesbyCruiseType) {
+    state.CruisesbyCruiseType = CruisesbyCruiseType
   }
 }
 
@@ -18,7 +19,16 @@ const actions = {
   async getCruisebyCruiseType ({commit}, cruisetypeid) {   
       commit('SET_BOOKINGS', await CruiseService.getCruisesbyCruiseType(cruisetypeid)
       )         
-  }
+  },
+  async addBooking (_, booking) {
+    await BookingService.addBooking(booking).then((response) => {
+      if (response) {
+        if (response.success) {
+            console.log("Ekleme Başarılı");       
+        }
+      }
+    })
+  },
 }
 
 export default {

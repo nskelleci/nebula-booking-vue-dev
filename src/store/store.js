@@ -31,6 +31,7 @@ import agencyType from './modules/agencyType'
 import cruise from './modules/cruise'
 import booking from './modules/booking'
 import auth from './modules/auth'
+import passenger from './modules/passenger'
 Vue.use(Vuex)
 
 export default new Vuex.Store({
@@ -53,7 +54,8 @@ export default new Vuex.Store({
     agencyType,
     cruise,
     booking,
-    auth
+    auth,
+    passenger
   },
 
   // strict: process.env.NODE_ENV !== 'production'
