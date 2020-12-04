@@ -14,7 +14,7 @@ const mutations = {
   },
   SET_AVALIABLE_CABINS_BY_CRUISE_CABIN_CATEGORY(state,cabins){
     state.avaliableCabinsbyCruiseCategory=cabins
-  }
+  },
 }
 const actions = {
 

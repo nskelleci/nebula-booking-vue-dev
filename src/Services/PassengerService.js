@@ -13,11 +13,11 @@ export default {
   },
 
   async getPassenger (passportNo)  {
-    console.log(passportNo)
-    return await axios.get(`${apiUri.apiUri.URI}/passenger/getPassenger`, passportNo)
+    return await axios.get(`${apiUri.apiUri.URI}/passenger/getPassenger/${passportNo}`)
       .then((response) => {
-        console.log(response)
-        return response.data
+        if(response.status == 200){
+          return response.data  
+        }
       })
       .catch((error) => { return (error) })
   },

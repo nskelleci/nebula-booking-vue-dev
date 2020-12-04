@@ -183,106 +183,179 @@
             <tab-content title="Booking" icon="feather icon-bar-chart" class="mb-5">
               <div class="vx-row">
 
-                <div class="vx-col lg:w-5/5 w-full relative">
-                  <vx-card title="Passenger and Contact Details">
-                      <p>Please Enter Passenger Information</p>
-                      <vs-collapse type="margin" accordion>
-                        <vs-collapse-item v-for="(item,index) in passengerList" :key="index">
-                            <div slot="header"><vs-avatar icon-pack="feather" icon="icon-user" style="vertical-align: middle;" /> {{index+1}}. {{ item.isAdult ? 'Adult Passenger (ages 12+)' : 'Child Passenger (ages 0-12)' }} | Cabin Number <span class="text-warning font-medium">#{{item.cabinnumber}}</span></div>
-                           <div class="vx-row">
-                              <div class="vx-col sm:w-1/5 w-full mb-2">
-                                <vs-input icon-pack="feather" icon="icon-hash" class="w-full" v-validate="'required|min:5'" data-vv-validate-on="blur" :name="'pasaport_number_'+index" label-placeholder="Pasaport Number" v-model="passengerPasaportList[index].pasaportNumber"/>
-                                <span class="text-danger text-sm" v-show="errors.has('pasaport_number_'+index)">{{ errors.first('pasaport_number_'+index) }}</span>
+                  <div class="vx-col w-full md:w-1/5">
+                      <vx-card>
+                          <h4>Cabin List</h4>
+                          <ul class="faq-topics mt-4">
+                              <li v-for="item in bookingDetails" :key="item._id" class="p-2 font-medium flex items-center" @click="selectedCabin=item">
+                                  <div class="h-3 w-3 rounded-full mr-2 bg-red"></div><span class="cursor-pointer">{{ item.cabin.number }}</span>
+                              </li>
+                          </ul>
+                          <ul>
+                            <li>
+                              <vs-divider class="my-6" />
+                              <div class="text-center">
+                                  <p><span class="mr-8">SELECTED CABIN: <span class="font-semibold text-warning">{{selectedCabin==null ? ' - ' : selectedCabin.cabin.number}}</span></span></p>
                               </div>
-                              <div class="vx-col sm:w-1/5 w-full mb-2">
-                                 <vs-avatar color="success" class="mt-5" icon-pack="feather" icon="icon-check" @click="checkPasaport(passengerPasaportList[index].pasaportNumber)"/>
-                                <vs-avatar color="success" class="mt-5" icon-pack="feather" icon="icon-plus" @click="passangerSelected(index)"  v-if="passengerPasaportList[index].pasaportNumber.length>5? true:false"/>
-                              </div>
-                              <div class="vx-col sm:w-3/5 w-full mb-2">
-                                <div class="text-right p-base">
-                                    <p>
-                                        <span class="mr-8">First Name: <span class="font-semibold">JONE DOE</span></span>
-                                        <span class="mr-8">Last Name: <span class="font-semibold"> AKSUH </span></span>
-                                        <span class="mr-8">Date of Birt: <span class="font-semibold"> 12/02/1976 </span></span>
-                                        <span class="mr-8">Pasaport Expiry Date: <span class="font-semibold"> 12/02/2025 </span></span>
-                                    </p>
+                              </li>
+                              <li>
+                                  <div class="flex items-left">
+                                      <vs-input
+                                          v-validate="'required'"
+                                          name="passport"
+                                          v-model="passport"
+                                          class="mr-3 ml-2 mt-4" />
+                                      <vs-button class="mt-4" @click="checkPasaport(passport)" :disabled="passport>0? false : true">CHECK</vs-button>
+                                  </div>
+                                  <div class="text-center mt-3">
+                                    <p><span v-show="errors.has('passport')" class="text-left text-danger">{{ errors.first('passport') }}</span></p>
+                                  </div>
+                                  <div class="text-center">
+                                      <p><span v-if="passangerNotFound" class="text-left text-danger">Passenger not found</span></p>
+                                  </div>
+                                  <vs-divider class="my-6" />
+                              <form>
+                                  <div v-if="isPassengerPanel==1">                  
+                                  <div class="mt-5 ml-2">
+                                      <h6>Firt Name:</h6>
+                                      <p>{{foundPassenger.firstName}}</p>
+                                  </div>
+
+                                  <div class="mt-5 ml-2">
+                                      <h6>Last Name:</h6>
+                                      <p>{{foundPassenger.lastName}}</p>
+                                  </div>
+
+                                  <div class="mt-5 ml-2">
+                                      <h6>Date of Birt:</h6>
+                                      <p>{{foundPassenger.Dob}}</p>
+                                  </div>
+
+                                  <div class="mt-5 ml-2">
+                                      <h6>Passport Expiry Date:</h6>
+                                      <p>{{foundPassenger.passportExpiryDate}}</p>
+                                  </div>
+                          
+                                <vs-button class="w-full mt-4" color="success" @click="addPassenger()">ADD TO CABIN</vs-button>
+                                <vs-divider class="my-6" />
+                                  </div>
+                                  <div v-if="isPassengerPanel==2">
+                                      <div class="vx-row mb-2">
+                                        <div class="vx-col w-full">
+                                          <vs-input class="w-full" v-validate="'required|min:3'" name="firstname" label-placeholder="First Name" v-model="passangerForm.firstName" data-vv-validate-on="blur" />
+                                          <span class="text-danger text-sm" v-show="errors.has('firstname')">{{ errors.first('firstname') }}</span>
+                                        </div>
+                                      </div>
+                                      <div class="vx-row mb-2">
+                                        <div class="vx-col w-full">
+                                          <vs-input class="w-full" v-validate="'required|min:3'" name="lastname" label-placeholder="Last Name" v-model="passangerForm.lastName" data-vv-validate-on="blur" />
+                                          <span class="text-danger text-sm" v-show="errors.has('lastname')">{{ errors.first('lastname') }}</span>
+                                        </div>
+                                      </div>
+                                      <div class="vx-row mb-2">
+                                        <div class="vx-col w-full">
+                                          <vs-input class="w-full" v-validate="'required|date_format:dd/MM/yyyy|date_between:01/01/1930,01/01/2020'" name="dateofbirt" label-placeholder="Date of Birt" v-model="passangerForm.Dob" data-vv-validate-on="blur" />
+                                          <span class="text-danger text-sm" v-show="errors.has('dateofbirt')">{{ errors.first('dateofbirt') }}</span>
+                                        </div>
+                                      </div>
+                                      <div class="vx-row mb-2">
+                                        <div class="vx-col w-full">
+                                          <vs-input class="w-full" v-validate="'required|min:8'" label-placeholder="Pasaport No" name="pasaportno" v-model="passangerForm.passportNo" data-vv-validate-on="blur" />
+                                          <span class="text-danger text-sm" v-show="errors.has('pasaportno')">{{ errors.first('pasaportno') }}</span>
+                                        </div>
+                                      </div>
+                                      <div class="vx-row mb-2">
+                                        <div class="vx-col w-full">
+                                          <vs-input class="w-full" name="internationalidno" v-validate="'required|min:8'" label-placeholder="International Id No" v-model="passangerForm.InternationalIdNo" data-vv-validate-on="blur" />
+                                          <span class="text-danger text-sm" v-show="errors.has('internationalidno')">{{ errors.first('internationalidno') }}</span>
+                                        </div>
+                                      </div>
+                                      <div class="vx-row mb-2">
+                                        <div class="vx-col w-full">
+                                          <vs-input class="w-full" name="passportexpirydate" v-validate="'required|date_format:dd/MM/yyyy|date_between:01/01/2020,01/01/2090'" label-placeholder="Passport Expiry Date" v-model="passangerForm.passportExpiryDate" data-vv-validate-on="blur" />
+                                          <span class="text-danger text-sm" v-show="errors.has('passportexpirydate')">{{ errors.first('passportexpirydate') }}</span>
+                                        </div>
+                                      </div>
+                                      <div class="vx-row mb-2">
+                                        <div class="vx-col w-full">
+                                          <vs-input class="w-full" v-validate="'required|decimal:5'" name="phonenumber" label-placeholder="Phone Number" v-model="passangerForm.phoneNumber" data-vv-validate-on="blur" />
+                                          <span class="text-danger text-sm" v-show="errors.has('phonenumber')">{{ errors.first('phonenumber') }}</span>
+                                        </div>
+                                      </div>
+                                      <div class="vx-row mb-2">
+                                        <div class="vx-col w-full">
+                                          <vs-input class="w-full" v-validate="'required|email'" name="email" label-placeholder="Email" v-model="passangerForm.email" data-vv-validate-on="blur" />
+                                          <span class="text-danger text-sm" v-show="errors.has('email')">{{ errors.first('email') }}</span>
+                                        </div>
+                                      </div>
+                                      <div class="vx-row mb-2">
+                                        <div class="vx-col w-full">
+                                          <vs-input class="w-full" v-validate="'required|max:255'" name="address" label-placeholder="Address" v-model="passangerForm.address" data-vv-validate-on="blur" />
+                                          <span class="text-danger text-sm" v-show="errors.has('address')">{{ errors.first('address') }}</span>
+                                        </div>
+                                      </div>
+                                      <vs-button class="w-full mt-4" type="filled" color="success" @click.prevent="addNewPassenger" :disabled="!isFormValid">Add New Passenger</vs-button>
+                                      <vs-divider class="my-6" />
+                                  </div>
+                              </form>
+                            </li>
+                          </ul>
+                      </vx-card>
+                  </div>
+
+                  <div class="vx-col w-full md:w-4/5 relative">
+                    <vx-card title="Passenger and Contact Details">
+                        <p>Please Enter Passenger Information</p>
+                        <vs-collapse type="margin" accordion>
+                          <vs-collapse-item v-for="(item,bookingindex) in bookingDetails" :key="bookingindex">
+                               <div slot="header"><vs-avatar icon-pack="feather" icon="icon-log-in" style="vertical-align: middle;" />#{{item.cabin.number}}</div>
+                           
+                              <div class="vx-row">
+                                <div class="vx-col sm:w-5/5 w-full mb-2">
+                                  <vs-table :data="item.Passengers">
+                                    <template slot="thead">
+                                      <vs-th>Firt Name</vs-th>
+                                      <vs-th>Last Name</vs-th>
+                                      <vs-th>Date of Birt</vs-th>
+                                      <vs-th>Passport No</vs-th>
+                                      <vs-th>Passport Expiry Date</vs-th>
+                                      <vs-th>Delete</vs-th>
+                                    </template>
+                                    <template slot-scope="{data}">
+                                      <vs-tr :data="tr" :key="passengerindex" v-for="(tr, passengerindex) in data">
+                                        <vs-td :data="tr.firstName">
+                                          {{ tr.firstName }}
+                                        </vs-td>
+                                        <vs-td :data="tr.lastName">
+                                          {{ tr.lastName }}
+                                        </vs-td>
+                                        <vs-td :data="tr.Dob">
+                                          {{ tr.Dob }}
+                                        </vs-td>
+                                        <vs-td :data="tr.passportNo">
+                                          {{ tr.passportNo }}
+                                        </vs-td>
+                                        <vs-td :data="tr.passportExpiryDate">
+                                          {{ tr.passportExpiryDate }}
+                                        </vs-td>
+                                        <vs-td>
+                                          <feather-icon icon="TrashIcon" @click="deletePassengerBooking(bookingindex,passengerindex)" class="cursor-pointer" svgClasses="w-5 h-5"/>
+                                        </vs-td>
+                                      </vs-tr>
+                                    </template>
+                                  </vs-table>
                                 </div>
                               </div>
-                            </div>
-                        </vs-collapse-item>
-                    </vs-collapse>
-                    <div class="col-md-6 bg-light text-right">
-                        <vs-button color="primary"  type="border" @click="bookingAllData()">Booking</vs-button>
-                    </div>
-                  </vx-card>
-                </div>
+                          </vs-collapse-item>
+                      </vs-collapse>
+                      <vs-button color="success" class="mt-6 ml-auto flex" @click.prevent="">COMPLETE BOOKING</vs-button>
+                    </vx-card>
+                  </div>
+                 
               </div>
             </tab-content>
         </form-wizard>
-        <vs-prompt :title="'Passenger Create Form'" :buttons-hidden="true" :active.sync="passangerCreateForm">
-            <div class="con-exemple-prompt">
-               <div class="vx-row mb-2">
-                      <div class="vx-col w-full">
-                        <vs-input class="w-full" v-validate="'required|min:3'" name="firstname" label-placeholder="First Name" v-model="passangerForm.firstName" />
-                        <span class="text-danger text-sm" v-show="errors.has('firstname')">{{ errors.first('firstname') }}</span>
-                      </div>
-                    </div>
-                    <div class="vx-row mb-2">
-                      <div class="vx-col w-full">
-                        <vs-input class="w-full" v-validate="'required|min:3'" name="lastname" label-placeholder="Last Name" v-model="passangerForm.lastName" />
-                        <span class="text-danger text-sm" v-show="errors.has('lastname')">{{ errors.first('lastname') }}</span>
-                      </div>
-                    </div>
-                    <div class="vx-row mb-2">
-                      <div class="vx-col w-full">
-                        <vs-input class="w-full" v-validate="'required|date_format:dd/MM/yyyy|date_between:01/01/1930,01/01/2020'" name="dateofbirt" label-placeholder="Date of Birt" v-model="passangerForm.Dob" />
-                        <span class="text-danger text-sm" v-show="errors.has('dateofbirt')">{{ errors.first('dateofbirt') }}</span>
-                      </div>
-                    </div>
-                    <div class="vx-row mb-2">
-                      <div class="vx-col w-full">
-                        <vs-input class="w-full" v-validate="'required|min:8'" label-placeholder="Pasaport No" name="pasaportno" v-model="passangerForm.passportNo" />
-                        <span class="text-danger text-sm" v-show="errors.has('pasaportno')">{{ errors.first('pasaportno') }}</span>
-                      </div>
-                    </div>
-                    <div class="vx-row mb-2">
-                      <div class="vx-col w-full">
-                        <vs-input class="w-full" name="internationalidno" v-validate="'required|min:8'" label-placeholder="International Id No" v-model="passangerForm.InternationalIdNo" />
-                        <span class="text-danger text-sm" v-show="errors.has('internationalidno')">{{ errors.first('internationalidno') }}</span>
-                      </div>
-                    </div>
-                    <div class="vx-row mb-2">
-                      <div class="vx-col w-full">
-                        <vs-input class="w-full" name="passportexpirydate" v-validate="'required|date_format:dd/MM/yyyy|date_between:01/01/2020,01/01/2090'" label-placeholder="Passport Expiry Date" v-model="passangerForm.passportExpiryDate" />
-                        <span class="text-danger text-sm" v-show="errors.has('passportexpirydate')">{{ errors.first('passportexpirydate') }}</span>
-                      </div>
-                    </div>
-                    <div class="vx-row mb-2">
-                      <div class="vx-col w-full">
-                        <vs-input class="w-full" v-validate="'required|decimal:5'" name="phonenumber" label-placeholder="Phone Number" v-model="passangerForm.phoneNumber" />
-                        <span class="text-danger text-sm" v-show="errors.has('phonenumber')">{{ errors.first('phonenumber') }}</span>
-                      </div>
-                    </div>
-                    <div class="vx-row mb-2">
-                      <div class="vx-col w-full">
-                        <vs-input class="w-full" v-validate="'required|email'" name="email" label-placeholder="Email" v-model="passangerForm.email" />
-                        <span class="text-danger text-sm" v-show="errors.has('email')">{{ errors.first('email') }}</span>
-                      </div>
-                    </div>
-                    <div class="vx-row mb-2">
-                      <div class="vx-col w-full">
-                        <vs-input class="w-full" v-validate="'required|max:255'" name="address" label-placeholder="Address" v-model="passangerForm.address" />
-                        <span class="text-danger text-sm" v-show="errors.has('address')">{{ errors.first('address') }}</span>
-                      </div>
-                    </div>
-                    <div class="vx-row">
-                      <div class="vx-col w-full">
-                        <vs-button class="mr-3 mb-2 mt-3" @click="passangerSendForm(passangerForm)" :disabled="!isFormValid">Save</vs-button>
-                        <vs-button color="warning" type="border" class="mb-2">Remove</vs-button>
-                      </div>
-                    </div>
-            </div>
-      </vs-prompt>
+        
         <div class="grid-layout-container alignment-block">
 </div>
     </div>
@@ -298,7 +371,7 @@ const bookingView = () => import('./components/bookingView.vue')
 export default {
   data () {
     return {
-      passangerSelectedIndex:null,
+      passangerNotFound:false,
       passangerForm:{
         firstName: null,
         lastName: null,
@@ -310,13 +383,18 @@ export default {
         email: null,
         address: null,
       },
-      passangerCreateForm:false,
-      selectedCabinNumber:null,
+      foundPassenger:{
+        firstName: '-',
+        lastName: '-',
+        passportNo: '-',
+        passportExpiryDate: '-',
+        Dob: '-',
+      },
+      passport:null,
       selected: [],
       itemsPerPage: 10,
       isMounted: false,
       cruiseType:[],
-      cruisesList:[],
       cabinCategory:[],
       cabins:[],
       eventTemp:null,
@@ -329,10 +407,9 @@ export default {
       selectedCruise:null,
       isLoading:false,
       endUserPrice:null,
-      passengerList:[],
-      passengerPasaportList:[],
       isComplate:false,
-      selectedCruiseTypeID:null,
+      selectedCabin:null,
+      isPassengerPanel:0
     }
   },
   watch:{
@@ -344,7 +421,28 @@ export default {
       }
     }
   },
+  
   computed: {
+    isFormValid () {
+      return !this.errors.any() 
+      && this.passangerForm.firstName 
+      && this.passangerForm.lastName 
+      && this.passangerForm.Dob 
+      && this.passangerForm.passportNo
+      && this.passangerForm.InternationalIdNo
+      && this.passangerForm.passportExpiryDate 
+      && this.passangerForm.phoneNumber 
+      && this.passangerForm.email 
+      && this.passangerForm.address
+    },
+
+    bookingDetails (){
+     return this.$store.state.booking.BookingDetails
+    }, 
+    cruisesList (){
+     return this.$store.state.booking.CruisesbyCruiseTypes
+    }, 
+
     adultCount (index) {
       return adult[index] = 0
     },
@@ -362,7 +460,6 @@ export default {
       for (let i = 0; i < this.selected.length; i++) {
         total += parseInt(this.selected[i].numberOfAdult) + parseInt(this.selected[i].numberOfChild)
       }
-      console.log(this.selected)
       return total
     },
     isSmallerScreen () {
@@ -381,13 +478,99 @@ export default {
     }
   },
   methods: {
-    passangerSendForm: function (value) {
-      this.passengerList[this.passangerSelectedIndex].passengerInformation=value
-      console.log(this.passengerList[this.passangerSelectedIndex])
-      this.$validator.validateAll().then(result => {
+    deletePassengerBooking(bookingindex,passengerindex){
+      let params={
+        bookingindex:bookingindex,
+        passengerindex:passengerindex
+      }
+      this.$vs.dialog({
+        type: 'confirm',
+        color: 'danger',
+        title: 'Confirm Delete',
+        text: `You are about to delete Pasaport No : "${this.$store.state.booking.BookingDetails[bookingindex].Passengers[passengerindex].passportNo}"`,
+        accept: ()=>{
+          this.$store.commit('CLEAR_BOOKING_DETAILS_WITH_INDEX',params)
+          this.$vs.notify({
+            color: 'success',
+            title: 'Passenger Deleted',
+            text: 'The selected user was successfully deleted'
+          })
+        },
+        acceptText: 'Delete'
+      })
+    },
+
+    isAnyPassenger(){
+      for (let index = 0; index < this.$store.state.booking.BookingDetails.length; index++) {
+        for (let detail = 0; detail < this.$store.state.booking.BookingDetails[index].Passengers.length; detail++) {
+          if(this.$store.state.booking.BookingDetails[index].Passengers[detail].passportNo==this.$store.state.passenger.passanger.data.passportNo){
+            return false
+          }
+        }
+      }
+      return true
+    },
+
+    addPassenger(){
+    if (typeof this.$store.state.passenger.passanger.data !== 'undefined'){
+      if(this.isAnyPassenger()){
+        if(this.selectedCabin!=null){
+        for (let index = 0; index < this.$store.state.booking.BookingDetails.length; index++) {
+            if(this.$store.state.booking.BookingDetails[index].cabin.number==this.selectedCabin.cabin.number){
+              if(this.$store.state.booking.BookingDetails[index].cabin.capacity>this.$store.state.booking.BookingDetails[index].Passengers.length){
+                  let params={
+                      index:index,
+                      passanger:this.$store.state.passenger.passanger.data
+                    }
+                    console.log(params);
+                    this.$store.commit('SET_BOOKING_DETAILS_PASSENGER',params)
+                    this.$vs.notify({
+                      title:'Successful',
+                      text:'added passenger',
+                      color:'success'
+                    })
+              }else{
+                this.$vs.notify({
+                  title:'Cabin is full',
+                  text:'Please delete passengers from the cabin',
+                  color:'danger'
+                })
+              }
+            }
+        }
+      }else{
+        this.$vs.notify({
+            title:'Cabin Error',
+            text:'Please choose cabin',
+            color:'danger'
+        })
+      }
+      }else{
+      this.$vs.notify({
+            title:'Passenger exist',
+            text:'Please enter new passport number',
+            color:'warning'
+        })
+      }
+      
+    }else{
+       this.$vs.notify({
+            title:'Passenger Error',
+            text:'Please add passenger',
+            color:'danger'
+        })
+    }
+    },
+
+    async addNewPassenger(){
+      this.loadingBar(true)
+      let newThis=this
+      this.$validator.validateAll().then(async function(result){
         if (result) {
-          this.$store.dispatch('addPassenger', this.passengerList[this.passangerSelectedIndex].passengerInformation)
-          this.passangerForm={
+          await newThis.$store.dispatch('addPassenger', newThis.passangerForm)
+          newThis.addPassenger()
+          newThis.isPassengerPanel=0
+          newThis.passangerForm={
             firstName: null,
             lastName: null,
             Dob: null,
@@ -400,72 +583,61 @@ export default {
           }
         }
       })
+      this.passangerNotFound=false
+      this.passport=null
+      this.loadingBar(false)
     },
 
-    passangerSelected(index){
-      this.passangerSelectedIndex=index
-      this.passangerForm.passportNo=this.passengerPasaportList[index].pasaportNumber
-      this.passangerCreateForm=true
-    },
     async checkPasaport(value){
-      await this.$store.dispatch('getPassenger', {passportNo: "123123123"})
-      console.log(this.$store.state.passenger.passanger)
+      this.loadingBar(true)
+      if(this.selectedCabin!=null){
+      await this.$store.dispatch('getPassenger', value)
+      if(this.$store.state.passenger.passanger.success==false){
+        this.isPassengerPanel=2
+        this.passangerNotFound=true
+      }else{
+        this.passangerNotFound=false
+        this.isPassengerPanel=1
+        console.log(this.$store.state.passenger.passanger.data);
+        const item=this.$store.state.passenger.passanger.data;
+        this.foundPassenger={
+          firstName: item.firstName,
+          lastName: item.lastName,
+          passportNo: item.passportNo,
+          passportExpiryDate: item.passportExpiryDate,
+          Dob: item.Dob,
+        };
+      }
+      }else{
+        this.$vs.notify({
+            title:'Cabin Error',
+            text:'Please choose cabin',
+            color:'danger'
+        })
+      }
+      this.loadingBar(false)
     },
-    createPassangerArray () {
-      this.passengerList = []
-      for (let i = 0; i < this.selected.length; i++) {
-        for (let j = 0; j < parseInt(this.selected[i].numberOfAdult); j++) {
-          const passanger = {
-            cabinnumber:this.selected[i].number,
-            passengerInformation:null,
-            isAdult:true
-          }
-          this.passengerList.push(passanger)
-          this.passengerPasaportList.push({pasaportNumber:''})
+
+    async complate () {
+      this.selectedCabin=null
+      let newThis=this
+      this.loadingBar(true)
+      this.$store.commit('CLEAR_BOOKING_DETAILS')
+      let itemsProcessed = 0;
+      this.selected.forEach(async function(element){
+        let booking={}
+        booking.cabin=element
+        booking.Passengers=[]
+        booking.notes="notes"
+        booking.cruise= newThis.selectedCruise
+        await newThis.$store.dispatch('addBooking',booking)
+        itemsProcessed++;
+        if(itemsProcessed === newThis.selected.length) {
+            newThis.$refs.checkoutWizard.nextTab()
+            newThis.loadingBar(false)
         }
-        for (let j = 0; j < parseInt(this.selected[i].numberOfChild); j++) {
-          const passanger = {
-            cabinnumber:this.selected[i].number,
-            passengerInformation:null,
-            isAdult:false
-          }
-          this.passengerList.push(passanger)
-          this.passengerPasaportList.push({pasaportNumber:''})
-        }
-      }
-    },
-
-     async bookingAllData () {
-
-      //await this.$store.dispatch('addBooking', params)
-
-      const bookingList = [];
-      const uniqueCabinNumber = [];
-      this.passengerList.map(x => uniqueCabinNumber.filter(a => a.cabinnumber == x.cabinnumber).length > 0 ? null : uniqueCabinNumber.push(x));
-
-      for(let i=0;i<uniqueCabinNumber.length;i++){
-        const items = this.passengerList.filter(item => item.cabinnumber.indexOf(uniqueCabinNumber[i].cabinnumber) !== -1);
-
-        let params={}
-        params.cabin=uniqueCabinNumber[i].cabinnumber;
-        params.passengers=items;
-        params.notes="notlar";
-        params.cruise=this.selectedCruiseTypeID;
-
-        bookingList.push(params);
-      }
-
-      for(let i=0;i<bookingList.length;i++){
-        await this.$store.dispatch('addBooking', bookingList[i])
-      }
-    
-      console.log(bookingList);
-    },
-
-    complate () {
-      this.$refs.checkoutWizard.nextTab()
-      this.createPassangerArray()
-      console.log(this.cabinPassenger)
+      });
+      console.log(newThis.$store.state.booking.BookingDetails);
     },
 
     handleSelected (tr) {
@@ -483,37 +655,24 @@ export default {
     async selectedCruiseType (value) {
       this.loadingBar(true)
       await this.$store.dispatch('getCruisebyCruiseType', value._id)
-      this.selectedCruiseTypeID=value._id
       //filter için cruise tipi ve vessel id objelerini oluşturduk
-      this.filter.selectedCruiseType = {
-        _id:value._id,
-        name:''
-      }
-      this.filter.selectedVessel = {
-        _id:value.vessel._id,
-        name:'',
-        flag:''
-      }
-      this.getCruise()
+      this.filter.selectedCruiseType = value
+      this.filter.selectedVessel = value.vessel
+     // this.getCruise()
+      this.stepNextTab()
+
       this.loadingBar(false)
     },
 
     // TAB 2
     getCruise () {
-      this.cruisesList = this.$store.state.booking.CruisesbyCruiseTypes
-      console.log(this.cruisesList)
-      this.stepNextTab()
+      //this.cruisesList = this.$store.state.booking.CruisesbyCruiseTypes
     },
 
     getSelectedCruise (value) {
-
       //filter için Season objesini oluşturduk
-      this.filter.selectedSeason = {
-        _id:value.season._id,
-        name:''
-      },
-      this.selectedCruise = value._id
-      console.log(value)
+      this.filter.selectedSeason = value.season
+      this.selectedCruise = value
       this.getMarket()
     },
 
@@ -537,58 +696,22 @@ export default {
       this.loadingBar(true)
       this.endUserPrice = value.endUserPrice
       const params = {
-        cruise : this.selectedCruise,
+        cruise : this.selectedCruise._id,
         cabinCategory: value.cabinCategory._id
       }
       await this.$store.dispatch('getAvaliableCabinsbyCruiseCabinCategory', params)
       this.cabins = this.$store.state.cabin.avaliableCabinsbyCruiseCategory
       this.loadingBar(false)
       this.stepNextTab()
-    },
-
-    // TAB 3
-    makePayment () {
-      return new Promise(() => {
-        this.$validator.validateAll('cvv-form').then(result => {
-          if (result) {
-            // if form have no errors
-            this.$vs.notify({
-              title: 'Success',
-              text: 'Payment received successfully',
-              color: 'success',
-              iconPack: 'feather',
-              icon: 'icon-check'
-            })
-          } else {
-            this.$vs.notify({
-              title: 'Error',
-              text: 'Please enter valid details',
-              color: 'warning',
-              iconPack: 'feather',
-              icon: 'icon-alert-circle'
-            })
-          }
-        })
-      })
+      this.selected=[]
     },
 
     stepNextTab () {
       this.$refs.checkoutWizard.nextTab()
     },
+
     loadingBar (value) {
       this.isLoading = value
-    },
-    isFormValid () {
-      return !this.errors.any() 
-      && this.passangerForm.firstName 
-      && this.passangerForm.lastName 
-      && this.passangerForm.Dob 
-      && this.passangerForm.passportNo
-      && this.passangerForm.InternationalIdNo
-      && this.passangerForm.passportExpiryDate 
-      && this.passangerForm.phoneNumber 
-      && this.passangerForm.email 
-      && this.passangerForm.address
     }
   },
   components: {

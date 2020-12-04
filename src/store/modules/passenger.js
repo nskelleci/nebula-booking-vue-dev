@@ -19,11 +19,12 @@ const actions = {
   async getPassenger ({commit}, pasaportno) {   
       commit('SET_PASSENGER', await PassengerService.getPassenger(pasaportno))         
   },
-  async addPassenger (_, passenger) {
+  async addPassenger ({commit}, passenger) {
     await PassengerService.addPassenger(passenger).then((response) => {
       if (response) {
         if (response.success) {
-            console.log("Ekleme Başarılı");       
+          response.data=response.data[0]
+          commit('SET_PASSENGER', response)
         }
       }
     })
