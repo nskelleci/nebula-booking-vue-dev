@@ -11,4 +11,29 @@ export default {
       })
       .catch((error) => { return (error) })
   },
+  async updateBooking (booking) {
+    return await axios.put(`${apiUri.apiUri.URI}/booking/updateBooking/${booking._id}`, booking)
+      .then((response) => {
+        notification.notifyMe(response.data)
+        return response.data
+      })
+      .catch((error) => { notification.notifyMe(error)  })
+  },
+  async getAllbookingsbyagency () {
+    return await axios.get(`${apiUri.apiUri.URI}/booking/mybookings/`)
+      .then((response) => {
+        notification.notifyMe(response.data)
+        return response.data
+      })
+      .catch((error) => { notification.notifyMe(error)  })
+  },
+  async getBookingbyId (bookingid) {
+    return await axios.get(`${apiUri.apiUri.URI}/booking/getBooking/${bookingid}`)
+      .then((response) => {
+        return response.data
+      })
+      .catch((error) => { 
+        console.log(error);
+      })
+  },
 }

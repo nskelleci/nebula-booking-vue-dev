@@ -177,6 +177,12 @@ export default [
             name: 'Booking',
             slug: 'booking',
             i18n: 'booking'
+          },
+          {
+            url: '/MyBookings/',
+            name: 'My Bookings',
+            slug: 'mybookings',
+            i18n: 'mybookings'
           }
         ]
       }

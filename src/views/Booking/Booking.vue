@@ -73,7 +73,6 @@
                 </vx-card>
             </tab-content>
 
-
             <!-- tab 4 content -->
             <tab-content title="Cabin" icon="feather icon-bar-chart" class="mb-5">
               <div class="vx-row">
@@ -311,7 +310,7 @@
                                <div slot="header"><vs-avatar icon-pack="feather" icon="icon-log-in" style="vertical-align: middle;" />#{{item.cabin.number}}</div>
                            
                               <div class="vx-row">
-                                <div class="vx-col sm:w-5/5 w-full mb-2">
+                                <div class="vx-col sm:w-4/5 w-full mb-2">
                                   <vs-table :data="item.Passengers">
                                     <template slot="thead">
                                       <vs-th>Firt Name</vs-th>
@@ -345,13 +344,30 @@
                                     </template>
                                   </vs-table>
                                 </div>
+                                <div class="vx-col sm:w-1/5 w-full mb-2">
+                                    <vs-textarea label="Rezervation Note" v-model="notes[bookingindex]"/>
+                                </div>
                               </div>
                           </vs-collapse-item>
+
                       </vs-collapse>
-                      <vs-button color="success" class="mt-6 ml-auto flex" @click.prevent="">COMPLETE BOOKING</vs-button>
+                      <vs-button color="success" class="mt-6 ml-auto flex" @click.prevent="complateBooking">COMPLETE BOOKING</vs-button>
                     </vx-card>
                   </div>
                  
+              </div>
+            </tab-content>
+
+            <!-- tab 6 content -->
+            <tab-content title="Complated" icon="feather icon-check" class="mb-5">
+              <div class="vx-row">
+                  <div class="vx-col w-full lg:w-4/4 mb-base">
+                    <vx-card slot="no-body" class="text-center bg-primary-gradient greet-user">
+                      <feather-icon icon="AwardIcon" class="p-6 mb-8 bg-primary inline-flex rounded-full text-white shadow" svgClasses="h-8 w-8"></feather-icon>
+                      <h1 class="mb-6 text-white">Reservation Complated</h1>
+                      <p class="xl:w-3/4 lg:w-4/5 md:w-2/3 w-4/5 mx-auto text-white">You have done more sales today. Check your new badge in your profile.</p>
+                    </vx-card>
+                  </div>
               </div>
             </tab-content>
         </form-wizard>
@@ -409,7 +425,8 @@ export default {
       endUserPrice:null,
       isComplate:false,
       selectedCabin:null,
-      isPassengerPanel:0
+      isPassengerPanel:0,
+      notes:[]
     }
   },
   watch:{
@@ -478,6 +495,18 @@ export default {
     }
   },
   methods: {
+
+    async complateBooking(){
+      for (let index = 0; index < this.$store.state.booking.BookingDetails.length; index++) {
+        console.log("---------------");
+        this.$store.state.booking.BookingDetails[index].notes=this.notes[index]
+        console.log(this.$store.state.booking.BookingDetails[index]);
+        await this.$store.dispatch('updateBooking',this.$store.state.booking.BookingDetails[index])
+      }
+      
+      this.$refs.checkoutWizard.nextTab()
+    },
+
     deletePassengerBooking(bookingindex,passengerindex){
       let params={
         bookingindex:bookingindex,
@@ -625,19 +654,28 @@ export default {
       this.$store.commit('CLEAR_BOOKING_DETAILS')
       let itemsProcessed = 0;
       this.selected.forEach(async function(element){
+
+        let blockedCabin={
+          cabin:element,
+          blockedFor:JSON.parse(localStorage.getItem('agency')),
+          blockReason:'Payment Pending',
+          blockedUntil:Date.now(),
+        }
+        
         let booking={}
         booking.cabin=element
         booking.Passengers=[]
-        booking.notes="notes"
+        booking.notes=""
         booking.cruise= newThis.selectedCruise
+        booking.status="pending payment"
         await newThis.$store.dispatch('addBooking',booking)
         itemsProcessed++;
         if(itemsProcessed === newThis.selected.length) {
+            newThis.createNotes();
             newThis.$refs.checkoutWizard.nextTab()
             newThis.loadingBar(false)
         }
       });
-      console.log(newThis.$store.state.booking.BookingDetails);
     },
 
     handleSelected (tr) {
@@ -693,6 +731,7 @@ export default {
     },
 
     async selectedCabinCategory (value) {
+      console.log(value);
       this.loadingBar(true)
       this.endUserPrice = value.endUserPrice
       const params = {
@@ -712,6 +751,11 @@ export default {
 
     loadingBar (value) {
       this.isLoading = value
+    },
+    createNotes(){
+      for (let index = 0; index < this.$store.state.booking.BookingDetails.length; index++) {
+        this.notes.push("")
+      }
     }
   },
   components: {

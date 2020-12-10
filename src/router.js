@@ -165,6 +165,24 @@ const router = new Router({
             rule: 'isAgency',
             authRequired : true
           }
+        },
+        {
+          path : '/MyBookings/',
+          name : 'mybookings',
+          component : () => import ('./views/Booking/MyBookings.vue'),
+          meta: {
+            rule: 'isAgency',
+            authRequired : true
+          }
+        },
+        {
+          path: '/MyBookings/Detail/:id',
+          name: 'mybookingsdetail',
+          component : () => import ('./views/Booking/MyBookingDetail.vue'),
+          meta: {
+            rule: 'isAgency',
+            authRequired : true
+          }
         }
       ]
     },
