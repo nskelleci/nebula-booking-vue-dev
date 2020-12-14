@@ -654,12 +654,14 @@ export default {
       this.$store.commit('CLEAR_BOOKING_DETAILS')
       let itemsProcessed = 0;
       this.selected.forEach(async function(element){
+         var dt = new Date();
+         dt.setHours(dt.getHours()+24);
 
         let blockedCabin={
           cabin:element,
-          blockedFor:JSON.parse(localStorage.getItem('agency')),
+          cruise:newThis.selectedCruise,
           blockReason:'Payment Pending',
-          blockedUntil:Date.now(),
+          blockedUntil:dt,
         }
         
         let booking={}
@@ -668,7 +670,18 @@ export default {
         booking.notes=""
         booking.cruise= newThis.selectedCruise
         booking.status="pending payment"
-        await newThis.$store.dispatch('addBooking',booking)
+        await newThis.$store.dispatch('addBooking',booking).then((response)=>{
+          if(response){
+            console.log("booking.vue icine gelen respose", response)
+            if(response.success){
+              newThis.$store.dispatch('addBlockedCabin',blockedCabin)
+            }
+          }
+        })
+        
+           
+         
+        
         itemsProcessed++;
         if(itemsProcessed === newThis.selected.length) {
             newThis.createNotes();

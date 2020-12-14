@@ -32,6 +32,9 @@ import cruise from './modules/cruise'
 import booking from './modules/booking'
 import auth from './modules/auth'
 import passenger from './modules/passenger'
+import blockedCabin from './modules/blockedCabin'
+import dashboard from './modules/dashboard'
+import logout from './modules/logout'
 Vue.use(Vuex)
 
 export default new Vuex.Store({
@@ -55,7 +58,10 @@ export default new Vuex.Store({
     cruise,
     booking,
     auth,
-    passenger
+    passenger,
+    blockedCabin,
+    dashboard,
+    logout
   },
 
   // strict: process.env.NODE_ENV !== 'production'

@@ -36,4 +36,14 @@ export default {
         console.log(error);
       })
   },
+
+  async getBookingsByCruise (cruiseid) {
+    return await axios.get(`${apiUri.apiUri.URI}/booking/getBookingsByCruise/${cruiseid}`)
+      .then((response) => {
+        return response.data
+      })
+      .catch((error) => { 
+        console.log(error);
+      })
+  },
 }

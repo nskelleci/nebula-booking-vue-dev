@@ -49,10 +49,9 @@ export default {
     }
   },
   methods: {
-    logout () {
-      localStorage.removeItem('userInfo')
-
-      // This is just for demo Purpose. If user clicks on logout -> redirect
+    async logout () {
+      localStorage.clear();
+      this.$store.dispatch("logout");
       this.$router.push('/pages/login').catch(() => {})
     }
   }

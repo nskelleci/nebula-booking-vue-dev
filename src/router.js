@@ -158,6 +158,15 @@ const router = new Router({
           }
         },
         {
+          path : '/Cruises/Detail/:id',
+          name : 'cruisedetail',
+          component : () => import ('./views/Cruises/CruiseDetail.vue'),
+          meta: {
+            rule: 'isManager',
+            authRequired : true
+          }
+        },
+        {
           path : '/Booking/',
           name : 'booking',
           component : () => import ('./views/Booking/Booking.vue'),
@@ -247,6 +256,7 @@ const router = new Router({
 
 router.beforeEach(async (to, from, next) => {
   if (to.matched.some(record => record.meta.authRequired) && localStorage.getItem('agency') === null) {
+    
     next({path:'pages/login'})
   } else {
     next()

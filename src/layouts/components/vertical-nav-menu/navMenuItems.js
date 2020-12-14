@@ -39,7 +39,8 @@ export default [
       {
         //url: '/dashboard/analytics',
         name: 'Admin Dashboard',
-        slug: 'dashboard-analytics',
+        url: '/',
+        slug: 'admin-dashboard',
         i18n: 'Analytics'
       },
       {

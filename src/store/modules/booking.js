@@ -1,11 +1,13 @@
 import CruiseService from '../../Services/CruiseServices'
 import BookingService from '../../Services/BookingService'
+import BlockedCabinService from '../../Services/BlockedCabinService'
 const state = {
   CruisesbyCruiseTypes : [],
   CruisesbyCruiseType : {},
   BookingDetails : [],
   AllBookingsByAgency:[],
   getBookingID:{},
+  BookingsByCruise:[]
 }
 
 const mutations = {
@@ -47,7 +49,11 @@ const mutations = {
   //Seçilen booking passengerlarını index numarasına göre siler
   DELETE_PASSENGER_GETBOOKINGID(state,index){
     state.getBookingID.Passengers.splice(index, 1);
-  }
+  },
+
+  SET_BOOKING_BY_CRUISE_ID(state,BookingsByCruise) {
+    state.BookingsByCruise=BookingsByCruise
+  },
 }
 
 const actions = {
@@ -55,10 +61,12 @@ const actions = {
       commit('CruisesbyCruiseTypes', await CruiseService.getCruisesbyCruiseType(cruisetypeid))         
   },
   async addBooking ({commit}, booking) {
-    await BookingService.addBooking(booking).then((response) => {
+   return await BookingService.addBooking(booking).then((response) => {
       if (response) {
+        console.log('store icinde response', response)
         if (response.success) {
-            commit('SET_BOOKING_DETAILS', response.data[0])     
+            commit('SET_BOOKING_DETAILS', response.data[0])
+            return response
         }
       }
     })
@@ -86,6 +94,15 @@ const actions = {
       if (response) {
         if (response.success) {
           commit('SET_BOOKING_ID', response.data)
+        }
+      }
+    })
+  },
+  async getBookingsByCruise ({commit},cruiseid) {
+    await BookingService.getBookingsByCruise(cruiseid).then((response) => {
+      if (response) {
+        if (response.success) {
+          commit('SET_BOOKING_BY_CRUISE_ID', response.data)
         }
       }
     })

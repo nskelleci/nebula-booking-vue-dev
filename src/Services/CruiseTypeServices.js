@@ -1,5 +1,6 @@
 import axios from '../axios'
 import notification from '../assets/utils/notify'
+import router from '../router'
 const apiUri = require('../Helpers/URI')  
 export default {
 
@@ -9,7 +10,10 @@ export default {
         notification.notifyMe(response.data)
         return response.data        
       })
-      .catch((error) => { return (error) })
+      .catch((error) => { 
+        router.push('/pages/login').catch(() => {});
+        notification.notifyMe(error); 
+    })
   },
 
   async updateCruiseType (cruisetype) {
@@ -18,7 +22,10 @@ export default {
         notification.notifyMe(response.data)
         return response.data.data
       })
-      .catch((error) => { notification.notifyMe(error)  })
+      .catch((error) => { 
+        router.push('/pages/login').catch(() => {});
+        notification.notifyMe(error); 
+    })
   },
 
   async fetchCruiseTypesbyVessel (vesselid) {
@@ -28,7 +35,10 @@ export default {
         return response.data.data
         
       })
-      .catch((error) => { notification.notifyMe(error) })
+      .catch((error) => { 
+        router.push('/pages/login').catch(() => {});
+        notification.notifyMe(error); 
+    })
   },
 
   async fetchCruiseTypes () {
@@ -38,6 +48,9 @@ export default {
         return response.data.data
         
       })
-      .catch((error) => { notification.notifyMe(error) })
+      .catch((error) => { 
+        router.push('/pages/login').catch(() => {});
+        notification.notifyMe(error); 
+    })
   }
 }

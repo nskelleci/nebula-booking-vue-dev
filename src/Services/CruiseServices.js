@@ -34,10 +34,10 @@ export default {
       .catch((error) => { notification.notifyMe(error) })
   },
 
-  async getCruise (cruiseid) {
-    return await axios.get(`${apiUri.apiUri.URI}/cruise/getCruises/${cruiseid}`)
+  async getCruiseDetail (cruiseid) {
+    return await axios.get(`${apiUri.apiUri.URI}/cruise/detail/${cruiseid}`)
       .then((response) => {
-        return response.data.data
+        return response.data.data[0]
       })
       .catch((error) => { return (error) })
   },
@@ -48,5 +48,5 @@ export default {
         return response.data.data
       })
       .catch((error) => { return (error) })
-  }
+  },
 }

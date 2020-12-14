@@ -19,8 +19,8 @@ const actions = {
     commit('SET_CRUISES', await CruiseService.fetchCruises())
   },
 
-  async getCruise ({commit}, cruise) {   
-    commit('SET_CRUISE', await CruiseService.getCruise(cruise))         
+  async getCruiseDetail ({commit}, cruiseid) {   
+    commit('SET_CRUISE', await CruiseService.getCruiseDetail(cruiseid))         
   },
 
   async addCruise (_, cruise) {

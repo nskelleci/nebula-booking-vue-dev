@@ -2,6 +2,7 @@ import CabinService from '../../Services/CabinService'
 
 const state = {
   cabins : [],
+  allCabins :[],
   avaliableCabinsbyCruiseCategory:[]
 }
 
@@ -12,6 +13,9 @@ const mutations = {
   SET_CABINS (state, Cabins) {
     state.cabins = Cabins
   },
+  SET_ALL_CABINS (state, Cabins) {
+    state.allCabins = Cabins
+  },
   SET_AVALIABLE_CABINS_BY_CRUISE_CABIN_CATEGORY(state,cabins){
     state.avaliableCabinsbyCruiseCategory=cabins
   },
@@ -21,7 +25,9 @@ const actions = {
   async getCabins ({commit}, vesselid) {
     commit('SET_CABINS', await CabinService.fetchCabins(vesselid))
   },
-
+  async getAllCabins ({commit}) {
+    commit('SET_ALL_CABINS', await CabinService.fetchAllCabins())
+  },
 
   async addCabin (_, cabin) {
     await CabinService.addCabin(cabin).then((response) => {
