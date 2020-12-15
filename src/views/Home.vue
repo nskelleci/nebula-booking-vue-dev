@@ -63,7 +63,7 @@
             <div class="flex justify-between text-center mt-6" slot="no-body-bottom">
                 <div class="w-1/2 border border-solid d-theme-border-grey-light border-r-0 border-b-0 border-l-0">
                     <p class="mt-4">Sold Cabin</p>
-                    <p class="mb-4 text-3xl font-semibold">{{selectedCabinData.soldCabin}}</p>
+                    <p class="mb-4 text-3xl font-semibold">{{selectedCabinData.blockedCabin}}</p>
                 </div>
                 <div class="w-1/2 border border-solid d-theme-border-grey-light border-r-0 border-b-0">
                     <p class="mt-4">Available Cabin</p>
