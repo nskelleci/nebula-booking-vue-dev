@@ -44,5 +44,13 @@ export default {
       })
       .catch((error) => { notification.notifyMe(error) })
   },
+
+  async fetchAvaliableCabins(cruiseId) {
+    return await axios.get(`${apiUri.apiUri.URI}/cabin/cruise/${cruiseId}`)
+      .then((response) => {
+        return response.data.data
+      })
+      .catch((error) => { notification.notifyMe(error) })
+  },
 }
 

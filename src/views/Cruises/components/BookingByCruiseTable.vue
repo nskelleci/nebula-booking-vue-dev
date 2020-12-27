@@ -54,7 +54,7 @@
             <vs-tr :data="tr" :key="indextr" v-for="(tr, indextr) in data">
 
               <vs-td>
-                <vs-chip color="success" class="product-order-status">{{ tr.refNo }}</vs-chip>
+                <p class="product-category" @click="cruiseDetailPage(tr)">{{ tr.refNo }}</p>
               </vs-td>
 
               <vs-td>
@@ -89,7 +89,7 @@
 </template>
 
 <script>
-
+import router from '../../../router'
 export default {
   props:['id'],
   data () {
@@ -122,6 +122,9 @@ export default {
   methods: {
     getBookingByCruise(){
       this.$store.dispatch("getBookingsByCruise",this.id);
+    },
+    cruiseDetailPage(tr){
+      router.push({name : 'mybookingsdetail', params: {id: tr._id} })
     }
   },
   async created () {

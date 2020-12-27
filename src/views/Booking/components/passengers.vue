@@ -84,12 +84,12 @@
                   </vs-td>
                   
                   <vs-td class="whitespace-no-wrap">
-                <feather-icon icon="TrashIcon" svgClasses="w-5 h-5 hover:text-primary stroke-current" @click.stop="deletePassenger(index)" />
+                    <feather-icon icon="TrashIcon" svgClasses="w-6 h-6 hover:text-danger stroke-current" @click.stop="deletePassenger(index)" />
               </vs-td>
                 </vs-tr>
               </tbody>
             </template>
-          
+            
       </vs-table>
     </div>
   </div>
@@ -104,6 +104,7 @@ export default {
       itemsPerPage: 10,
       isMounted: false,
       sidebarData: {},
+      
     };
   },
   computed: {

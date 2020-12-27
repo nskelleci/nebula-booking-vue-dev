@@ -11,7 +11,7 @@
   <div id="data-list-thumb-view" class="data-list-container">
     <div class="demo-alignment">
        <vs-popup fullscreen title="fullscreen" :active.sync="popupActive">
-        <prices :data="filter"/>
+        <prices/>
       </vs-popup>
   </div>
 
@@ -85,7 +85,7 @@
       <template>
         <tbody>
           <div class="vx-row" >
-            <div :data="item" :key="_id" v-for="(item, _id) in cruises" class="vx-col w-full sm:w-1/2 lg:w-1/3 mb-base" >
+            <div :data="item" :key="index" v-for="(item, index) in cruises" class="vx-col w-full sm:w-1/2 lg:w-1/3 mb-base" >
                 <vx-card>
                     <img src="../../assets/images/uploads/gemini-out1.jpg" alt="content-img" class="responsive rounded-lg">
                     <div class="my-6">
@@ -104,7 +104,10 @@
                     </div>
                      <div class="flex justify-between flex-wrap">
                        <span>
-                        <vs-button class="mt-4 mr-2 shadow-lg" type="gradient" color="#7367F0" gradient-color-secondary="#CE9FFC" @click="openPricePopup(item)">Price List</vs-button>
+                        <vs-button class="mt-4 shadow-lg" type="gradient" color="#7367F0" gradient-color-secondary="#CE9FFC" @click="openPricePopup(item)">Price List</vs-button>
+                       </span>
+                       <span>
+                        <vs-button class="mt-4 shadow-lg" type="gradient" color="warning" gradient-color-secondary="#CE9FFC" @click.stop="roseCabin(item)" >Rose Cabin</vs-button>
                        </span>
                        <span>
                         <vs-button class="mt-4 mr-2 shadow-lg" type="gradient" color="#7367F0" gradient-color-secondary="#CE9FFC" @click.stop="editData(item)" >Edit</vs-button>
@@ -192,6 +195,10 @@ export default {
       // this.sidebarData = JSON.parse(JSON.stringify(this.blankData))
       this.sidebarData = data
       this.toggleDataSidebar(true)
+    },
+    roseCabin(data){
+      console.log(data);
+      router.push({name : 'rosecabin', params: {id: data._id} })
     },
     toggleDataSidebar (val = false) {
       this.addNewDataSidebar = val

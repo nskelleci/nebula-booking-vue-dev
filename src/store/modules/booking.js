@@ -7,7 +7,8 @@ const state = {
   BookingDetails : [],
   AllBookingsByAgency:[],
   getBookingID:{},
-  BookingsByCruise:[]
+  BookingsByCruise:[],
+  getBookingsToday:{}
 }
 
 const mutations = {
@@ -53,6 +54,10 @@ const mutations = {
 
   SET_BOOKING_BY_CRUISE_ID(state,BookingsByCruise) {
     state.BookingsByCruise=BookingsByCruise
+  },
+
+  SET_BOOKINGS_TODAY(state,getBookingsToday) {
+    state.getBookingsToday=getBookingsToday
   },
 }
 
@@ -103,6 +108,16 @@ const actions = {
       if (response) {
         if (response.success) {
           commit('SET_BOOKING_BY_CRUISE_ID', response.data)
+        }
+      }
+    })
+  },
+
+  async getBookingsToday ({commit}) {
+    await BookingService.getBookingsToday().then((response) => {
+      if (response) {
+        if (response.success) {
+          commit('SET_BOOKINGS_TODAY', response.data)
         }
       }
     })

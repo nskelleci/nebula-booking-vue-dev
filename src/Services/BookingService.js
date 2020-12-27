@@ -46,4 +46,14 @@ export default {
         console.log(error);
       })
   },
+
+  async getBookingsToday () {
+    return await axios.get(`${apiUri.apiUri.URI}/booking/getBookingsToday/`)
+      .then((response) => {
+        return response.data
+      })
+      .catch((error) => { 
+        console.log(error);
+      })
+  },
 }

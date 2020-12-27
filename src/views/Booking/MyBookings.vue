@@ -112,7 +112,7 @@ export default {
     async allBooking() {
       await this.$store.dispatch("getAllbookingsbyagency");
       this.bookings = this.$store.state.booking.AllBookingsByAgency;
-      console.log(this.bookings)
+      console.log(JSON.stringify(this.bookings[1]))
     },
     handleSelected(tr) {
       this.$vs.notify({

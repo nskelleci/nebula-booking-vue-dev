@@ -1,13 +1,35 @@
 <template>
   <div v-if="isLoad" id="page-user-view">
     <div class="vx-row">
-      <div class="vx-col lg:w-1/2 w-full">
+      <div class="vx-col lg:w-2/2 w-full">
         <vx-card v-if="isLoad" class="mb-base">
         <div class="flex items-end px-3">
-          <feather-icon svgClasses="w-6 h-6" icon="ColumnsIcon" class="mr-2" />
-          <span class="font-medium text-lg leading-none">Cabin Detail</span>
+          <feather-icon svgClasses="w-6 h-6" icon="CheckIcon" class="mr-2" />
+          <span class="font-medium text-lg leading-none">Rezervation Confirm</span>
         </div>
-         <vs-divider />
+          <vs-divider />
+            <vs-button v-if="isShowConfirm" color="success" class="mr-3" type="border"  @click.stop="openConfirm">Confirm Rezervation</vs-button>
+            <vs-button v-if="isShowNotification" color="primary" type="border" @click="activePrompt = true">Send Notifaction</vs-button>
+        </vx-card>
+      </div>
+    </div>
+
+    <div class="vx-row">
+      <div class="vx-col lg:w-1/2 w-full">
+      <template slot="actions">
+        <feather-icon icon="MoreVerticalIcon" svgClasses="w-6 h-6 text-grey"></feather-icon>
+      </template>
+        <vx-card v-if="isLoad" class="mb-base">
+        <div class="post-header flex justify-between mb-4">
+              <div class="flex items-center">
+                <feather-icon svgClasses="w-6 h-6" icon="ColumnsIcon" class="mr-2" />
+                  <span class="font-medium text-lg leading-none">Cabin Detail</span>
+              </div>
+              <div class="flex" @click="editCabin=true">
+                  <feather-icon class="ml-4" icon="EditIcon"></feather-icon>
+              </div>
+          </div>
+          <vs-divider />
           <table>
             <tr>
               <td class="font-semibold">Bed Type</td>
@@ -71,27 +93,60 @@
         </div>
         <vs-divider />
         <vs-textarea label="Rezervation Note" v-model="booking.notes"/>
+        <vs-button color="success" type="border" @click="updateRezervationNote">Update</vs-button>
         </vx-card>
       </div>
     </div>
 
-   <vx-card>
-    <div class="vx-row">
-      <div class="vx-col w-full">
-        <div class="flex items-end px-3">
-          <feather-icon svgClasses="w-6 h-6" icon="UserIcon" class="mr-2" />
-          <span class="font-medium text-lg leading-none">Passengers</span>
+    <vx-card>
+      <div class="vx-row">
+        <div class="vx-col w-full">
+          <div class="flex items-end px-3">
+            <feather-icon svgClasses="w-6 h-6" icon="UserIcon" class="mr-2" />
+            <span class="font-medium text-lg leading-none">Passengers</span>
+          </div>
+          <vs-divider />
+          <passengers/>
         </div>
-        <vs-divider />
-        <passengers/>
       </div>
-    </div>
-  </vx-card>
+    </vx-card>
+    
+    <vs-prompt
+          cancel-text="Cancel"
+          accept-text="Send"
+          title="Send Notifaction"
+          @accept="sendNotifaction"
+          :active.sync="activePrompt">
+          <div class="con-exemple-prompt">
+            <span>Description</span>
+          <vs-input vs-placeholder="Description" class="mt-3 w-full" v-model="notifactionDesc" row="3" />
+          </div>
+    </vs-prompt>
+
+    <vs-prompt
+          cancel-text="Cancel"
+          accept-text="Update Cabin"
+          title="Update Cabin"
+          @accept="changeCabin"
+          :active.sync="editCabin">
+          <div class="con-exemple-prompt">
+            <span>Cabin Category</span>
+            <v-select placeholder="Choose a Cabin Category" :options="optionsCabinCategory" :dir="$vs.rtl ? 'rtl' : 'ltr'" @input="selectedCabinCategory" class="mt-3 mb-3"/> 
+          </div>
+          <div class="con-exemple-prompt">
+            <span>Cabin</span>
+            <v-select placeholder="Choose a Cabin" :options="optionsCabin" :dir="$vs.rtl ? 'rtl' : 'ltr'" @input="selectedCabin" :disabled="optionsCabin.length>0 ? false : true" class="mt-3"/> 
+          </div>
+    </vs-prompt>
+
   </div>
 </template>
 <script>
+import vSelect from 'vue-select'
 import router from '../../router'
+import booking from '../../store/modules/booking';
 const passengers = () => import('./components/passengers.vue')
+
 export default {
   data() {
     return {
@@ -99,11 +154,33 @@ export default {
       itemsPerPage: 10,
       isMounted: false,
       isLoad:false,
-
+      activePrompt:false,
+      notifactionDesc:"",
+      isShowNotification:false,
+      isShowConfirm:false,
+      editCabin:false,
+      optionsCabinCategory: [],
+      optionsCabin: [],
+      selectedCabinCategoryID:null,
+      selectedCabinID:null
     };
   },
   components: {
     passengers,
+    'v-select': vSelect,
+  },
+  watch:{
+    async editCabin(){
+      if(this.editCabin){
+        this.optionsCabinCategory=[]
+        //console.log(this.booking);
+        await this.$store.dispatch('getCabinCategories', this.booking.cruise.vessel._id)
+        this.$store.state.cabinCategory.cabinCategories.forEach(element => {
+          this.optionsCabinCategory.push({label: element.name, value: element._id});
+        });
+        //console.log(this.$store.state.cabinCategory.cabinCategories);
+      }
+    }
   },
   computed : {
     booking (){
@@ -111,6 +188,10 @@ export default {
     }
   },
   methods: {
+    async updateRezervationNote(){
+        await this.$store.dispatch('updateBooking',this.booking)
+    },
+
     async getBooking() {
       this.$emit('searchQuery', `Deneme`)
       await this.$store.dispatch("getBookingbyId",this.$route.params.id);
@@ -119,6 +200,98 @@ export default {
       }
       this.isLoad=true
     },
+     openConfirm() {
+      this.$vs.dialog({
+        type: 'confirm',
+        color: 'success',
+        title: `Booking Confirm`,
+        text: 'Cake sesame snaps cupcake gingerbread danish I love gingerbread. Apple pie pie jujubes chupa chups.',
+        accept: ()=>{
+          console.log("Accept");
+        }
+      })
+    },
+    sendNotifaction(){
+      console.log(this.notifactionDesc);
+    },
+    async selectedCabinCategory(value){
+      this.isLoading(true)
+      this.optionsCabin=[]
+      this.selectedCabinID=null
+      console.log(value);
+      this.selectedCabinCategoryID=value.value;
+      let params={
+        cruise:this.booking.cruise._id,
+        cabinCategory:value.value
+      }
+     await this.$store.dispatch('getAvaliableCabinsbyCruiseCabinCategory', params)
+     this.$store.state.cabin.avaliableCabinsbyCruiseCategory.forEach(element => {
+        this.optionsCabin.push({label: element.number, value: element._id});
+      });
+
+
+
+      this.isLoading(false)
+    },
+    async selectedCabin(value){
+      this.selectedCabinID=value.value
+      console.log(value);
+    },
+    async changeCabin(){
+      if(this.selectedCabinCategoryID!=null && this.selectedCabinID!=null){
+
+      this.isLoading(true)
+    
+      //Bloklu kabin objesini getiriyoruz
+      let blockedCabinObject={
+        cabin:this.booking.cabin._id,
+        cruise:this.booking.cruise._id
+      }
+
+      await this.$store.dispatch('getBlockedCabin',blockedCabinObject)
+
+      //Bloklu kabin objesini state üzerinden güncelliyoruz
+      this.$store.state.blockedCabin.blockedCabin.cabin=this.selectedCabinID
+      console.log(this.$store.state.blockedCabin.blockedCabin);
+
+      //State deki kabin objesi apiye gönderiyoruz
+      await this.$store.dispatch('updateBlockedCabin',this.$store.state.blockedCabin.blockedCabin)
+      
+
+      //Booking objesini güncelliyoruz
+      this.booking.cabin.cabinCategory._id=this.selectedCabinCategoryID
+      this.booking.cabin._id=this.selectedCabinID
+
+      this.$store.commit('SET_BOOKING_ID', this.booking)
+      await this.$store.dispatch('updateBooking',this.booking)
+      await this.$store.dispatch("getBookingbyId",this.$route.params.id);
+
+      
+      this.isLoading(false)
+      }else{
+        this.$vs.notify({
+          title:'Warning',
+          text:'Please choose Cabin Category or Cabin',
+          color:'warning'
+        })
+      }
+    },
+    checkRole(){
+      if(JSON.parse(localStorage.getItem("agency")).role=="manager"){
+        this.isShowNotification=true;
+        this.isShowConfirm=true;
+      }else{
+        this.isShowNotification=true;
+        this.isShowConfirm=false;
+      }
+    },
+    isLoading (newData) {
+      if (newData) {
+        this.$vs.loading()
+      } else {
+        this.$vs.loading.close()
+      }
+    }
   },
   created(){
     if(this.$route.params.id==null){
@@ -128,7 +301,8 @@ export default {
   mounted(){
     this.isMounted = true;
     this.getBooking()
-  }
+    this.checkRole();
+  },
 };
 </script>
 

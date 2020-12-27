@@ -1,10 +1,20 @@
 import BlockedCabinService from '../../Services/BlockedCabinService'
 
-const state = {}
+const state = {
+    blockedCabin:{},
+    blockedCabinsbyCruise:[]
+}
 
 const getters = {}
 
-const mutations = {}
+const mutations = {
+    SET_BLOCKED_CABIN(state,blockedCabin){
+        state.blockedCabin=blockedCabin
+    },
+    SET_BLOCKED_CABINS_BY_CRUISE(state,blockedCabinsbyCruise){
+        state.blockedCabinsbyCruise=blockedCabinsbyCruise
+    }
+}
 
 const actions = {
     async addBlockedCabin (_, booking) {
@@ -22,7 +32,26 @@ const actions = {
                 }
             }
         })
+    },
+    async getBlockedCabin ({commit},params) {
+        await BlockedCabinService.getBlockedCabin(params).then((response) => {
+            if (response) {
+                if (response.success) {
+                    commit('SET_BLOCKED_CABIN', response.data[0])
+                }
+            }
+        })
+    },
+    async getBlockedCabinsByCruise ({commit},cruiseid) {
+        await BlockedCabinService.getAllBlockedCabinsbyCruise(cruiseid).then((response) => {
+            if (response) {
+                if (response.success) {
+                    commit('SET_BLOCKED_CABINS_BY_CRUISE', response.data)
+                }
+            }
+        })
     }
+
 }
 
 export default {

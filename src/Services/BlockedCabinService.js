@@ -19,7 +19,7 @@ export default {
       })
       .catch((error) => { notification.notifyMe(error)  })
   },
-  async getAllBlockedCabinbyCruise (cruiseid) {
+  async getAllBlockedCabinsbyCruise (cruiseid) {
     return await axios.get(`${apiUri.apiUri.URI}/blockedCabin/cruise/${cruiseid}`)
       .then((response) => {
         notification.notifyMe(response.data)
@@ -31,7 +31,16 @@ export default {
     return await axios.get(`${apiUri.apiUri.URI}/blockedCabin/getAll/`)
       .then((response) => {
         notification.notifyMe(response.data)
+        console.log(response.data.data);
         return response.data.data
+      })
+      .catch((error) => { notification.notifyMe(error)  })
+  },
+  async getBlockedCabin (params) {
+    return await axios.post(`${apiUri.apiUri.URI}/blockedCabin/cabin/`,params)
+      .then((response) => {
+        notification.notifyMe(response.data)
+        return response.data
       })
       .catch((error) => { notification.notifyMe(error)  })
   },

@@ -57,7 +57,7 @@
                 <div class="vx-row" v-if="cabinCategory.length">
                    <div class="vx-col lg:w-3/3 w-full relative">
                         <div class="items-list-view" v-for="(item,index) in cabinCategory" :key="index">
-                            <prices-view :item="item" class="mb-base">
+                            <prices-view :item="item" :cruise="selectedCruise" class="mb-base">
                                <template slot="action-buttons">
                                    <div @click="selectedCabinCategory(item)" class="item-view-secondary-action-btn bg-primary p-3 rounded-lg flex flex-grow items-center justify-center text-white cursor-pointer">
                                         <span class="text-sm font-semibold ml-2">SELECT</span>
@@ -121,7 +121,10 @@
                             <vs-tr :data="cabin" :key="_id" v-for="(cabin, _id) in data">
                               <vs-td>
                                 <p class="product-name font-large truncate">
-                                  <vs-chip color="primary">
+                                  <vs-chip color="warning" v-if="isROSCheck(cabin._id)">
+                                      <span>{{ cabin.number }} / {{cabin.rosPrice}} / <b>ROS</b></span> 
+                                  </vs-chip>
+                                  <vs-chip color="primary" v-else>
                                       <span>{{ cabin.number }}</span> 
                                   </vs-chip>
                                 </p>
@@ -157,7 +160,7 @@
                   <vx-card>
                       <p class="font-semibold mb-3">Cabin Details</p>
                       <div class="flex justify-between" vs-align="center" vs-type="flex" vs-justify="center" v-for="(item,index) in selected" :key="index">
-                            <span class="text-grey"><b>{{ item.number }}</b> ({{ item.capacity }})</span>
+                            <span :class="{'text-warning': item.isRose,'text-grey': !item.isRose}"><b>{{ item.number }}</b> ({{ item.capacity }})</span>
                             <span>{{item.bedType.name}}</span>
                             <vs-input-number label="Adult: " :min="0" :max=" parseInt(item.numberOfAdult)  + parseInt(item.numberOfChild)  < item.capacity ? item.capacity : 0 " v-model="item.numberOfAdult"  class="inline-flex" />
                             <vs-input-number label="Child: " :min="0" :max="parseInt(item.numberOfAdult) + parseInt(item.numberOfChild) < item.capacity ? item.capacity : 0" v-model ="item.numberOfChild"  class="inline-flex" />
@@ -426,7 +429,8 @@ export default {
       isComplate:false,
       selectedCabin:null,
       isPassengerPanel:0,
-      notes:[]
+      notes:[],
+      isRoseCabin:false
     }
   },
   watch:{
@@ -495,7 +499,16 @@ export default {
     }
   },
   methods: {
-
+    isROSCheck(id){
+      return this.selectedCruise.rosCabins.find((element)=>{
+          if(element.cabin._id==id){
+            console.log("eşit");
+            return true;
+          }else{
+            return false;
+          }
+      });
+    },
     async complateBooking(){
       for (let index = 0; index < this.$store.state.booking.BookingDetails.length; index++) {
         console.log("---------------");
@@ -654,6 +667,7 @@ export default {
       this.$store.commit('CLEAR_BOOKING_DETAILS')
       let itemsProcessed = 0;
       this.selected.forEach(async function(element){
+        console.log("Booking Cabin",element);
          var dt = new Date();
          dt.setHours(dt.getHours()+24);
 
@@ -669,7 +683,9 @@ export default {
         booking.Passengers=[]
         booking.notes=""
         booking.cruise= newThis.selectedCruise
-        booking.status="pending payment"
+        booking.status="pending payment",
+        booking.isRose=element.isRose,
+        booking.rosePrice=element.rosePrice,
         await newThis.$store.dispatch('addBooking',booking).then((response)=>{
           if(response){
             console.log("booking.vue icine gelen respose", response)
@@ -720,10 +736,11 @@ export default {
       //this.cruisesList = this.$store.state.booking.CruisesbyCruiseTypes
     },
 
-    getSelectedCruise (value) {
+    async getSelectedCruise (value) {
       //filter için Season objesini oluşturduk
       this.filter.selectedSeason = value.season
       this.selectedCruise = value
+      await this.$store.dispatch('getBlockedCabinsByCruise',this.selectedCruise._id)
       this.getMarket()
     },
 
@@ -732,7 +749,7 @@ export default {
       this.loadingBar(true)
       //filter için Market objesini oluşturduk
       this.filter.selectedMarket = {
-        _id:'5f948cbb1a3a980011ad3686', //Turkish Market ID
+        _id:JSON.parse(localStorage.getItem("agency")).market, //Agency Market ID
         name:''
       }
 
@@ -753,6 +770,20 @@ export default {
       }
       await this.$store.dispatch('getAvaliableCabinsbyCruiseCabinCategory', params)
       this.cabins = this.$store.state.cabin.avaliableCabinsbyCruiseCategory
+      
+      for (let index = 0; index < this.cabins.length; index++) {
+        this.selectedCruise.rosCabins.find((element)=>{
+          if(element.cabin._id==this.cabins[index]._id){
+            console.log("eşit----->",element.cabin);
+            this.cabins[index].isRose=true
+            this.cabins[index].rosPrice=element.rosPrice
+            console.log(this.cabins[index]);
+          }
+        });
+      }
+      
+      
+      
       this.loadingBar(false)
       this.stepNextTab()
       this.selected=[]

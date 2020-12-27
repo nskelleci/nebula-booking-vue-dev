@@ -16,6 +16,7 @@ export default {
     return await axios.put(`${apiUri.apiUri.URI}/cruise/updatecruise/${cruise._id}`, cruise)
       .then((response) => {
         notification.notifyMe(response.data)
+        console.log(response.data.data);
         return response.data.data
       })
       .catch((error) => { notification.notifyMe(error)  })

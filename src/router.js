@@ -167,6 +167,15 @@ const router = new Router({
           }
         },
         {
+          path : '/Cruises/RoseCabin/:id',
+          name : 'rosecabin',
+          component : () => import ('./views/Cruises/RoseCabin.vue'),
+          meta: {
+            rule: 'isManager',
+            authRequired : true
+          }
+        },
+        {
           path : '/Booking/',
           name : 'booking',
           component : () => import ('./views/Booking/Booking.vue'),

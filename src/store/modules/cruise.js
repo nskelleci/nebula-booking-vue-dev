@@ -10,6 +10,7 @@ const mutations = {
   },
 
   SET_CRUISE (state, cruise) {
+
     state.cruise = cruise
   }
 }
@@ -20,7 +21,8 @@ const actions = {
   },
 
   async getCruiseDetail ({commit}, cruiseid) {   
-    commit('SET_CRUISE', await CruiseService.getCruiseDetail(cruiseid))         
+    const cruise = await CruiseService.getCruiseDetail(cruiseid)
+    commit('SET_CRUISE', cruise)         
   },
 
   async addCruise (_, cruise) {
@@ -32,7 +34,7 @@ const actions = {
       }
     })
   },
-
+  // ROS   (run of ship )  ROH (Run of hotel) FIAT -> Fix It Again tomorrow
   async updateCruise (_, cruise) {
     await CruiseService.updateCruise(cruise)
     this.dispatch('getCruises')

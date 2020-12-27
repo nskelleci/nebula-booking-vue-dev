@@ -22,11 +22,11 @@
     <div class="vx-col w-full lg:w-1/3 lg:mt-0 mt-base">
         <vx-card title="">
             <div slot="no-body">
-                <vue-apex-charts class="mb-8" type="donut" height="325" :options="sessionsByDeviceDonut.chartOptions" :series="sessionsData.series" />
+                <vue-apex-charts class="mb-8" type="donut" height="325" :options="sessionsByDeviceDonut.chartOptions" :series="sessionsByDeviceDonut.series" />
             </div>
 
             <ul class="mt-6">
-                <li v-for="deviceData in sessionsData.analyticsData" :key="deviceData.device" class="flex mb-3">
+                <li v-for="deviceData in sessionsByDeviceDonut.analyticsData" :key="deviceData.device" class="flex mb-3">
                     <feather-icon :icon="deviceData.icon" :svgClasses="[`h-5 w-5 stroke-current text-${deviceData.color}`]"></feather-icon>
                     <span class="ml-2 inline-block font-semibold">{{ deviceData.device }}</span>
                     <span class="mx-2">-</span>
@@ -82,8 +82,6 @@ import VueApexCharts from 'vue-apexcharts'
 export default {
   data () {
     return {
-      sessionsData: {"analyticsData":[{"device":"Dekstop","icon":"MonitorIcon","color":"primary","sessionsPercentage":58.6,"comparedResultPercentage":2},{"device":"Mobile","icon":"SmartphoneIcon","color":"warning","sessionsPercentage":34.9,"comparedResultPercentage":8},{"device":"Tablet","icon":"TabletIcon","color":"danger","sessionsPercentage":6.5,"comparedResultPercentage":-5}],"series":[200,300,400]},
-      
       // RADIAL BAR
       goalOverview: {
         series: [0],
@@ -146,14 +144,13 @@ export default {
 
       sessionsByDeviceDonut: {
         analyticsData: [
-             { device: 'Dekstop', icon: 'MonitorIcon', color: 'primary', sessionsPercentgae: 58.6, comparedResultPercentage: 2 },
-             { device: 'Mobile', icon: 'SmartphoneIcon', color: 'warning', sessionsPercentgae: 34.9, comparedResultPercentage: 8 },
-             { device: 'Tablet', icon: 'TabletIcon', color: 'danger', sessionsPercentgae: 6.5, comparedResultPercentage: -5 },
+             { device: 'Pending Payment', icon: 'MonitorIcon', color: 'primary', sessionsPercentgae: 58.6, comparedResultPercentage: 2 },
+             { device: 'Sold', icon: 'SmartphoneIcon', color: 'warning', sessionsPercentgae: 34.9, comparedResultPercentage: 8 },
          ],
         comparedResult: [2, -3, 8],
-        series: [58.6, 34.9, 6.5],
+        series:[1,1],
         chartOptions: {
-          labels: ['Desktop', 'Mobile', 'Tablet'],
+          labels: ['Pending Payment', 'Sold'],
           dataLabels: {
             enabled: false
           },
@@ -166,11 +163,11 @@ export default {
             }
           },
           stroke: { width: 0 },
-          colors: ['#7961F9', '#FF9F43', '#EA5455'],
+          colors: ['#7961F9', '#FF9F43'],
           fill: {
             type: 'gradient',
             gradient: {
-              gradientToColors: ['#9c8cfc', '#FFC085', '#f29292']
+              gradientToColors: ['#9c8cfc', '#FFC085']
             }
           }
         }
@@ -246,10 +243,11 @@ export default {
   },
   computed: {
     selectedCruise () {
-      
-
       return this.$store.state.dashboard.selectedCruise
     },
+    getBookingsToday(){
+      return this.$store.state.booking.getBookingsToday
+    }
   },
   watch : {
     selectedCruise () {
@@ -262,14 +260,23 @@ export default {
         console.log(result);
       this.goalOverview.series=[]
        this.goalOverview.series.push(result.toFixed(2))
+    },
+    getBookingsToday(){
+      this.sessionsByDeviceDonut.series=[]
+        this.sessionsByDeviceDonut.series.push(this.getBookingsToday.todayPendingPayment)
+        this.sessionsByDeviceDonut.series.push(this.getBookingsToday.todaySold)
+        console.log(this.sessionsByDeviceDonut.series);
     }
   },
   methods: {
-      
+
   },
   components:{
     AdminDashboardTable,
     VueApexCharts
+  },
+  async created(){
+    await this.$store.dispatch("getBookingsToday");
   }
 
 }

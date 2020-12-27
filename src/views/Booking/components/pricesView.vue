@@ -24,6 +24,11 @@
                             <h6 class="item-name font-semibold mb-1 hover:text-primary cursor-pointer">{{ item.cabinCategory.name }}</h6>
                             <p class="font-medium text-grey mt-4">Cruise Type</p>
                             <p class="text-success font-medium">{{ item.cruiseType.name }}</p>
+                              <vs-chip color="danger mt-5" v-if="viewObj.hasRos">
+                               <span class="font-medium">Ros Available</span>
+                              </vs-chip>
+                            
+
                         </slot>
                     </div>
                 </div>
@@ -32,10 +37,10 @@
 
                     <div class="p-4 flex flex-col w-full">
                         <div class="my-6">
-                            <h5 class="font-bold text-center">₺ {{ item.endUserPrice}}</h5>
+                            <h5 class="font-bold text-center">{{getPrice.price}}</h5>
                             <span class="text-grey flex items-start justify-center mt-1">
-                                  <feather-icon icon="CheckCircleIcon" svgClasses="w-4 h-4" />
-                                <span class="text-sm ml-2">All in One</span>
+                                  <!--<feather-icon icon="CheckCircleIcon" svgClasses="w-4 h-4" />
+                                <span class="text-sm ml-2">All in One</span> -->
                             </span>
                         </div>
                         <slot name="action-buttons" />
@@ -48,14 +53,69 @@
 </template>
 
 <script>
-export default{
+export default {
+    data ()  {
+        return {
+            viewObj : {
+                price : 0,
+                hasRos : false
+            }
+        }    
+    },
   props: {
     item: {
       type: Object,
       required: true
+    },
+    cruise: {
+      type: Object,
+      required: true
     }
   },
+  computed:{
+         getPrice () {
+            let blockedCabins=this.$store.state.blockedCabin.blockedCabinsbyCruise;
 
+            if(this.cruise.rosCabins.length === 0) {
+                this.viewObj.price = this.item.endUserPrice
+                this.viewObj.hasRos = false               
+
+                return this.viewObj
+            }else{
+
+            for (let index = 0; index < this.cruise.rosCabins.length; index++) {
+                const rosElement = this.cruise.rosCabins[index];
+                if(this.item.cabinCategory._id===rosElement.cabin.cabinCategory._id){
+                    let result = false
+                    blockedCabins.forEach(element => {
+                        if(element.cabin._id===rosElement.cabin._id){
+                            result = true
+                            
+                        }
+                        console.log(result)
+                    });
+                    if(!result) {
+                        console.log("Ros Avalible");
+                        console.log("Ros Element",rosElement.cabin);
+                        this.viewObj.price = rosElement.rosPrice
+                        this.viewObj.hasRos = true
+                    }else{
+                        console.log("Ros NOT Avalible");
+                        this.viewObj.price = this.item.endUserPrice
+                        this.viewObj.hasRos = false 
+                    }
+                    break
+                }else{
+                    this.viewObj.price = this.item.endUserPrice
+                }
+            }
+
+            }
+            console.log("viewObject", this.viewObj)
+            return this.viewObj
+            
+        }
+    }
 }
 </script>
 
