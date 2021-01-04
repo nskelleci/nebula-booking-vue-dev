@@ -107,7 +107,7 @@
                         <vs-button class="mt-4 shadow-lg" type="gradient" color="#7367F0" gradient-color-secondary="#CE9FFC" @click="openPricePopup(item)">Price List</vs-button>
                        </span>
                        <span>
-                        <vs-button class="mt-4 shadow-lg" type="gradient" color="warning" gradient-color-secondary="#CE9FFC" @click.stop="roseCabin(item)" >Rose Cabin</vs-button>
+                        <vs-button class="mt-4 shadow-lg" type="gradient" color="warning" gradient-color-secondary="#CE9FFC" @click.stop="roseCabin(item)" >ROS Cabin</vs-button>
                        </span>
                        <span>
                         <vs-button class="mt-4 mr-2 shadow-lg" type="gradient" color="#7367F0" gradient-color-secondary="#CE9FFC" @click.stop="editData(item)" >Edit</vs-button>

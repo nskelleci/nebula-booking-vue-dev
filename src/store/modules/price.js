@@ -6,8 +6,10 @@ const state = {
     'selectedCruiseType' : null,
     'selectedMarket' : null,
     'selectedSeason' : null
-  }
- 
+  },
+  calculatedFrontEndPrice:{},
+  calculatedBackEndPrice:[],
+  calculatedBackEndPriceSingle:{}
 }
 
 
@@ -19,6 +21,21 @@ const mutations = {
   SET_VALUES (state, filter) {
     console.log('mutationa gelen filter', filter)
     state.priceFilter = filter
+  },
+
+  SET_CALCULATED_FRONTEND_PRICE (state, calculatedFrontEndPrice) {
+    state.calculatedFrontEndPrice=calculatedFrontEndPrice
+    console.log("calculatedFrontEndPrice",state.calculatedFrontEndPrice);
+  },
+
+  SET_CALCULATED_BACKEND_PRICE (state, calculatedBackEndPrice) {
+    state.calculatedBackEndPrice=calculatedBackEndPrice
+    console.log("calculatedBackEndPrice---",state.calculatedBackEndPrice);
+  },
+
+  SET_CALCULATED_BACKEND_PRICE_SINGLE (state, calculatedBackEndPriceSingle) {
+    state.calculatedBackEndPriceSingle=calculatedBackEndPriceSingle
+    //console.log("calculatedBackEndPriceSingle---",state.calculatedBackEndPriceSingle);
   }
 }
 
@@ -60,7 +77,41 @@ const actions = {
         }
       }
     })
-  }
+  },
+
+  async calculatePriceFrontEnd ({commit}, data) {
+    await PriceService.calculatePriceFrontEnd(data).then((response) => {
+      if (response) {
+        if (response.success) {
+          console.log("response",response);
+          commit('SET_CALCULATED_FRONTEND_PRICE', response.data)
+        }
+      }
+    })
+  },
+
+  async calculatePriceBackEnd ({commit}, data) {
+    await PriceService.calculatePriceBackEnd(data).then((response) => {
+      if (response) {
+        if (response.success) {
+          console.log("response",response);
+          commit('SET_CALCULATED_BACKEND_PRICE', response.data)
+        }
+      }
+    })
+  },
+
+  async calculatePriceBackEndSingle ({commit}, data) {
+    await PriceService.calculatePriceBackEndSingle(data).then((response) => {
+      if (response) {
+        if (response.success) {
+          console.log("response",response);
+          commit('SET_CALCULATED_BACKEND_PRICE_SINGLE', response.data)
+        }
+      }
+    })
+  },
+
 }
 
 export default {

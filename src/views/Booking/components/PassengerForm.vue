@@ -223,8 +223,17 @@ export default {
       if(this.booking.cabin.capacity>this.booking.Passengers.length){
           if(this.isAnyPassenger()){
             this.booking.Passengers.push(this.$store.state.passenger.passanger.data)
+
+
+            //Personel Eklendiğinde yeni fiyatı hesaplar ve günceller
+            await this.$store.dispatch('calculatePriceBackEndSingle',this.booking)
+            this.booking.totalPrice=this.$store.state.price.calculatedBackEndPriceSingle
+
             this.$store.commit('SET_BOOKING_ID', this.booking)
             await this.$store.dispatch('updateBooking',this.booking)
+
+            console.log("---",this.booking);
+
           }else{
             this.$vs.notify({
               title:'Passenger exist',

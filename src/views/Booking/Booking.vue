@@ -171,11 +171,23 @@
                         <span>{{totalPassenger}}</span>
                     </div>
                     <vs-divider />
-                    <div class="flex justify-between font-semibold mb-3">
-                          <span>Total Cabin</span>
+                     <div class="flex justify-between mb-2">
+                          <span class="text-grey">Total Cabin</span>
                           <span>{{selected.length}}</span>
                       </div>
-                      <vs-button v-if="isComplateCheck" class="w-full" @click="complate()">COMPLATE</vs-button>
+                      <vs-divider />
+                      <div class="flex justify-between mb-2" v-for="data in getCalculateFrontEndPrice.cabinList" :key="data.cabinNumber">
+                          <span class="text-grey"><b>{{data.cabinNumber}}</b> ({{data.totalPassengers}})</span>
+                          <span>{{data.cabinPrice!=0? data.cabinPrice : "0" | priceFormat}}</span>
+                      </div>
+                    
+                    <vs-divider />
+                   <div class="flex justify-between font-semibold mb-3">
+                        <span>Total Price(€)</span>
+                        <span v-if="getCalculateFrontEndPrice.totalCabinPrice!=0">{{Number(getCalculateFrontEndPrice.totalCabinPrice) | priceFormat}}</span>
+                        <span v-else>{{ "0" | priceFormat}}</span>
+                    </div>
+                      <vs-button v-if="isComplateCheck" class="w-full" @click="complate()">COMPLETE</vs-button>
                   </vx-card>
                 </div>
               </div>
@@ -219,7 +231,7 @@
                               <form>
                                   <div v-if="isPassengerPanel==1">                  
                                   <div class="mt-5 ml-2">
-                                      <h6>Firt Name:</h6>
+                                      <h6>First Name:</h6>
                                       <p>{{foundPassenger.firstName}}</p>
                                   </div>
 
@@ -229,13 +241,13 @@
                                   </div>
 
                                   <div class="mt-5 ml-2">
-                                      <h6>Date of Birt:</h6>
-                                      <p>{{foundPassenger.Dob}}</p>
+                                      <h6>Date of Birth:</h6>
+                                      <p>{{foundPassenger.Dob | formatShortDate}}</p>
                                   </div>
 
                                   <div class="mt-5 ml-2">
                                       <h6>Passport Expiry Date:</h6>
-                                      <p>{{foundPassenger.passportExpiryDate}}</p>
+                                      <p>{{foundPassenger.passportExpiryDate | formatShortDate}}</p>
                                   </div>
                           
                                 <vs-button class="w-full mt-4" color="success" @click="addPassenger()">ADD TO CABIN</vs-button>
@@ -310,8 +322,7 @@
                         <p>Please Enter Passenger Information</p>
                         <vs-collapse type="margin" accordion>
                           <vs-collapse-item v-for="(item,bookingindex) in bookingDetails" :key="bookingindex">
-                               <div slot="header"><vs-avatar icon-pack="feather" icon="icon-log-in" style="vertical-align: middle;" />#{{item.cabin.number}}</div>
-                           
+                              <div slot="header"><vs-avatar icon-pack="feather" icon="icon-log-in" style="vertical-align: middle;" />#{{item.cabin.number}} / {{""+getTotalPricePassengers(item.cabin.number).price+"" | priceFormat}} / {{getTotalPricePassengers(item.cabin.number).passengersCount}}</div>
                               <div class="vx-row">
                                 <div class="vx-col sm:w-4/5 w-full mb-2">
                                   <vs-table :data="item.Passengers">
@@ -367,7 +378,7 @@
                   <div class="vx-col w-full lg:w-4/4 mb-base">
                     <vx-card slot="no-body" class="text-center bg-primary-gradient greet-user">
                       <feather-icon icon="AwardIcon" class="p-6 mb-8 bg-primary inline-flex rounded-full text-white shadow" svgClasses="h-8 w-8"></feather-icon>
-                      <h1 class="mb-6 text-white">Reservation Complated</h1>
+                      <h1 class="mb-6 text-white">Reservation Completed</h1>
                       <p class="xl:w-3/4 lg:w-4/5 md:w-2/3 w-4/5 mx-auto text-white">You have done more sales today. Check your new badge in your profile.</p>
                     </vx-card>
                   </div>
@@ -440,6 +451,9 @@ export default {
       } else {
         this.$vs.loading.close()
       }
+    },
+    selected(){
+      this.calculateFrontEndPrice()
     }
   },
   
@@ -481,10 +495,25 @@ export default {
       for (let i = 0; i < this.selected.length; i++) {
         total += parseInt(this.selected[i].numberOfAdult) + parseInt(this.selected[i].numberOfChild)
       }
+
+      //calculate front end price function
+      if(total>0){
+        this.calculateFrontEndPrice()
+      }else{
+        this.$store.state.price.calculatedFrontEndPrice.totalCabinPrice=0
+      }
+
       return total
     },
     isSmallerScreen () {
       return this.$store.state.windowWidth < 768
+    },
+    getCalculateFrontEndPrice () {
+      return this.$store.state.price.calculatedFrontEndPrice
+    },
+
+    getCalculateBackEndPrice () {
+      return this.$store.state.price.calculatedBackEndPrice
     },
 
     isComplateCheck () {
@@ -499,6 +528,36 @@ export default {
     }
   },
   methods: {
+    async calculateFrontEndPrice(){
+      this.loadingBar(true);
+      this.selectedCruise.market=JSON.parse(localStorage.getItem("agency")).market
+      let calculatePrice={
+        selectedCabin:this.selected,
+        selectedCruise:this.selectedCruise
+      }
+      await this.$store.dispatch('calculatePriceFrontEnd',calculatePrice)
+      this.loadingBar(false);
+    },
+    getTotalPricePassengers(cabinNumber){
+      let price=0;
+      let passengersCount=0;
+      for (let index = 0; index < this.getCalculateBackEndPrice.length; index++) {
+        const element = this.getCalculateBackEndPrice[index];
+        if(element.cabinNumber==cabinNumber){
+            console.log("---->>>",element);
+            price = element.calculatePrice
+            passengersCount = element.passengersCount
+        }
+      }
+
+      let data={
+        price,
+        passengersCount
+      }
+      
+      return data;
+    },
+
     isROSCheck(id){
       return this.selectedCruise.rosCabins.find((element)=>{
           if(element.cabin._id==id){
@@ -511,8 +570,8 @@ export default {
     },
     async complateBooking(){
       for (let index = 0; index < this.$store.state.booking.BookingDetails.length; index++) {
-        console.log("---------------");
         this.$store.state.booking.BookingDetails[index].notes=this.notes[index]
+        this.$store.state.booking.BookingDetails[index].totalPrice=this.getTotalPricePassengers(this.$store.state.booking.BookingDetails[index].cabin.number).price
         console.log(this.$store.state.booking.BookingDetails[index]);
         await this.$store.dispatch('updateBooking',this.$store.state.booking.BookingDetails[index])
       }
@@ -530,13 +589,16 @@ export default {
         color: 'danger',
         title: 'Confirm Delete',
         text: `You are about to delete Pasaport No : "${this.$store.state.booking.BookingDetails[bookingindex].Passengers[passengerindex].passportNo}"`,
-        accept: ()=>{
+        accept: async ()=>{
+          this.loadingBar(true)
           this.$store.commit('CLEAR_BOOKING_DETAILS_WITH_INDEX',params)
+          await this.$store.dispatch('calculatePriceBackEnd',this.$store.state.booking.BookingDetails);
           this.$vs.notify({
             color: 'success',
             title: 'Passenger Deleted',
             text: 'The selected user was successfully deleted'
           })
+            this.loadingBar(false)
         },
         acceptText: 'Delete'
       })
@@ -553,7 +615,8 @@ export default {
       return true
     },
 
-    addPassenger(){
+    async addPassenger(){
+      let newThis=this;
     if (typeof this.$store.state.passenger.passanger.data !== 'undefined'){
       if(this.isAnyPassenger()){
         if(this.selectedCabin!=null){
@@ -564,13 +627,18 @@ export default {
                       index:index,
                       passanger:this.$store.state.passenger.passanger.data
                     }
-                    console.log(params);
+
                     this.$store.commit('SET_BOOKING_DETAILS_PASSENGER',params)
+          
+                    
+                    await this.$store.dispatch('calculatePriceBackEnd',this.$store.state.booking.BookingDetails);
+
                     this.$vs.notify({
                       title:'Successful',
                       text:'added passenger',
                       color:'success'
                     })
+
               }else{
                 this.$vs.notify({
                   title:'Cabin is full',
@@ -686,6 +754,7 @@ export default {
         booking.status="pending payment",
         booking.isRose=element.isRose,
         booking.rosePrice=element.rosePrice,
+        booking.totalPrice=0,
         await newThis.$store.dispatch('addBooking',booking).then((response)=>{
           if(response){
             console.log("booking.vue icine gelen respose", response)
@@ -796,6 +865,7 @@ export default {
     loadingBar (value) {
       this.isLoading = value
     },
+
     createNotes(){
       for (let index = 0; index < this.$store.state.booking.BookingDetails.length; index++) {
         this.notes.push("")

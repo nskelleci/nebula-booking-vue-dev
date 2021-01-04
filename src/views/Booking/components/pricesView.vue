@@ -53,13 +53,15 @@
 </template>
 
 <script>
+import blockedCabin from '../../../store/modules/blockedCabin';
 export default {
     data ()  {
         return {
             viewObj : {
                 price : 0,
                 hasRos : false
-            }
+            },
+            blockedCabins:[]
         }    
     },
   props: {
@@ -72,50 +74,43 @@ export default {
       required: true
     }
   },
+  methods:{
+      findBlockedCabin(rosElement){
+        return !!this.blockedCabins.find(element => JSON.stringify(element.cabin) === JSON.stringify(rosElement.cabin));
+      }
+  },
   computed:{
          getPrice () {
-            let blockedCabins=this.$store.state.blockedCabin.blockedCabinsbyCruise;
-
+             this.blockedCabins=this.$store.state.blockedCabin.blockedCabinsbyCruise;
             if(this.cruise.rosCabins.length === 0) {
                 this.viewObj.price = this.item.endUserPrice
                 this.viewObj.hasRos = false               
-
                 return this.viewObj
             }else{
-
-            for (let index = 0; index < this.cruise.rosCabins.length; index++) {
-                const rosElement = this.cruise.rosCabins[index];
-                if(this.item.cabinCategory._id===rosElement.cabin.cabinCategory._id){
-                    let result = false
-                    blockedCabins.forEach(element => {
-                        if(element.cabin._id===rosElement.cabin._id){
-                            result = true
-                            
+                for (let index = 0; index < this.cruise.rosCabins.length; index++) {
+                    const rosElement = this.cruise.rosCabins[index];
+                    if (this.item.cabinCategory._id === rosElement.cabin.cabinCategory._id) {
+                        //console.log("Ros Cabin Blocked",this.findBlockedCabin(rosElement));
+                        if (!this.findBlockedCabin(rosElement)) {
+                            this.viewObj.price = rosElement.rosPrice
+                            this.viewObj.hasRos = true
+                            break;
+                        } else {
+                            this.viewObj.price = this.item.endUserPrice
+                            this.viewObj.hasRos = false
                         }
-                        console.log(result)
-                    });
-                    if(!result) {
-                        console.log("Ros Avalible");
-                        console.log("Ros Element",rosElement.cabin);
-                        this.viewObj.price = rosElement.rosPrice
-                        this.viewObj.hasRos = true
-                    }else{
-                        console.log("Ros NOT Avalible");
+                    } else {
                         this.viewObj.price = this.item.endUserPrice
-                        this.viewObj.hasRos = false 
+                        this.viewObj.hasRos = false
                     }
-                    break
-                }else{
-                    this.viewObj.price = this.item.endUserPrice
                 }
+                
+                return this.viewObj
+                
             }
-
-            }
-            console.log("viewObject", this.viewObj)
-            return this.viewObj
-            
         }
     }
+    
 }
 </script>
 

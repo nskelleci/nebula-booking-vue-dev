@@ -29,6 +29,38 @@ export default {
       }).catch((error) => { notification.notifyMe(error) })
   },
 
+  async deletePrice (priceId) {
+    return await axios.delete(`${apiUri.apiUri.URI}/price/delete/${priceId}`)
+      .then((response) => {
+        notification.notifyMe(response.data)
+        return response.data
+      }).catch((error) => { notification.notifyMe(error) })
+  },
+
+  async calculatePriceFrontEnd (data) {
+    return await axios.post(`${apiUri.apiUri.URI}/price/calculatefrontend/`,data)
+      .then((response) => {
+        //notification.notifyMe(response.data)
+        return response.data
+      }).catch((error) => { notification.notifyMe(error) })
+  },
+
+  async calculatePriceBackEnd (data) {
+    return await axios.post(`${apiUri.apiUri.URI}/price/calculatebackend/`,data)
+      .then((response) => {
+        //notification.notifyMe(response.data)
+        return response.data
+      }).catch((error) => { notification.notifyMe(error) })
+  },
+
+  async calculatePriceBackEndSingle (data) {
+    return await axios.post(`${apiUri.apiUri.URI}/price/calculatebackendsingle/`,data)
+      .then((response) => {
+        //notification.notifyMe(response.data)
+        return response.data
+      }).catch((error) => { notification.notifyMe(error) })
+  },
+
   async getPrices (filter) {
     // 'http://localhost:7878/api/v1/vessel'
     console.log('servise gelen filter ===', filter)

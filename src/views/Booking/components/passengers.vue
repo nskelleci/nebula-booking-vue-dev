@@ -129,6 +129,10 @@ export default {
   methods: {
     async deletePassenger(index) {
       this.$store.commit('DELETE_PASSENGER_GETBOOKINGID',index)
+
+      //Personel Silindiğinde yeni fiyatı hesaplar ve günceller
+      await this.$store.dispatch('calculatePriceBackEndSingle',this.booking)
+      this.booking.totalPrice=this.$store.state.price.calculatedBackEndPriceSingle
       await this.$store.dispatch('updateBooking',this.booking)
     },
     addNewData () {

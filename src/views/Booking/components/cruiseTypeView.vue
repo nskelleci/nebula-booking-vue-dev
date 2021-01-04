@@ -22,8 +22,8 @@
                     <div class="p-4 pt-6">
                         <slot name="item-meta">
                             <h6 class="item-name font-semibold mb-1 hover:text-primary cursor-pointer">{{ item.name }}</h6>
-                            <p class="text-sm mb-4">Description :<span class="font-semibold cursor-pointer">Lorem Ipsum Pulse</span></p>
-                            <p class="item-description text-sm">{{ item.description }}</p>
+                            <!--- <p class="text-sm mb-4">Description :<span class="font-semibold cursor-pointer">{{item.description}}</span></p> -->
+                            <p class="item-description text-sm"></p>
                         </slot>
                     </div>
                 </div>

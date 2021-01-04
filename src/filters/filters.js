@@ -19,3 +19,9 @@ Vue.filter('formatShortDate', function (value) {
     return moment(String(value)).format('YYYY-MM-DD')
   }
 })
+
+Vue.filter('priceFormat', function (number) {
+  if (number) {
+    return new Intl.NumberFormat('tr-TR', { style: 'currency', currency: 'EUR' }).format(number)
+  }
+})

@@ -32,6 +32,7 @@
             <vs-th sort-key="cabinCategory">Cruise Type</vs-th>
             <vs-th sort-key="bedType">Checkin Date</vs-th>
             <vs-th sort-key="df">Checkout Date</vs-th>
+            <vs-th sort-key="df">Price</vs-th>
             <vs-th sort-key="df">Status</vs-th>
           </template>
 
@@ -74,6 +75,9 @@
                   <p class="product-category">{{ bookings.cruise.checkOutDate | formatShortDate }}</p>
                 </vs-td>
                 <vs-td>
+                  <p class="product-category">{{ ""+bookings.totalPrice+"" | priceFormat }}</p>
+                </vs-td>
+                <vs-td>
                   <p class="product-category">{{ bookings.status }}</p>
                 </vs-td>
               </vs-tr>
@@ -112,7 +116,6 @@ export default {
     async allBooking() {
       await this.$store.dispatch("getAllbookingsbyagency");
       this.bookings = this.$store.state.booking.AllBookingsByAgency;
-      console.log(JSON.stringify(this.bookings[1]))
     },
     handleSelected(tr) {
       this.$vs.notify({

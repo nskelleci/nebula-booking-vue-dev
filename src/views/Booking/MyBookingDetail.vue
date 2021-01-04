@@ -1,15 +1,25 @@
 <template>
   <div v-if="isLoad" id="page-user-view">
     <div class="vx-row">
-      <div class="vx-col lg:w-2/2 w-full">
+      <div class="vx-col lg:w-1/2 w-full">
         <vx-card v-if="isLoad" class="mb-base">
         <div class="flex items-end px-3">
           <feather-icon svgClasses="w-6 h-6" icon="CheckIcon" class="mr-2" />
-          <span class="font-medium text-lg leading-none">Rezervation Confirm</span>
+          <span class="font-medium text-lg leading-none">Reservation Confirm</span>
         </div>
           <vs-divider />
-            <vs-button v-if="isShowConfirm" color="success" class="mr-3" type="border"  @click.stop="openConfirm">Confirm Rezervation</vs-button>
+            <vs-button v-if="isShowConfirm" color="success" class="mr-3" type="border"  @click.stop="openConfirm">Confirm Reservation</vs-button>
             <vs-button v-if="isShowNotification" color="primary" type="border" @click="activePrompt = true">Send Notifaction</vs-button>
+        </vx-card>
+      </div>
+      <div class="vx-col lg:w-1/2 w-full">
+        <vx-card v-if="isLoad" class="mb-base">
+        <div class="flex items-end px-3">
+          <feather-icon svgClasses="w-6 h-6" icon="CreditCardIcon" class="mr-2" />
+          <span class="font-medium text-lg leading-none">Reservation Price</span>
+        </div>
+          <vs-divider />
+            <span class="font-medium text-lg">{{ ""+booking.totalPrice+"" | priceFormat }} (tax included)</span>
         </vx-card>
       </div>
     </div>
@@ -89,10 +99,10 @@
         <vx-card v-if="isLoad" class="mb-base">
         <div class="flex items-end px-3">
           <feather-icon svgClasses="w-6 h-6" icon="AlignJustifyIcon" class="mr-2" />
-          <span class="font-medium text-lg leading-none">Rezervation Note</span>
+          <span class="font-medium text-lg leading-none">Reservation Note</span>
         </div>
         <vs-divider />
-        <vs-textarea label="Rezervation Note" v-model="booking.notes"/>
+        <vs-textarea label="Reservation Note" v-model="booking.notes"/>
         <vs-button color="success" type="border" @click="updateRezervationNote">Update</vs-button>
         </vx-card>
       </div>
