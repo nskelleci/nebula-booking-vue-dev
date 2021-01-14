@@ -201,7 +201,16 @@ const router = new Router({
             rule: 'isAgency',
             authRequired : true
           }
-        }
+        },
+        {
+          path: '/voucher/:id',
+          name: 'voucher',
+          component: () => import('./views/Booking/components/voucher.vue'),
+          meta: {
+            rule: 'isManager',
+            authRequired : true
+          }
+        },
       ]
     },
     // =============================================================================

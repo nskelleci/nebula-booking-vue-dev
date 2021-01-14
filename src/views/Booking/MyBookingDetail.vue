@@ -1,5 +1,21 @@
 <template>
-  <div v-if="isLoad" id="page-user-view">
+  <div v-if="isLoad">
+
+    <div class="flex flex-wrap items-center justify-between">
+        <vx-input-group class="mb-base mr-3">
+          <!-- <vs-input placeholder="Email" />
+
+          <template slot="append">
+            <div class="append-text btn-addon">
+              <vs-button type="border" class="whitespace-no-wrap">Send Invoice</vs-button>
+            </div>
+          </template> -->
+        </vx-input-group>
+        <div class="flex items-center">
+          <vs-button class="mb-base mr-3" icon-pack="feather" icon="icon icon-file" @click="printInvoice">Show Voucher</vs-button>
+        </div>
+    </div>
+
     <div class="vx-row">
       <div class="vx-col lg:w-1/2 w-full">
         <vx-card v-if="isLoad" class="mb-base">
@@ -149,6 +165,10 @@
           </div>
     </vs-prompt>
 
+    <!-- <div id="print-page" style="visibility: hidden; height: 0">
+      <voucher  id="print-container" style="visibility: hidden;"></voucher>
+    </div> -->
+  
   </div>
 </template>
 <script>
@@ -177,7 +197,7 @@ export default {
   },
   components: {
     passengers,
-    'v-select': vSelect,
+    'v-select': vSelect
   },
   watch:{
     async editCabin(){
@@ -198,6 +218,10 @@ export default {
     }
   },
   methods: {
+    printInvoice () {
+      let voucher = this.$router.resolve({name: 'voucher',params: {id: this.$route.params.id}});
+      window.open(voucher.href, '_blank','width=800,height=1000');
+    },
     async updateRezervationNote(){
         await this.$store.dispatch('updateBooking',this.booking)
     },
@@ -310,8 +334,9 @@ export default {
   },
   mounted(){
     this.isMounted = true;
-    this.getBooking()
+    this.getBooking();
     this.checkRole();
+    this.$emit('setAppClasses', 'print-page');
   },
 };
 </script>
@@ -338,3 +363,40 @@ export default {
 }
 
 </style>
+
+
+<style lang="scss">
+@media print {
+  .print-page {
+    * {
+      visibility: hidden;
+    }
+
+    #content-area {
+      margin: 0 !important;
+    }
+
+    .vs-con-table {
+      .vs-con-tbody {
+        overflow: hidden !important;
+      }
+    }
+
+    #print-container,
+    #print-container * {
+      visibility: visible;
+    }
+    #print-container {
+      position: absolute;
+      left: 0;
+      top: 0;
+      box-shadow: none;
+    }
+  }
+}
+
+@page {
+  size: auto;
+}
+</style>
+
