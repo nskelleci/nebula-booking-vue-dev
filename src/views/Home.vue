@@ -114,6 +114,9 @@
             color="warning" />
       </div>
     </div>
+
+     <AgencyDashboardTable/>
+
   </div>
 
 </div>
@@ -121,6 +124,7 @@
 
 <script>
 import AdminDashboardTable from './components/AdminDashboardTable'
+import AgencyDashboardTable from './components/AgencyDashboardTable'
 import VueApexCharts from 'vue-apexcharts'
 import StatisticsCardLine from '../../src/components/statistics-cards/StatisticsCardLine'
 export default {
@@ -268,6 +272,7 @@ export default {
   components:{
     StatisticsCardLine,
     AdminDashboardTable,
+    AgencyDashboardTable,
     VueApexCharts
   },
   async created(){
