@@ -34,21 +34,14 @@ export default [
     // tagColor: 'warning',
     icon: 'HomeIcon',
     i18n: 'Dashboard',
-    role : ['manager'],
+    role : ['manager','agency'],
     submenu: [
       {
         //url: '/dashboard/analytics',
-        name: 'Admin Dashboard',
+        name: 'Dashboard',
         url: '/',
         slug: 'admin-dashboard',
         i18n: 'Analytics'
-      },
-      {
-        //url: '/dashboard/ecommerce',
-        name: 'Agency Dashboard',
-        slug: 'dashboard-ecommerce',
-        i18n: 'eCommerce'
-
       }
     ]
   },

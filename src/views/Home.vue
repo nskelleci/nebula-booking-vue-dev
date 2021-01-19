@@ -9,16 +9,8 @@
 
 <template>
 <div>
-  <div class="vx-row mb-5">
-    <div class="vx-col w-full md:w-2/3">
-        <vx-card title="Client Retention">
-            <div class="flex">
-                <span class="flex items-center"><div class="h-3 w-3 rounded-full mr-1 bg-primary"></div><span>New Clients</span></span>
-                <span class="flex items-center ml-4"><div class="h-3 w-3 rounded-full mr-1 bg-danger"></div><span>Retained Clients</span></span>
-            </div>
-            <vue-apex-charts type="bar" height="370" :options="clientRetentionBar.chartOptions" :series="clientRetentionBar.series" />
-        </vx-card>
-    </div>
+  <div v-if="role==roles[0]">
+    <div class="vx-row mb-5">
     <div class="vx-col w-full lg:w-1/3 lg:mt-0 mt-base">
         <vx-card title="">
             <div slot="no-body">
@@ -30,18 +22,16 @@
                     <feather-icon :icon="deviceData.icon" :svgClasses="[`h-5 w-5 stroke-current text-${deviceData.color}`]"></feather-icon>
                     <span class="ml-2 inline-block font-semibold">{{ deviceData.device }}</span>
                     <span class="mx-2">-</span>
-                    <span class="mr-4">{{ deviceData.sessionsPercentage }}%</span>
                     <div class="ml-auto flex -mr-1">
-                    <span class="mr-1">{{ deviceData.comparedResultPercentage }}%</span>
-                    <feather-icon :icon=" deviceData.comparedResultPercentage < 0 ? 'ArrowDownIcon' : 'ArrowUpIcon'" :svgClasses="[deviceData.comparedResultPercentage < 0 ? 'text-danger' : 'text-success'  ,'stroke-current h-4 w-4 mb-1 mr-1']"></feather-icon>
+                    <span class="mr-1">{{ Number(deviceData.comparedResultPercentage) }}</span>
                     </div>
                 </li>
             </ul>
         </vx-card>
     </div>
-  </div>
+    </div>
 
-  <div class="vx-row">
+    <div class="vx-row">
     <div class="vx-col w-full md:w-2/3 mb-base">
       <AdminDashboardTable/>
     </div>
@@ -72,16 +62,71 @@
             </div>
         </vx-card>
     </div>
+    </div>
   </div>
+  
+  <div v-if="role==roles[1]">
+    <div class="vx-row">
+      <div class="vx-col w-full sm:w-1/2 md:w-1/2 lg:w-1/4 xl:w-1/4">
+          <statistics-card-line
+            hideChart
+            class="mb-base"
+            icon="CpuIcon"
+            icon-right
+            :statistic="allBookingsByAgencyDetail.totalPrice| priceFormat"
+            statisticTitle="Total Reservation Price (tax included)" />
+      </div>
+
+      <div class="vx-col w-full sm:w-1/2 md:w-1/2 lg:w-1/4 xl:w-1/4">
+          <statistics-card-line
+            hideChart
+            class="mb-base"
+            icon="ServerIcon"
+            icon-right
+            :statistic="allBookingsByAgencyDetail.agencyCost  || 0 | priceFormat"
+            statisticTitle="Total Agency Cost (tax included)"
+            color="success" />
+      </div>
+
+      <div class="vx-col w-full sm:w-1/2 md:w-1/2 lg:w-1/4 xl:w-1/4">
+          <statistics-card-line
+            className="danger"
+            hideChart
+            class="mb-base"
+            icon="ActivityIcon"
+            icon-right
+            :statistic="allBookingsByAgencyDetail.balance || 0 | priceFormat"
+            statisticTitle="Total Balance"
+            color="danger" />
+      </div>
+
+      <div class="vx-col w-full sm:w-1/2 md:w-1/2 lg:w-1/4 xl:w-1/4">
+          <statistics-card-line
+            hideChart
+            class="mb-base"
+            icon="AlertOctagonIcon"
+            icon-right
+            :statistic="allBookingsByAgencyDetail.profit  || 0 | priceFormat"
+            statisticTitle="Total Profit"
+            color="warning" />
+      </div>
+    </div>
+  </div>
+
 </div>
 </template>
 
 <script>
 import AdminDashboardTable from './components/AdminDashboardTable'
 import VueApexCharts from 'vue-apexcharts'
+import StatisticsCardLine from '../../src/components/statistics-cards/StatisticsCardLine'
 export default {
   data () {
     return {
+      todayPendingPayment:10,
+      todaySold:10,
+      role:null,
+      roles:['manager','agency'],
       // RADIAL BAR
       goalOverview: {
         series: [0],
@@ -144,11 +189,11 @@ export default {
 
       sessionsByDeviceDonut: {
         analyticsData: [
-             { device: 'Pending Payment', icon: 'MonitorIcon', color: 'primary', sessionsPercentgae: 58.6, comparedResultPercentage: 2 },
-             { device: 'Sold', icon: 'SmartphoneIcon', color: 'warning', sessionsPercentgae: 34.9, comparedResultPercentage: 8 },
+             { device: 'Pending Payment', icon: 'MonitorIcon', color: 'danger', comparedResultPercentage: 0 },
+             { device: 'Sold', icon: 'SmartphoneIcon', color: 'success', comparedResultPercentage: 0 },
          ],
         comparedResult: [2, -3, 8],
-        series:[1,1],
+        series:[0,0],
         chartOptions: {
           labels: ['Pending Payment', 'Sold'],
           dataLabels: {
@@ -163,75 +208,14 @@ export default {
             }
           },
           stroke: { width: 0 },
-          colors: ['#7961F9', '#FF9F43'],
+          colors: ['#A93226', '#145A32'],
           fill: {
             type: 'gradient',
             gradient: {
-              gradientToColors: ['#9c8cfc', '#FFC085']
+              gradientToColors: ['#FF0000', '#B0FF47']
             }
           }
         }
-      },
-
-      clientRetentionBar: {
-        series: [{
-            name: 'New Clients',
-            data: [175, 125, 225, 175, 160, 189, 206, 134, 159, 216, 148, 123]
-        }, {
-            name: 'Retained Clients',
-            data: [-144, -155, -141, -167, -122, -143, -158, -107, -126, -131, -140, -137]
-        }],
-          chartOptions: {
-            grid: {
-              borderColor: '#ebebeb',
-              padding: {
-                left: 0,
-                right: 0
-              }
-            },
-            legend: {
-              show: false
-            },
-            dataLabels: {
-              enabled: false
-            },
-            chart: {
-              stacked: true,
-              type: 'bar',
-              toolbar: { show: false }
-            },
-            colors: ['#7367F0', '#EA5455'],
-            plotOptions: {
-              bar: {
-                columnWidth: '10%'
-              }
-            },
-            xaxis: {
-              labels: {
-                style: {
-                  cssClass: 'text-grey fill-current'
-                }
-              },
-              axisTicks: {
-                show: false
-              },
-              categories: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'],
-              axisBorder: {
-                show: false
-              }
-            },
-            yaxis: {
-              tickAmount: 5,
-              labels: {
-                style: {
-                  cssClass: 'text-grey fill-current'
-                }
-              }
-            },
-            tooltip: {
-              x: { show: false }
-            }
-          }
       },
 
       selectedCabinData:{
@@ -247,6 +231,9 @@ export default {
     },
     getBookingsToday(){
       return this.$store.state.booking.getBookingsToday
+    },
+    allBookingsByAgencyDetail(){
+      return this.$store.state.booking.AllBookingsByAgencyDetail
     }
   },
   watch : {
@@ -265,18 +252,25 @@ export default {
       this.sessionsByDeviceDonut.series=[]
         this.sessionsByDeviceDonut.series.push(this.getBookingsToday.todayPendingPayment)
         this.sessionsByDeviceDonut.series.push(this.getBookingsToday.todaySold)
-        console.log(this.sessionsByDeviceDonut.series);
+        this.sessionsByDeviceDonut.analyticsData[0].comparedResultPercentage=this.getBookingsToday.todayPendingPayment
+        this.sessionsByDeviceDonut.analyticsData[1].comparedResultPercentage=this.getBookingsToday.todaySold
+        console.log("getBookingsToday",this.sessionsByDeviceDonut.series);
     }
   },
   methods: {
-
+    async allBookingbyAgencyDetail() {
+      await this.$store.dispatch("getAllbookingsbyagencydetail");
+    }
   },
   components:{
+    StatisticsCardLine,
     AdminDashboardTable,
     VueApexCharts
   },
   async created(){
     await this.$store.dispatch("getBookingsToday");
+    this.role = JSON.parse(localStorage.getItem('agency')).role;
+    this.allBookingbyAgencyDetail()
   }
 
 }

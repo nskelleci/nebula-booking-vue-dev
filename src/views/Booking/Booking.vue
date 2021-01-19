@@ -755,6 +755,10 @@ export default {
         booking.isRose=element.isRose,
         booking.rosePrice=element.rosePrice,
         booking.totalPrice=0,
+        booking.agencyCost=0,
+        booking.paidAmount=[],
+        booking.balance=0,
+        booking.profit=0,
         await newThis.$store.dispatch('addBooking',booking).then((response)=>{
           if(response){
             console.log("booking.vue icine gelen respose", response)

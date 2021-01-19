@@ -168,6 +168,12 @@
                         <p>{{ booking.refNo }}</p>
                     </div>
                 </div>
+                <div class="vx-col w-1/3 text-left">
+                  <div class="invoice__recipient-info my-4">
+                        <h6>Cabin Number</h6>
+                        <p>{{ booking.isRose ? 'ROS' : booking.cabin.number }}</p>
+                    </div>
+                </div>
             </div>
 
             <!-- 3. ULAŞIM DETAYLAR -->
@@ -190,7 +196,7 @@
                     <template slot-scope="{data}">
                         <vs-tr v-for="(tr, index) in data" :key="index">
                             <vs-td>{{ data[index].date | formatShortDate}}</vs-td>
-                             <vs-td>{{ data[index].port }}</vs-td>
+                             <vs-td>{{ data[index].port.name }}</vs-td>
                              <vs-td>{{ data[index].departureTime }}</vs-td>
                             <vs-td>{{ data[index].arrivalTime}}</vs-td>
                         </vs-tr>

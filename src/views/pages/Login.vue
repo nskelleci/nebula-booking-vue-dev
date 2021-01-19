@@ -16,8 +16,8 @@
 
           <div class="vx-row no-gutter justify-center items-center">
 
-            <div class="vx-col hidden lg:block lg:w-1/2">
-              <img src="@/assets/images/pages/login.png" alt="login" class="mx-auto">
+            <div class="vx-col hidden lg:block lg:w-1/2 d-theme-dark-bg">
+              <img src="@/assets/images/logo/miray-logo.jpg" style="width: 330px;" alt="login" class="mx-auto">
             </div>
 
             <div class="vx-col sm:w-full md:w-full lg:w-1/2 d-theme-dark-bg">
@@ -104,6 +104,7 @@ export default{
     async login () {
       const params = {agencyCode : this.agencyCode, password : this.password}
       await this.$store.dispatch('login', params)
+      console.log("current-user",this.$store.state.auth.currentUser)
       this.$router.push(this.$router.currentRoute.query.to || '/') 
     }
   }

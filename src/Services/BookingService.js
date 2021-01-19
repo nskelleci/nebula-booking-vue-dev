@@ -27,6 +27,14 @@ export default {
       })
       .catch((error) => { notification.notifyMe(error)  })
   },
+  async getAllbookingsbyagencydetail () {
+    return await axios.get(`${apiUri.apiUri.URI}/booking/getAllbookingsbyagencydetail/`)
+      .then((response) => {
+        notification.notifyMe(response.data)
+        return response.data
+      })
+      .catch((error) => { notification.notifyMe(error)  })
+  },
   async getBookingbyId (bookingid) {
     return await axios.get(`${apiUri.apiUri.URI}/booking/getBooking/${bookingid}`)
       .then((response) => {

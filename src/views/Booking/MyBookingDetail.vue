@@ -3,45 +3,65 @@
 
     <div class="flex flex-wrap items-center justify-between">
         <vx-input-group class="mb-base mr-3">
-          <!-- <vs-input placeholder="Email" />
-
-          <template slot="append">
-            <div class="append-text btn-addon">
-              <vs-button type="border" class="whitespace-no-wrap">Send Invoice</vs-button>
-            </div>
-          </template> -->
+          <vs-button color="warning" class="mr-3">{{booking.status}}</vs-button>
+          <vs-button v-if="isShowConfirm=booking.status!='Sold'? true : false "  color="success" class="mr-3" type="border"  @click.stop="openConfirm">Confirm Reservation</vs-button>
+            <vs-button v-if="isShowNotification" color="primary" type="border" @click="activePrompt = true">Send Notifaction</vs-button>
         </vx-input-group>
         <div class="flex items-center">
+          <vs-button class="mb-base mr-3" v-if="booking.balance==0 ? false : true" color="success" icon-pack="feather" icon="icon icon-file" @click="activeGetPayment = true">Settle Payment</vs-button>
           <vs-button class="mb-base mr-3" icon-pack="feather" icon="icon icon-file" @click="printInvoice">Show Voucher</vs-button>
         </div>
     </div>
 
     <div class="vx-row">
-      <div class="vx-col lg:w-1/2 w-full">
-        <vx-card v-if="isLoad" class="mb-base">
-        <div class="flex items-end px-3">
-          <feather-icon svgClasses="w-6 h-6" icon="CheckIcon" class="mr-2" />
-          <span class="font-medium text-lg leading-none">Reservation Confirm</span>
+            
+            <div class="vx-col w-full sm:w-1/2 md:w-1/2 lg:w-1/4 xl:w-1/4">
+                <statistics-card-line
+                  hideChart
+                  class="mb-base"
+                  icon="CpuIcon"
+                  icon-right
+                  :statistic="booking.totalPrice| priceFormat"
+                  statisticTitle="Reservation Price (tax included)" />
+            </div>
+
+            <div class="vx-col w-full sm:w-1/2 md:w-1/2 lg:w-1/4 xl:w-1/4">
+                <statistics-card-line
+                  hideChart
+                  class="mb-base"
+                  icon="ServerIcon"
+                  icon-right
+                  :statistic="booking.agencyCost  || 0 | priceFormat"
+                  statisticTitle="Agency Cost (tax included)"
+                  color="success" />
+            </div>
+
+            <div class="vx-col w-full sm:w-1/2 md:w-1/2 lg:w-1/4 xl:w-1/4">
+                <statistics-card-line
+                 className="danger"
+                  hideChart
+                  class="mb-base"
+                  icon="ActivityIcon"
+                  icon-right
+                  :statistic="booking.balance || 0 | priceFormat"
+                  statisticTitle="Balance"
+                  color="danger" />
+            </div>
+
+            <div class="vx-col w-full sm:w-1/2 md:w-1/2 lg:w-1/4 xl:w-1/4">
+                <statistics-card-line
+                  hideChart
+                  class="mb-base"
+                  icon="AlertOctagonIcon"
+                  icon-right
+                  :statistic="booking.profit  || 0 | priceFormat"
+                  statisticTitle="Profit"
+                  color="warning" />
+            </div>
         </div>
-          <vs-divider />
-            <vs-button v-if="isShowConfirm" color="success" class="mr-3" type="border"  @click.stop="openConfirm">Confirm Reservation</vs-button>
-            <vs-button v-if="isShowNotification" color="primary" type="border" @click="activePrompt = true">Send Notifaction</vs-button>
-        </vx-card>
-      </div>
-      <div class="vx-col lg:w-1/2 w-full">
-        <vx-card v-if="isLoad" class="mb-base">
-        <div class="flex items-end px-3">
-          <feather-icon svgClasses="w-6 h-6" icon="CreditCardIcon" class="mr-2" />
-          <span class="font-medium text-lg leading-none">Reservation Price</span>
-        </div>
-          <vs-divider />
-            <span class="font-medium text-lg">{{ ""+booking.totalPrice+"" | priceFormat }} (tax included)</span>
-        </vx-card>
-      </div>
-    </div>
 
     <div class="vx-row">
-      <div class="vx-col lg:w-1/2 w-full">
+      <div class="vx-col lg:w-1/3 w-full">
       <template slot="actions">
         <feather-icon icon="MoreVerticalIcon" svgClasses="w-6 h-6 text-grey"></feather-icon>
       </template>
@@ -80,7 +100,8 @@
           </table>
         </vx-card>
       </div>
-      <div class="vx-col lg:w-1/2 w-full">
+
+      <div class="vx-col lg:w-1/3 w-full">
         <vx-card v-if="isLoad" class="mb-base">
         <div class="flex items-end px-3">
           <feather-icon svgClasses="w-6 h-6" icon="FlagIcon" class="mr-2" />
@@ -111,6 +132,25 @@
           </table>
         </vx-card>
       </div>
+
+      <div class="vx-col lg:w-1/3 w-full">
+        <vx-card v-if="isLoad" class="mb-base">
+        <div class="flex items-end px-3">
+          <feather-icon svgClasses="w-6 h-6" icon="FlagIcon" class="mr-2" />
+          <span class="font-medium text-lg leading-none">Payment History</span>
+        </div>
+        <vs-divider />
+          <table>
+            <tr v-for="(item,index) in booking.paidAmount" :key="index">
+              <td class="font-semibold">Date : </td>
+              <td>{{ new Date(item.date) | formatShortDate }}</td>
+              <td class="font-semibold">Price : </td>
+              <td>{{ item.price | priceFormat }}</td>
+            </tr>
+          </table>
+        </vx-card>
+      </div>
+
       <div class="vx-col lg:w-2/2 w-full">
         <vx-card v-if="isLoad" class="mb-base">
         <div class="flex items-end px-3">
@@ -136,6 +176,22 @@
         </div>
       </div>
     </vx-card>
+
+    <vs-prompt
+          color="success"
+          cancel-text="Cancel"
+          accept-text="Save"
+          title="Settle Payment"
+          @accept="getPayment"
+           :is-valid="checkPayment"
+          :active.sync="activeGetPayment">
+          <div class="con-exemple-prompt">
+            <span>Payment Amount(€)</span>
+          <vs-input size="large" v-validate="{ rules: { regex:  /.[0-9]{0,}$/} }"  name="numeric" v-model="getPaymentValue" class="mt-5 w-full" />
+          <span class="text-danger text-sm" v-show="errors.has('numeric')">{{ errors.first('numeric') }}</span>
+          <span class="text-danger text-sm" v-show="!checkPayment">Amount can't be greater than balance</span>
+          </div>
+    </vs-prompt>
     
     <vs-prompt
           cancel-text="Cancel"
@@ -176,10 +232,12 @@ import vSelect from 'vue-select'
 import router from '../../router'
 import booking from '../../store/modules/booking';
 const passengers = () => import('./components/passengers.vue')
-
+import StatisticsCardLine from '@/components/statistics-cards/StatisticsCardLine.vue'
 export default {
   data() {
     return {
+      getPaymentValue:0,
+      activeGetPayment:false,
       selected: [],
       itemsPerPage: 10,
       isMounted: false,
@@ -196,6 +254,7 @@ export default {
     };
   },
   components: {
+    StatisticsCardLine,
     passengers,
     'v-select': vSelect
   },
@@ -215,9 +274,22 @@ export default {
   computed : {
     booking (){
       return this.$store.state.booking.getBookingID
+    },
+    checkPayment(){
+      console.log("checkPayment",Number(this.getPaymentValue) + Number(this.booking.balance));
+      if(Number(this.getPaymentValue) + Number(this.booking.balance) <= 0){
+        return true
+      }else{
+        return false
+      }
     }
   },
   methods: {
+    async getPayment(){
+      this.$store.state.booking.getBookingID.paidAmount.push({date:Date.now(),price:this.getPaymentValue});
+      await this.$store.dispatch('updateBooking',this.booking)
+      this.getBooking();
+    },
     printInvoice () {
       let voucher = this.$router.resolve({name: 'voucher',params: {id: this.$route.params.id}});
       window.open(voucher.href, '_blank','width=800,height=1000');
@@ -235,15 +307,30 @@ export default {
       this.isLoad=true
     },
      openConfirm() {
-      this.$vs.dialog({
-        type: 'confirm',
-        color: 'success',
-        title: `Booking Confirm`,
-        text: 'Cake sesame snaps cupcake gingerbread danish I love gingerbread. Apple pie pie jujubes chupa chups.',
-        accept: ()=>{
-          console.log("Accept");
-        }
-      })
+      if(booking.balance!=0){
+        this.$vs.dialog({
+          type: 'confirm',
+          color: 'success',
+          title: `Booking Confirm`,
+          text: 'There is an open balance for this reservation. Do you want to confirm it anyway?',
+          accept:async ()=>{
+            this.$store.state.booking.getBookingID.status="Sold"
+            await this.$store.dispatch('updateBooking',this.booking)
+          }
+        })
+      }else{
+        this.$vs.dialog({
+          type: 'confirm',
+          color: 'success',
+          title: `Booking Confirm`,
+          text: 'Please click accept to confirm reservation',
+          accept: async ()=>{
+            this.$store.state.booking.getBookingID.status="Sold"
+            await this.$store.dispatch('updateBooking',this.booking)
+          }
+        })
+      }
+      
     },
     sendNotifaction(){
       console.log(this.notifactionDesc);
@@ -312,7 +399,7 @@ export default {
     },
     checkRole(){
       if(JSON.parse(localStorage.getItem("agency")).role=="manager"){
-        this.isShowNotification=true;
+        this.isShowNotification=false;
         this.isShowConfirm=true;
       }else{
         this.isShowNotification=true;
@@ -337,6 +424,7 @@ export default {
     this.getBooking();
     this.checkRole();
     this.$emit('setAppClasses', 'print-page');
+    console.log(this.booking);
   },
 };
 </script>

@@ -29,6 +29,15 @@
         <vs-input label="Name" v-model="companyName" class="mt-5 w-full" name="agency-name" v-validate="'required'" />
         <span class="text-danger text-sm" v-show="errors.has('agency-name')">{{ errors.first('agency-name') }}</span>
 
+        <vs-input label="Company Full Name" v-model="companyFullName" class="mt-5 w-full" name="company-full-name" v-validate="'required'" />
+        <span class="text-danger text-sm" v-show="errors.has('company-full-name')">{{ errors.first('company-full-name') }}</span>
+
+        <vs-input label="Tax Office" v-model="taxOffice" class="mt-5 w-full" name="tax-office" v-validate="'required'" />
+        <span class="text-danger text-sm" v-show="errors.has('tax-office')">{{ errors.first('tax-office') }}</span>
+
+        <vs-input label="Tax Number" v-model="taxNumber" class="mt-5 w-full" name="tax-number" v-validate="'required'" />
+        <span class="text-danger text-sm" v-show="errors.has('tax-number')">{{ errors.first('tax-number') }}</span>
+
         <vs-input label="Address" v-model="address" class="mt-5 w-full" name="agency-address" v-validate="'required'" />
         <span class="text-danger text-sm" v-show="errors.has('agency-address')">{{ errors.first('agency-address') }}</span>
 
@@ -99,6 +108,9 @@ export default {
       email: '',
       password: '',
       companyName: '',
+      companyFullName:'',
+      taxNumber:'',
+      taxOffice:'',
       address: '',
       authorizedPerson: '',
       agencyType : null,
@@ -118,10 +130,13 @@ export default {
         this.initValues()
         this.$validator.reset()
       } else {
-        const { _id, companyName, email,  agencyType, address,market, authorizedPerson, phone, agencyDiscountType} = JSON.parse(JSON.stringify(this.data))
+        const { _id, companyName,companyFullName, taxNumber, taxOffice, email,  agencyType, address,market, authorizedPerson, phone, agencyDiscountType} = JSON.parse(JSON.stringify(this.data))
         this.dataId = _id
       
         this.companyName = companyName
+        this.companyFullName=companyFullName
+        this.taxOffice = taxOffice
+        this.taxNumber = taxNumber
         this.email = email
         this.phone = phone
         //this.password = password
@@ -151,9 +166,9 @@ export default {
     },
     isFormValid () {
       if (Object.entries(this.data).length === 0) {
-        return !this.errors.any() && this.email &&  this.password && this.companyName && this.address && this.authorizedPerson && this.agencyType && this.phone && this.agencyDiscountType && this.market
+        return !this.errors.any() && this.email &&  this.password && this.companyName && this.companyFullName &&this.taxNumber && this.taxOffice && this.address && this.authorizedPerson && this.agencyType && this.phone && this.agencyDiscountType && this.market
       } else {
-        return !this.errors.any() && this.email && this.companyName && this.address && this.authorizedPerson && this.agencyType && this.phone && this.agencyDiscountType && this.market
+        return !this.errors.any() && this.email && this.companyName && this.companyFullName &&this.taxNumber && this.taxOffice && this.address && this.authorizedPerson && this.agencyType && this.phone && this.agencyDiscountType && this.market
       }
      
     },
@@ -175,6 +190,9 @@ export default {
       this.email = ''
       this.password = ''
       this.companyName = ''
+      this.companyFullName=''
+      this.taxOffice = ''
+      this.taxNumber = ''
       this.address = ''
       this.authorizedPerson = ''
       this.agencyType = null
@@ -190,6 +208,9 @@ export default {
             email: this.email,
             password: this.password,
             companyName: this.companyName,
+            companyFullName:this.companyFullName,
+            taxOffice: this.taxOffice,
+            taxNumber: this.taxNumber,
             address: this.address,
             authorizedPerson: this.authorizedPerson,
             agencyType: this.agencyType._id,
@@ -202,6 +223,9 @@ export default {
             _id: this.dataId,
             email: this.email,
             companyName: this.companyName,
+            companyFullName:this.companyFullName,
+            taxOffice: this.taxOffice,
+            taxNumber: this.taxNumber,
             address: this.address,
             authorizedPerson: this.authorizedPerson,
             agencyType: this.agencyType._id,

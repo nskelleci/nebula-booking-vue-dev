@@ -73,6 +73,9 @@
       <template slot="thead">
         <vs-th sort-key="agencycode">Agency Code</vs-th>
         <vs-th sort-key="companyname">Company Name</vs-th>
+        <vs-th sort-key="companyname">Full Name</vs-th>
+        <vs-th sort-key="companyname">Tax Number</vs-th>
+        <vs-th sort-key="companyname">Tax Office</vs-th>
         <vs-th sort-key="email">Email</vs-th>
         <vs-th sort-key="address">Address</vs-th>
         <vs-th sort-key="authorizedperson">Authorized Person</vs-th>
@@ -89,6 +92,15 @@
             </vs-td>
             <vs-td>
               <p class="product-name font-medium truncate">{{ agency.companyName }}</p>
+            </vs-td>
+            <vs-td>
+              <p class="product-name font-medium truncate">{{ agency.companyFullName }}</p>
+            </vs-td>
+            <vs-td>
+              <p class="product-name font-medium truncate">{{ agency.taxOffice }}</p>
+            </vs-td>
+            <vs-td>
+              <p class="product-name font-medium truncate">{{ agency.taxNumber }}</p>
             </vs-td>
             <vs-td>
               <p class="product-name font-medium truncate">{{ agency.email }}</p>

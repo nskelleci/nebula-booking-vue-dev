@@ -33,6 +33,7 @@
             <vs-th sort-key="bedType">Checkin Date</vs-th>
             <vs-th sort-key="df">Checkout Date</vs-th>
             <vs-th sort-key="df">Price</vs-th>
+            <vs-th sort-key="df">Agency Cost</vs-th>
             <vs-th sort-key="df">Status</vs-th>
           </template>
 
@@ -78,7 +79,12 @@
                   <p class="product-category">{{ ""+bookings.totalPrice+"" | priceFormat }}</p>
                 </vs-td>
                 <vs-td>
-                  <p class="product-category">{{ bookings.status }}</p>
+                  <p class="product-category">{{ ""+bookings.agencyCost+"" | priceFormat }}</p>
+                </vs-td>
+                <vs-td>
+                  <vs-chip :color="bookings.status!='pending payment' ? bookings.balance!=0 ? 'warning' : 'success' : 'danger' ">
+                    <span>{{ bookings.status }}</span>
+                  </vs-chip>
                 </vs-td>
               </vs-tr>
             </tbody>
@@ -117,6 +123,11 @@ export default {
       await this.$store.dispatch("getAllbookingsbyagency");
       this.bookings = this.$store.state.booking.AllBookingsByAgency;
     },
+    async allBookingbyAgencyDetail() {
+      await this.$store.dispatch("getAllbookingsbyagencydetail");
+      console.log(this.$store.state.booking.AllBookingsByAgencyDetail);
+    },
+    
     handleSelected(tr) {
       this.$vs.notify({
         title: `${tr.refNo}`,
@@ -133,6 +144,7 @@ export default {
   mounted() {
     this.isMounted = true;
     this.allBooking();
+    this.allBookingbyAgencyDetail();
   },
 };
 </script>
