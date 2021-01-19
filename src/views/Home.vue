@@ -10,59 +10,62 @@
 <template>
 <div>
   <div v-if="role==roles[0]">
+  
     <div class="vx-row mb-5">
-    <div class="vx-col w-full lg:w-1/3 lg:mt-0 mt-base">
-        <vx-card title="">
-            <div slot="no-body">
-                <vue-apex-charts class="mb-8" type="donut" height="325" :options="sessionsByDeviceDonut.chartOptions" :series="sessionsByDeviceDonut.series" />
-            </div>
+      <div class="vx-col w-full lg:w-1/3 lg:mt-0 mt-base">
+          <vx-card title="">
+              <div slot="no-body">
+                  <vue-apex-charts type="donut" height="290" :options="sessionsByDeviceDonut.chartOptions" :series="sessionsByDeviceDonut.series" />
+              </div>
 
-            <ul class="mt-6">
-                <li v-for="deviceData in sessionsByDeviceDonut.analyticsData" :key="deviceData.device" class="flex mb-3">
-                    <feather-icon :icon="deviceData.icon" :svgClasses="[`h-5 w-5 stroke-current text-${deviceData.color}`]"></feather-icon>
-                    <span class="ml-2 inline-block font-semibold">{{ deviceData.device }}</span>
-                    <span class="mx-2">-</span>
-                    <div class="ml-auto flex -mr-1">
-                    <span class="mr-1">{{ Number(deviceData.comparedResultPercentage) }}</span>
-                    </div>
-                </li>
-            </ul>
-        </vx-card>
-    </div>
+              <ul class="mt-6">
+                  <li v-for="deviceData in sessionsByDeviceDonut.analyticsData" :key="deviceData.device" class="flex mb-3">
+                      <feather-icon :icon="deviceData.icon" :svgClasses="[`h-5 w-5 stroke-current text-${deviceData.color}`]"></feather-icon>
+                      <span class="ml-2 inline-block font-semibold">{{ deviceData.device }}</span>
+                      <span class="mx-2">-</span>
+                      <div class="ml-auto flex -mr-1">
+                      <span class="mr-1">{{ Number(deviceData.comparedResultPercentage) }}</span>
+                      </div>
+                  </li>
+              </ul>
+          </vx-card>
+      </div>
+      <!-- RADIAL CHART -->
+      <div class="vx-col w-full md:w-1/3 lg:mt-0 mb-base">
+          <vx-card :title="selectedCabinData.cruiseName">
+              <template slot="actions">
+                  <feather-icon icon="HelpCircleIcon" svgClasses="w-6 h-6 text-grey"></feather-icon>
+              </template>
+
+              <!-- CHART -->
+              <template slot="no-body">
+                  <div class="mt-10">
+                      <vue-apex-charts type="radialBar" height="240" :options="goalOverview.chartOptions" :series="goalOverview.series" />
+                  </div>
+              </template>
+
+              <!-- DATA -->
+              <div class="flex justify-between text-center mt-6" slot="no-body-bottom">
+                  <div class="w-1/2 border border-solid d-theme-border-grey-light border-r-0 border-b-0 border-l-0">
+                      <p class="mt-4">Sold Cabin</p>
+                      <p class="mb-4 text-3xl font-semibold">{{selectedCabinData.blockedCabin}}</p>
+                  </div>
+                  <div class="w-1/2 border border-solid d-theme-border-grey-light border-r-0 border-b-0">
+                      <p class="mt-4">Available Cabin</p>
+                      <p class="mb-4 text-3xl font-semibold">{{selectedCabinData.availableCabin}}</p>
+                  </div>
+              </div>
+          </vx-card>
+      </div>
     </div>
 
     <div class="vx-row">
-    <div class="vx-col w-full md:w-2/3 mb-base">
-      <AdminDashboardTable/>
+      <div class="vx-col w-full md:w-3/3 mb-base">
+        <AdminDashboardTable/>
+      </div>
+      
     </div>
-    <!-- RADIAL CHART -->
-    <div class="vx-col w-full md:w-1/3 mb-base">
-        <vx-card :title="selectedCabinData.cruiseName">
-            <template slot="actions">
-                <feather-icon icon="HelpCircleIcon" svgClasses="w-6 h-6 text-grey"></feather-icon>
-            </template>
 
-            <!-- CHART -->
-            <template slot="no-body">
-                <div class="mt-10">
-                    <vue-apex-charts type="radialBar" height="240" :options="goalOverview.chartOptions" :series="goalOverview.series" />
-                </div>
-            </template>
-
-            <!-- DATA -->
-            <div class="flex justify-between text-center mt-6" slot="no-body-bottom">
-                <div class="w-1/2 border border-solid d-theme-border-grey-light border-r-0 border-b-0 border-l-0">
-                    <p class="mt-4">Sold Cabin</p>
-                    <p class="mb-4 text-3xl font-semibold">{{selectedCabinData.blockedCabin}}</p>
-                </div>
-                <div class="w-1/2 border border-solid d-theme-border-grey-light border-r-0 border-b-0">
-                    <p class="mt-4">Available Cabin</p>
-                    <p class="mb-4 text-3xl font-semibold">{{selectedCabinData.availableCabin}}</p>
-                </div>
-            </div>
-        </vx-card>
-    </div>
-    </div>
   </div>
   
   <div v-if="role==roles[1]">

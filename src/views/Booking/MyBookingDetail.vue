@@ -4,11 +4,11 @@
     <div class="flex flex-wrap items-center justify-between">
         <vx-input-group class="mb-base mr-3">
           <vs-button color="warning" class="mr-3">{{booking.status}}</vs-button>
-          <vs-button v-if="isShowConfirm=booking.status!='Sold'? true : false "  color="success" class="mr-3" type="border"  @click.stop="openConfirm">Confirm Reservation</vs-button>
-            <vs-button v-if="isShowNotification" color="primary" type="border" @click="activePrompt = true">Send Notifaction</vs-button>
+          <vs-button v-if="isShowConfirm=(booking.status!='Sold'? role=='agency'? false : true : false)"  color="success" class="mr-3" type="border"  @click.stop="openConfirm">Confirm Reservation</vs-button>
+            <vs-button v-if="isShowNotification = role=='agency'? true : false " color="primary" type="border" @click="activePrompt = true">Send Notifaction</vs-button>
         </vx-input-group>
         <div class="flex items-center">
-          <vs-button class="mb-base mr-3" v-if="booking.balance==0 ? false : true" color="success" icon-pack="feather" icon="icon icon-file" @click="activeGetPayment = true">Settle Payment</vs-button>
+          <vs-button class="mb-base mr-3" v-if="booking.balance==0 ? false : role=='agency'? false : true" color="success" icon-pack="feather" icon="icon icon-file" @click="activeGetPayment = true">Settle Payment</vs-button>
           <vs-button class="mb-base mr-3" icon-pack="feather" icon="icon icon-file" @click="printInvoice">Show Voucher</vs-button>
         </div>
     </div>
@@ -236,6 +236,7 @@ import StatisticsCardLine from '@/components/statistics-cards/StatisticsCardLine
 export default {
   data() {
     return {
+      role:"",
       getPaymentValue:0,
       activeGetPayment:false,
       selected: [],
@@ -398,6 +399,7 @@ export default {
       }
     },
     checkRole(){
+      this.role=JSON.parse(localStorage.getItem("agency")).role;
       if(JSON.parse(localStorage.getItem("agency")).role=="manager"){
         this.isShowNotification=false;
         this.isShowConfirm=true;
