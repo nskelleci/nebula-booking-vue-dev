@@ -160,7 +160,7 @@
                   <vx-card>
                       <p class="font-semibold mb-3">Cabin Details</p>
                       <div class="flex justify-between" vs-align="center" vs-type="flex" vs-justify="center" v-for="(item,index) in selected" :key="index">
-                            <span :class="{'text-warning': item.isRose,'text-grey': !item.isRose}"><b>{{ item.number }}</b> ({{ item.capacity }})</span>
+                            <span :class="{'text-warning': item.isRos,'text-grey': !item.isRos}"><b>{{ item.number }}</b> ({{ item.capacity }})</span>
                             <span>{{item.bedType.name}}</span>
                             <vs-input-number label="Adult: " :min="0" :max=" parseInt(item.numberOfAdult)  + parseInt(item.numberOfChild)  < item.capacity ? item.capacity : 0 " v-model="item.numberOfAdult"  class="inline-flex" />
                             <vs-input-number label="Child: " :min="0" :max="parseInt(item.numberOfAdult) + parseInt(item.numberOfChild) < item.capacity ? item.capacity : 0" v-model ="item.numberOfChild"  class="inline-flex" />
@@ -441,7 +441,7 @@ export default {
       selectedCabin:null,
       isPassengerPanel:0,
       notes:[],
-      isRoseCabin:false
+      isRosCabin:false
     }
   },
   watch:{
@@ -528,6 +528,7 @@ export default {
     }
   },
   methods: {
+
     async calculateFrontEndPrice(){
       this.loadingBar(true);
       this.selectedCruise.market=JSON.parse(localStorage.getItem("agency")).market
@@ -538,6 +539,7 @@ export default {
       await this.$store.dispatch('calculatePriceFrontEnd',calculatePrice)
       this.loadingBar(false);
     },
+
     getTotalPricePassengers(cabinNumber){
       let price=0;
       let passengersCount=0;
@@ -752,8 +754,8 @@ export default {
         booking.notes=""
         booking.cruise= newThis.selectedCruise
         booking.status="pending payment",
-        booking.isRose=element.isRose,
-        booking.rosePrice=element.rosePrice,
+        booking.isRos=element.isRos,
+        booking.rosPrice=element.rosPrice,
         booking.totalPrice=0,
         booking.agencyCost=0,
         booking.paidAmount=[],
@@ -848,7 +850,7 @@ export default {
         this.selectedCruise.rosCabins.find((element)=>{
           if(element.cabin._id==this.cabins[index]._id){
             console.log("eşit----->",element.cabin);
-            this.cabins[index].isRose=true
+            this.cabins[index].isRos=true
             this.cabins[index].rosPrice=element.rosPrice
             console.log(this.cabins[index]);
           }

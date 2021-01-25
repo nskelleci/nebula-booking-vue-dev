@@ -64,4 +64,16 @@ export default {
         console.log(error);
       })
   },
+
+  async bookingPriceStatistic () {
+    return await axios.get(`${apiUri.apiUri.URI}/booking/getAllbookingPriceStatistic/`)
+      .then((response) => {
+        return response.data
+        
+      })
+      .catch((error) => { 
+        console.log(error);
+      })
+  },
+  
 }

@@ -171,7 +171,7 @@
                 <div class="vx-col w-1/3 text-left">
                   <div class="invoice__recipient-info my-4">
                         <h6>Cabin Number</h6>
-                        <p>{{ booking.isRose ? 'ROS' : booking.cabin.number }}</p>
+                        <p>{{ booking.isRos ? 'ROS' : booking.cabin.number }}</p>
                     </div>
                 </div>
             </div>

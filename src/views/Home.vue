@@ -57,7 +57,125 @@
               </div>
           </vx-card>
       </div>
-    </div>
+
+      <div class="vx-col w-full md:w-1/3 lg:mt-0 mb-base">
+        <vx-card class="overflow-hidden">
+          <div class="flex justify-between items-center p-6 border border-solid d-theme-border-grey-light border-r-0 border-l-0 border-t-0">
+              <div>
+                  <vs-button color="primary" size="small" class="mr-3" type="border" @click="changeStatistic(0)">Today</vs-button>
+                  <vs-button color="warning" size="small" class="mr-3" type="border" @click="changeStatistic(1)">Weekly</vs-button>
+                  <vs-button color="danger" size="small" class="mr-3" type="border" @click="changeStatistic(2)">Monthly</vs-button>
+                  <vs-button color="success" size="small" class="mr-3" type="border" @click="changeStatistic(3)">All</vs-button>
+              </div>
+          </div>
+          <ul class="tasks-today-container" v-if="statisticTable==0">
+              <li class="px-6 py-4 tasks-today__task">
+                <div class="vx-row">
+                  <div class="vx-col w-full sm:w-auto">
+                      <p class="font-semibold text-lg">{{ Number(bookingPriceStatistic.today.todayTotalPrice)===0 ? "0" : bookingPriceStatistic.today.todayTotalPrice | priceFormat }}</p>
+                      <small>Today Total Price</small>
+                  </div>
+                </div>
+              </li>
+              <li class="px-6 py-4 tasks-today__task">
+                <div class="vx-row">
+                  <div class="vx-col w-full sm:w-auto">
+                      <p class="font-semibold text-lg">{{ Number(bookingPriceStatistic.today.todayAgencyCost)===0? "0" : bookingPriceStatistic.today.todayAgencyCost | priceFormat }}</p>
+                      <small>Today Agency Cost</small>
+                  </div>
+                </div>
+              </li>
+              <li class="px-6 py-4 tasks-today__task">
+                <div class="vx-row">
+                  <div class="vx-col w-full sm:w-auto">
+                      <p class="font-semibold text-lg">{{ Number(bookingPriceStatistic.today.todayBalance)===0? "0" : bookingPriceStatistic.today.todayBalance | priceFormat }}</p>
+                      <small>Today Balance</small>
+                  </div>
+                </div>
+              </li>
+          </ul>
+          <ul class="tasks-today-container" v-if="statisticTable==1">
+              <li class="px-6 py-4 tasks-today__task">
+                <div class="vx-row">
+                  <div class="vx-col w-full sm:w-auto">
+                      <p class="font-semibold text-lg">{{ Number(bookingPriceStatistic.week.weekTotalPrice)===0 ? "0" : bookingPriceStatistic.week.weekTotalPrice | priceFormat }}</p>
+                      <small>Week Total Price</small>
+                  </div>
+                </div>
+              </li>
+              <li class="px-6 py-4 tasks-today__task">
+                <div class="vx-row">
+                  <div class="vx-col w-full sm:w-auto">
+                      <p class="font-semibold text-lg">{{ Number(bookingPriceStatistic.week.weekAgencyCost)===0? "0" : bookingPriceStatistic.week.weekAgencyCost | priceFormat }}</p>
+                      <small>Week Agency Cost</small>
+                  </div>
+                </div>
+              </li>
+              <li class="px-6 py-4 tasks-today__task">
+                <div class="vx-row">
+                  <div class="vx-col w-full sm:w-auto">
+                      <p class="font-semibold text-lg">{{ Number(bookingPriceStatistic.week.weekBalance)===0? "0" : bookingPriceStatistic.week.weekBalance | priceFormat }}</p>
+                      <small>Week Balance</small>
+                  </div>
+                </div>
+              </li>
+          </ul>
+          <ul class="tasks-today-container" v-if="statisticTable==2">
+              <li class="px-6 py-4 tasks-today__task">
+                <div class="vx-row">
+                  <div class="vx-col w-full sm:w-auto">
+                      <p class="font-semibold text-lg">{{ Number(bookingPriceStatistic.month.monthTotalPrice)===0 ? "0" : bookingPriceStatistic.month.monthTotalPrice | priceFormat }}</p>
+                      <small>Month Total Price</small>
+                  </div>
+                </div>
+              </li>
+              <li class="px-6 py-4 tasks-today__task">
+                <div class="vx-row">
+                  <div class="vx-col w-full sm:w-auto">
+                      <p class="font-semibold text-lg">{{ Number(bookingPriceStatistic.month.monthAgencyCost)===0? "0" : bookingPriceStatistic.month.monthAgencyCost | priceFormat }}</p>
+                      <small>Month Agency Cost</small>
+                  </div>
+                </div>
+              </li>
+              <li class="px-6 py-4 tasks-today__task">
+                <div class="vx-row">
+                  <div class="vx-col w-full sm:w-auto">
+                      <p class="font-semibold text-lg">{{ Number(bookingPriceStatistic.month.monthBalance)===0? "0" : bookingPriceStatistic.month.monthBalance | priceFormat }}</p>
+                      <small>Month Balance</small>
+                  </div>
+                </div>
+              </li>
+          </ul>
+          <ul class="tasks-today-container" v-if="statisticTable==3">
+              <li class="px-6 py-4 tasks-today__task">
+                <div class="vx-row">
+                  <div class="vx-col w-full sm:w-auto">
+                      <p class="font-semibold text-lg">{{ Number(bookingPriceStatistic.all.allTotalPrice)===0 ? "0" : bookingPriceStatistic.all.allTotalPrice | priceFormat }}</p>
+                      <small>All Total Price</small>
+                  </div>
+                </div>
+              </li>
+              <li class="px-6 py-4 tasks-today__task">
+                <div class="vx-row">
+                  <div class="vx-col w-full sm:w-auto">
+                      <p class="font-semibold text-lg">{{ Number(bookingPriceStatistic.all.allAgencyCost)===0? "0" : bookingPriceStatistic.all.allAgencyCost | priceFormat }}</p>
+                      <small>All Agency Cost</small>
+                  </div>
+                </div>
+              </li>
+              <li class="px-6 py-4 tasks-today__task">
+                <div class="vx-row">
+                  <div class="vx-col w-full sm:w-auto">
+                      <p class="font-semibold text-lg">{{ Number(bookingPriceStatistic.all.allBalance)===0? "0" : bookingPriceStatistic.all.allBalance | priceFormat }}</p>
+                      <small>All Balance</small>
+                  </div>
+                </div>
+              </li>
+          </ul>
+        </vx-card>
+      </div>
+
+      </div>
 
     <div class="vx-row">
       <div class="vx-col w-full md:w-3/3 mb-base">
@@ -133,6 +251,7 @@ export default {
       todayPendingPayment:10,
       todaySold:10,
       role:null,
+      statisticTable:0,
       roles:['manager','agency'],
       // RADIAL BAR
       goalOverview: {
@@ -241,6 +360,9 @@ export default {
     },
     allBookingsByAgencyDetail(){
       return this.$store.state.booking.AllBookingsByAgencyDetail
+    },
+    bookingPriceStatistic(){
+      return this.$store.state.booking.getBookingsStatistic
     }
   },
   watch : {
@@ -267,6 +389,9 @@ export default {
   methods: {
     async allBookingbyAgencyDetail() {
       await this.$store.dispatch("getAllbookingsbyagencydetail");
+    },
+    changeStatistic(value){
+      this.statisticTable=value
     }
   },
   components:{
@@ -279,6 +404,8 @@ export default {
     await this.$store.dispatch("getBookingsToday");
     this.role = JSON.parse(localStorage.getItem('agency')).role;
     this.allBookingbyAgencyDetail()
+    await this.$store.dispatch("bookingPriceStatistic");
+    
   }
 
 }

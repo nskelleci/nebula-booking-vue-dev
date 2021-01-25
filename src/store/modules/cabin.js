@@ -53,8 +53,8 @@ const actions = {
     for (let item in cabins) {
       cabins[item].numberOfAdult = 0;
       cabins[item].numberOfChild = 0;
-      cabins[item].rosePrice = 0;
-      cabins[item].isRose = false;
+      cabins[item].rosPrice = 0;
+      cabins[item].isRos = false;
     }
     commit('SET_AVALIABLE_CABINS_BY_CRUISE_CABIN_CATEGORY', cabins)
   },
@@ -64,8 +64,8 @@ const actions = {
     for (let item in cabins) {
       cabins[item].numberOfAdult = 0;
       cabins[item].numberOfChild = 0;
-      cabins[item].rosePrice = 0;
-      cabins[item].isRose = false;
+      cabins[item].rosPrice = 0;
+      cabins[item].isRos = false;
     }
     commit('SET_AVALIABLE_CABINS', cabins)
   }
