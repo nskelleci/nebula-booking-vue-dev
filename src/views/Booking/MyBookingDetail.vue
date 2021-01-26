@@ -8,7 +8,6 @@
             <vs-button v-if="isShowNotification = role=='agency'? true : false " color="primary" type="border" @click="activePrompt = true">Send Notifaction</vs-button>
         </vx-input-group>
         <div class="flex items-center">
-          <vs-button class="mb-base mr-3" v-if="booking.balance==0 ? false : role=='agency'? false : true" color="success" icon-pack="feather" icon="icon icon-file" @click="activeGetPayment = true">Settle Payment</vs-button>
           <vs-button class="mb-base mr-3" icon-pack="feather" icon="icon icon-file" @click="printInvoice">Show Voucher</vs-button>
         </div>
     </div>
@@ -176,32 +175,29 @@
         </div>
       </div>
     </vx-card>
-
-    <vs-prompt
-          color="success"
-          cancel-text="Cancel"
-          accept-text="Save"
-          title="Settle Payment"
-          @accept="getPayment"
-           :is-valid="checkPayment"
-          :active.sync="activeGetPayment">
-          <div class="con-exemple-prompt">
-            <span>Payment Amount(€)</span>
-          <vs-input size="large" v-validate="{ rules: { regex:  /.[0-9]{0,}$/} }"  name="numeric" v-model="getPaymentValue" class="mt-5 w-full" />
-          <span class="text-danger text-sm" v-show="errors.has('numeric')">{{ errors.first('numeric') }}</span>
-          <span class="text-danger text-sm" v-show="!checkPayment">Amount can't be greater than balance</span>
-          </div>
-    </vs-prompt>
     
     <vs-prompt
           cancel-text="Cancel"
           accept-text="Send"
           title="Send Notifaction"
           @accept="sendNotifaction"
+          :is-valid="paymentRequestObj.description!='' && paymentRequestObj.paymenType!='' && paymentRequestObj.amount!='' && !errors.any() && checkPayment()"
           :active.sync="activePrompt">
           <div class="con-exemple-prompt">
-            <span>Description</span>
-          <vs-input vs-placeholder="Description" class="mt-3 w-full" v-model="notifactionDesc" row="3" />
+            <div>
+              <span>Payment Type</span>
+              <v-select :options="['Credit Card', 'Bank Transfer']" v-model="paymentRequestObj.paymenType"></v-select>
+            </div>
+            <div class="mt-2">
+              <span>Amount (€)</span>
+              <vs-input class="mt-3 w-full" v-validate="'required|numeric'"  name="numeric" v-model="paymentRequestObj.amount" row="3" />
+              <span class="text-danger text-sm" v-show="errors.has('numeric')">{{ errors.first('numeric') }}</span>
+              <span class="text-danger text-sm" v-show="!checkPayment">Amount can't be greater than balance</span>
+            </div>
+              <div class="mt-2">
+              <span>Description</span>
+              <vs-input class="mt-3 w-full" v-model="paymentRequestObj.description" row="3" />
+            </div>
           </div>
     </vs-prompt>
 
@@ -237,8 +233,6 @@ export default {
   data() {
     return {
       role:"",
-      getPaymentValue:0,
-      activeGetPayment:false,
       selected: [],
       itemsPerPage: 10,
       isMounted: false,
@@ -251,7 +245,15 @@ export default {
       optionsCabinCategory: [],
       optionsCabin: [],
       selectedCabinCategoryID:null,
-      selectedCabinID:null
+      selectedCabinID:null,
+      paymentRequestObj:{
+          booking:"",
+          description:"",
+          paymenType:"",
+          amount:"",
+          status:"Pending Review"
+      },
+      amountIsTrue:false
     };
   },
   components: {
@@ -276,21 +278,8 @@ export default {
     booking (){
       return this.$store.state.booking.getBookingID
     },
-    checkPayment(){
-      console.log("checkPayment",Number(this.getPaymentValue) + Number(this.booking.balance));
-      if(Number(this.getPaymentValue) + Number(this.booking.balance) <= 0){
-        return true
-      }else{
-        return false
-      }
-    }
   },
   methods: {
-    async getPayment(){
-      this.$store.state.booking.getBookingID.paidAmount.push({date:Date.now(),price:this.getPaymentValue});
-      await this.$store.dispatch('updateBooking',this.booking)
-      this.getBooking();
-    },
     printInvoice () {
       let voucher = this.$router.resolve({name: 'voucher',params: {id: this.$route.params.id}});
       window.open(voucher.href, '_blank','width=800,height=1000');
@@ -306,6 +295,13 @@ export default {
         router.push({name : 'mybookings'})
       }
       this.isLoad=true
+    },
+    checkPayment(){
+      if(Number(this.paymentRequestObj.amount) + Number(this.booking.balance) <= 0){
+        return true
+      }else{
+        return false
+      }
     },
      openConfirm() {
       if(booking.balance!=0){
@@ -333,8 +329,14 @@ export default {
       }
       
     },
-    sendNotifaction(){
-      console.log(this.notifactionDesc);
+    async sendNotifaction(){
+      this.isLoading(true)
+      this.paymentRequestObj.booking=this.$store.state.booking.getBookingID._id
+      await this.$store.dispatch('addPaymentRequest', this.paymentRequestObj)
+      this.$store.state.booking.getBookingID.paidAmount.push({date:Date.now(),price:this.paymentRequestObj.amount});
+      await this.$store.dispatch('updateBooking',this.booking)
+      this.getBooking()
+      this.isLoading(false)
     },
     async selectedCabinCategory(value){
       this.isLoading(true)

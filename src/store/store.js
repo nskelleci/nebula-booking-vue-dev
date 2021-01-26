@@ -34,6 +34,8 @@ import auth from './modules/auth'
 import passenger from './modules/passenger'
 import blockedCabin from './modules/blockedCabin'
 import dashboard from './modules/dashboard'
+import paymentRequest from './modules/paymentRequest'
+
 import logout from './modules/logout'
 Vue.use(Vuex)
 
@@ -61,6 +63,7 @@ export default new Vuex.Store({
     passenger,
     blockedCabin,
     dashboard,
+    paymentRequest,
     logout
   },
 

@@ -41,6 +41,15 @@ const router = new Router({
           }
         },
         {
+          path: '/PaymentRequest',
+          name: 'paymentRequest',
+          component: () => import('../src/views/RequestPayment.vue'),
+          meta: {
+            rule: 'isManager',
+            authRequired : true
+          }
+        },
+        {
           path: '/Vessels',
           name: 'Vessel',
           component: () => import('./views/Vessel/vessels.vue'),

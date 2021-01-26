@@ -42,6 +42,14 @@ export default [
         url: '/',
         slug: 'admin-dashboard',
         i18n: 'Analytics'
+        
+      },
+      {
+        //url: '/dashboard/analytics',
+        name: 'Payment Request',
+        url: '/PaymentRequest',
+        slug: 'payment-request',
+        i18n: 'PaymentRequest'
       }
     ]
   },
