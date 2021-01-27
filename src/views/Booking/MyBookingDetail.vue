@@ -186,7 +186,7 @@
           <div class="con-exemple-prompt">
             <div>
               <span>Payment Type</span>
-              <v-select :options="['Credit Card', 'Bank Transfer']" v-model="paymentRequestObj.paymenType"></v-select>
+              <v-select :options="['Bank Transfer']" v-model="paymentRequestObj.paymenType"></v-select>
             </div>
             <div class="mt-2">
               <span>Amount (€)</span>
@@ -333,9 +333,6 @@ export default {
       this.isLoading(true)
       this.paymentRequestObj.booking=this.$store.state.booking.getBookingID._id
       await this.$store.dispatch('addPaymentRequest', this.paymentRequestObj)
-      this.$store.state.booking.getBookingID.paidAmount.push({date:Date.now(),price:this.paymentRequestObj.amount});
-      await this.$store.dispatch('updateBooking',this.booking)
-      this.getBooking()
       this.isLoading(false)
     },
     async selectedCabinCategory(value){

@@ -68,7 +68,7 @@
               <vs-td>
                 <vs-chip color="success" class="product-order-status">{{ tr.amount }}</vs-chip>
               </vs-td>
-              <vs-td @click="activePrompt=true">
+              <vs-td>
                 <vs-chip :color="tr.status=='Confirmed' ? 'success'  : ''" v-if="tr.status=='Confirmed' ? true  : false" class="product-order-status">{{ tr.status }}</vs-chip>
                 <vs-chip :color="tr.status=='Pending Review' ? 'warning'  : ''" v-if="tr.status=='Pending Review' ? true  : false" class="product-order-status">{{ tr.status }}</vs-chip>
                 <vs-chip :color="tr.status=='Rejected' ? 'danger'  : ''" v-if="tr.status=='Rejected' ? true  : false" class="product-order-status">{{ tr.status }}</vs-chip>
@@ -120,7 +120,11 @@ export default {
             amount:this.selected.amount,
             status:this.selected.status
         }
-        this.toggleDataSidebar(true)
+
+        if(this.selected.status!="Confirmed"){
+          this.toggleDataSidebar(true)
+        }
+      
       }
   },
   components:{

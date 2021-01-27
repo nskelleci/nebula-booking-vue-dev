@@ -100,9 +100,16 @@ export default {
       this.selectedStatus = null
     },
     submitData () {
-      this.$validator.validateAll().then(result => {
+      this.$validator.validateAll().then(async result => {
         if (result) {
           this.data.status=this.selectedStatus
+
+          if(this.data.status=="Confirmed"){
+           
+            await this.$store.dispatch('getBookingbyId',this.data.booking)
+            this.$store.state.booking.getBookingID.paidAmount.push({date:Date.now(),price:this.data.amount});
+            await this.$store.dispatch('updateBooking',this.$store.state.booking.getBookingID)
+          }
 
           if (this.selectedStatus !== null) {
             this.$store.dispatch('updatePaymentRequest', this.data).catch(err => { console.error(err) })
@@ -112,7 +119,7 @@ export default {
           this.initValues()
         }
       })
-    }
+    },
   },
   created () {
     this.$store.dispatch('getCountries')

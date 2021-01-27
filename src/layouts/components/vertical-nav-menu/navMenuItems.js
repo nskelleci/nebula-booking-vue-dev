@@ -43,15 +43,24 @@ export default [
         slug: 'admin-dashboard',
         i18n: 'Analytics'
         
-      },
-      {
-        //url: '/dashboard/analytics',
-        name: 'Payment Request',
-        url: '/PaymentRequest',
-        slug: 'payment-request',
-        i18n: 'PaymentRequest'
       }
     ]
+  },
+  {
+    //url: '/dashboard/analytics',
+    header: 'Account Management',
+    icon: 'PackageIcon',
+    i18n: 'Account Management',
+    role : 'manager',
+    items :[
+      {
+        name: 'Payment Requests',
+        url: '/PaymentRequest',
+        slug: 'payment-requests',
+        i18n: 'PaymentRequests'
+      }
+    ]
+   
   },
   {
     header: 'Admin',
