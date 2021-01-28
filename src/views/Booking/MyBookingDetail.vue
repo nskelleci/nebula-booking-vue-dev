@@ -304,6 +304,8 @@ export default {
       }
     },
      openConfirm() {
+      var dt = new Date();
+      dt.setHours(dt.getHours()+24);
       if(booking.balance!=0){
         this.$vs.dialog({
           type: 'confirm',
@@ -313,6 +315,15 @@ export default {
           accept:async ()=>{
             this.$store.state.booking.getBookingID.status="Sold"
             await this.$store.dispatch('updateBooking',this.booking)
+
+            let blockedCabin={
+              cabin:this.$store.state.booking.getBookingID.cabin._id,
+              cruise:this.$store.state.booking.getBookingID.cruise._id,
+              blockReason:'Sold',
+              blockedUntil:dt,
+            }
+            await this.$store.dispatch('updateBlockedCabin',blockedCabin)
+    
           }
         })
       }else{
@@ -323,6 +334,14 @@ export default {
           text: 'Please click accept to confirm reservation',
           accept: async ()=>{
             this.$store.state.booking.getBookingID.status="Sold"
+
+            let blockedCabin={
+              cabin:this.$store.state.booking.getBookingID.cabin._id,
+              cruise:this.$store.state.booking.getBookingID.cruise._id,
+              blockReason:'Sold',
+              blockedUntil:dt,
+            }
+            await this.$store.dispatch('updateBlockedCabin',blockedCabin)
             await this.$store.dispatch('updateBooking',this.booking)
           }
         })
@@ -415,17 +434,21 @@ export default {
       }
     }
   },
-  created(){
+   created(){
     if(this.$route.params.id==null){
       router.push({name : 'mybookings'})
     }
   },
-  mounted(){
+   async mounted(){
     this.isMounted = true;
     this.getBooking();
     this.checkRole();
     this.$emit('setAppClasses', 'print-page');
-    console.log(this.booking);
+    
+    console.log("--->XX",this.booking);
+    await this.$store.dispatch("getCruiseDetail","5fa925a577a2e200111e40ed")
+    console.log("----->",this.$store.state.cruise.cruises);
+    
   },
 };
 </script>

@@ -667,7 +667,7 @@ export default {
       
     }else{
        this.$vs.notify({
-            title:'Passenger Error',
+            title:'International ID or Passport ID to be unique',
             text:'Please add passenger',
             color:'danger'
         })

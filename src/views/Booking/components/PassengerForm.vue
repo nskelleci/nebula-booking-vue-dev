@@ -220,6 +220,7 @@ export default {
       return true
     },
     async addPassenger(){
+      if (typeof this.$store.state.passenger.passanger.data !== 'undefined'){
       if(this.booking.cabin.capacity>this.booking.Passengers.length){
           if(this.isAnyPassenger()){
             this.booking.Passengers.push(this.$store.state.passenger.passanger.data)
@@ -248,6 +249,14 @@ export default {
           color:'danger'
         })
       }
+    }else{
+       this.$vs.notify({
+            title:'International ID or Passport ID to be unique',
+            text:'Please add passenger',
+            color:'danger'
+        })
+    }
+    
     },
 
     async addNewPassenger () {

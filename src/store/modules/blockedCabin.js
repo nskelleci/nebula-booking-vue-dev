@@ -20,12 +20,13 @@ const actions = {
     async addBlockedCabin (_, booking) {
         await BlockedCabinService.addBlockedCabin(booking).then((response) => {
             if (response) {
+                console.log("addBlockedCabin---------->",response);
                 return response
             }
         })
     },
-    async updateBlockedCabin (_, booking) {
-        await BlockedCabinService.updateBlockedCabin(booking).then((response) => {
+    async updateBlockedCabin (_, blockedCabin) {
+        await BlockedCabinService.updateBlockedCabin(blockedCabin).then((response) => {
             if (response) {
                 if (response.success) {
                     

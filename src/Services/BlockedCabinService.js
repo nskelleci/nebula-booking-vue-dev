@@ -11,8 +11,8 @@ export default {
       })
       .catch((error) => { return (error) })
   },
-  async updateBlockedCabin(booking) {
-    return await axios.put(`${apiUri.apiUri.URI}/blockedCabin/update/${booking._id}`, booking)
+  async updateBlockedCabin(blockedCabin) {
+    return await axios.put(`${apiUri.apiUri.URI}/blockedCabin/update/`, blockedCabin)
       .then((response) => {
         notification.notifyMe(response.data)
         return response.data
